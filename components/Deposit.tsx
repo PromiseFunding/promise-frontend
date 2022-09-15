@@ -5,6 +5,7 @@ import { SetStateAction, useEffect, useState } from "react"
 import { Dropdown, useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { BigNumber, ethers, ContractTransaction } from "ethers"
 import { sendError } from "next/dist/server/api-utils"
+import { networkConfig } from "../helper-config"
 
 interface contractAddressesInterface {
     [key: string]: { YieldFund: string[] }
@@ -16,10 +17,18 @@ export default function Deposit() {
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
     const fundAddress = chainId in addresses ? addresses[chainId]["YieldFund"][0] : null
+    console.log(chainId)
+    //let decimal = BigNumber.from(6)
+
+    //TODO: get helper-config working instead!... gets rid of decimal function
+    const chainIdNum = parseInt(chainIdHex!)
+
+    const decimals = chainId in addresses ? networkConfig[chainIdNum].decimals : null
 
     const [timeLock, setTimeLock] = useState("0") //changes entranceFee to a stateHook and triggers a rerender for us... entranceFee starts out as 0
     //setEntranceFee triggers the update
     const [owner, setOwner] = useState("0")
+    const [asset, setAsset] = useState("0") //token contract
     const [poolAddy, setPoolAddress] = useState("0")
     const [val, setVal] = useState("")
 
@@ -31,22 +40,36 @@ export default function Deposit() {
         isFetching,
     } = useWeb3Contract({
         abi: erc20Abi,
-        contractAddress: "0xC2C527C0CACF457746Bd31B2a698Fe89de2b6d49",
+        contractAddress: asset,
         functionName: "approve",
         params: {
             _spender: fundAddress,
-            _value: BigNumber.from((Number(val) * 10 ** 6).toString()),
+            _value: BigNumber.from((Number(val) * 10 ** decimals!).toString()),
+            // _value: BigNumber.from(Number(val)).mul(BigNumber.from(10).pow(decimals));
         },
     })
+
+    // const { runContractFunction: decimals } = useWeb3Contract({
+    //     abi: erc20Abi,
+    //     contractAddress: asset,
+    //     functionName: "decimals",
+    //     params: {},
+    // })
 
     const { runContractFunction: fund } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!, // specify the networkId
         functionName: "fund",
-        params: { amount: BigNumber.from((Number(val) * 10 ** 6).toString()) },
+        params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
 
     /* View Functions */
+    const { runContractFunction: getAssetAddress } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!, // specify the networkId
+        functionName: "getAssetAddress",
+        params: {},
+    })
 
     const { runContractFunction: getTimeLock } = useWeb3Contract({
         abi: abi,
@@ -76,20 +99,26 @@ export default function Deposit() {
         setTimeLock(timeFromCall)
         setOwner(ownerFromCall)
         setPoolAddress(poolFromCall)
+        //decimal = (await decimals()) as BigNumber
     }
 
     useEffect(() => {
-        if (isWeb3Enabled) {
+        if (isWeb3Enabled && fundAddress) {
             updateUI()
         }
-    }, [isWeb3Enabled])
+    }, [isWeb3Enabled, fundAddress])
 
-    const handleSuccess = async function (tx: ContractTransaction) {
+    const handleSuccess = async function () {
         // await tx.wait(1)
 
         const fundTx: any = await fund()
-        await fundTx.wait(1)
-        handleNewNotification()
+        try {
+            await fundTx.wait(1)
+            handleNewNotification()
+        } catch (error) {
+            console.log(error)
+            handleNewNotification1()
+        }
         updateUI()
     }
 
@@ -101,7 +130,16 @@ export default function Deposit() {
     const handleNewNotification = function () {
         dispatch({
             type: "info",
-            message: "Transaction Complete!",
+            message: "Donation Complete!",
+            title: "Transaction Notification",
+            position: "topR",
+        })
+    }
+
+    const handleNewNotification1 = function () {
+        dispatch({
+            type: "info",
+            message: "Donation Failed!",
             title: "Transaction Notification",
             position: "topR",
         })
@@ -110,10 +148,12 @@ export default function Deposit() {
     return (
         <div className="p-5">
             Depositing To Contract
-            {fundAddress ? (
+            {isWeb3Enabled && fundAddress ? (
                 <div className="">
                     <input
-                        type="text"
+                        maxLength={21 - (decimals || 6)}
+                        type="number"
+                        min="0"
                         id="message"
                         name="message"
                         onChange={handleChange}
@@ -123,14 +163,16 @@ export default function Deposit() {
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async function () {
+                            //gets asset address and decimals
+                            const assetFromCall = (
+                                (await getAssetAddress()) as BigNumber
+                            ).toString()
+                            setAsset(assetFromCall)
+
                             await approve({
-                                onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
+                                onSuccess: () => handleSuccess(),
                                 onError: (error) => console.log(error),
                             })
-                            // await fund({
-                            //     onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
-                            //     onError: (error) => console.log(error),
-                            // })
                         }}
                         disabled={isLoading || isFetching}
                     >
@@ -147,7 +189,7 @@ export default function Deposit() {
                     <div> Pool Address: {poolAddy} </div>
                 </div>
             ) : (
-                <div>No Fund Address Deteched</div>
+                <div>No Fund Address Detected</div>
             )}
         </div>
     )
