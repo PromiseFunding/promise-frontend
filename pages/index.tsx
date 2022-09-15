@@ -3,6 +3,7 @@ import Head from "next/head"
 import Image from "next/image"
 import styles from "../styles/Home.module.css"
 import Header from "../components/Header"
+import Deposit from "../components/Deposit"
 
 const Home: NextPage = () => {
     return (
@@ -12,6 +13,7 @@ const Home: NextPage = () => {
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
             </Head>
             <Header></Header>
+            <Deposit></Deposit>
         </div>
     )
 }
