@@ -4,6 +4,7 @@ import Image from "next/image"
 import styles from "../styles/Home.module.css"
 import Header from "../components/Header"
 import Deposit from "../components/Deposit"
+import Withdraw from "../components/WithdrawFunder"
 
 const Home: NextPage = () => {
     return (
@@ -14,6 +15,7 @@ const Home: NextPage = () => {
             </Head>
             <Header></Header>
             <Deposit></Deposit>
+            <Withdraw></Withdraw>
         </div>
     )
 }

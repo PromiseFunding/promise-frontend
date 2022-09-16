@@ -12,11 +12,11 @@ interface contractAddressesInterface {
 }
 
 //contract is already deployed... trying to look at features of contract
-export default function Deposit() {
+export default function Withdraw() {
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
-    
+
     const fundAddress = chainId in addresses ? addresses[chainId]["YieldFund"][0] : null
 
     //TODO: get helper-config working instead!... gets rid of decimal function
@@ -24,90 +24,57 @@ export default function Deposit() {
 
     const decimals = chainId in addresses ? networkConfig[chainIdNum].decimals : null
 
-    const tokenAddress = chainId in addresses ? networkConfig[chainIdNum].assetAddress : null
+    //const tokenAddress = chainId in addresses ? networkConfig[chainIdNum].assetAddress : null
 
-    const poolAddress = chainId in addresses ? networkConfig[chainIdNum].poolAddress : null
+    //const poolAddress = chainId in addresses ? networkConfig[chainIdNum].poolAddress : null
 
-    const [timeLock, setTimeLock] = useState("0") //changes entranceFee to a stateHook and triggers a rerender for us... entranceFee starts out as 0
     //setEntranceFee triggers the update
-    const [owner, setOwner] = useState("0")
+    const [fundAmount, setFundAmount] = useState("")
 
     const [val, setVal] = useState("")
 
     const dispatch = useNotification()
 
     const {
-        runContractFunction: approve,
+        runContractFunction: withdraw,
         isLoading,
         isFetching,
     } = useWeb3Contract({
-        abi: erc20Abi,
-        contractAddress: tokenAddress!,
-        functionName: "approve",
-        params: {
-            _spender: fundAddress,
-            _value: BigNumber.from((Number(val) * 10 ** decimals!).toString()),
-            // _value: BigNumber.from(Number(val)).mul(BigNumber.from(10).pow(decimals)); might need to use this instead
-        },
-    })
-
-
-    const { runContractFunction: fund } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!, // specify the networkId
-        functionName: "fund",
+        functionName: "withdrawFundsFromPool",
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
 
     /* View Functions */
-    // const { runContractFunction: getAssetAddress } = useWeb3Contract({
+    // const { runContractFunction: getFundAmount } = useWeb3Contract({
     //     abi: abi,
     //     contractAddress: fundAddress!, // specify the networkId
-    //     functionName: "getAssetAddress",
-    //     params: {},
+    //     functionName: "getFundAmount",
+    //     params: { address: "0x861Aea40c9AcC62435cEa31b2078FF3e022D6627"},
     // })
 
-    const { runContractFunction: getTimeLock } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!, // specify the networkId
-        functionName: "getTimeLock",
-        params: {},
-    })
+    // async function updateUI() {
 
-    const { runContractFunction: getOwner } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getOwner",
-        params: {},
-    })
+    //     const fundFromCall = ((await getFundAmount()) as BigNumber).toString()
+    //     setFundAmount(fundFromCall)
+    // }
 
+    // useEffect(() => {
+    //     if (isWeb3Enabled && fundAddress) {
+    //         updateUI()
+    //     }
+    // }, [isWeb3Enabled, fundAddress])
 
-    async function updateUI() {
-        const timeFromCall = ((await getTimeLock()) as BigNumber).toString()
-        const ownerFromCall = ((await getOwner()) as BigNumber).toString()
-        setTimeLock(timeFromCall)
-        setOwner(ownerFromCall)
-        //decimal = (await decimals()) as BigNumber
-    }
-
-    useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
-            updateUI()
-        }
-    }, [isWeb3Enabled, fundAddress])
-
-    const handleSuccess = async function () {
-        // await tx.wait(1)
-
-        const fundTx: any = await fund()
+    const handleSuccess = async function (tx: ContractTransaction) {
         try {
-            await fundTx.wait(1)
+            await tx.wait(1)
             handleNewNotification()
         } catch (error) {
             console.log(error)
             handleNewNotification1()
         }
-        updateUI()
+        //updateUI()
     }
 
     const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
@@ -118,7 +85,7 @@ export default function Deposit() {
     const handleNewNotification = function () {
         dispatch({
             type: "info",
-            message: "Donation Complete!",
+            message: "Withdraw Complete!",
             title: "Transaction Notification",
             position: "topR",
         })
@@ -135,7 +102,7 @@ export default function Deposit() {
 
     return (
         <div className="p-5">
-            Depositing To Contract
+            Withdraw from Contract
             {isWeb3Enabled && fundAddress ? (
                 <div className="">
                     <input
@@ -151,14 +118,8 @@ export default function Deposit() {
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async function () {
-                            //gets asset address and decimals
-                            // const assetFromCall = (
-                            //     (await getAssetAddress()) as BigNumber
-                            // ).toString()
-                            // setAsset(assetFromCall)
-
-                            await approve({
-                                onSuccess: () => handleSuccess(),
+                            await withdraw({
+                                onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
                                 onError: (error) => console.log(error),
                             })
                         }}
@@ -167,17 +128,15 @@ export default function Deposit() {
                         {isLoading || isFetching ? (
                             <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
                         ) : (
-                            <div>Donate</div>
+                            <div>Withdraw</div>
                         )}
                     </button>
-                    <h2>Deposit Amount: {val} USDT</h2>
-                    <h2>Pool Information:</h2>
-                    <div>TimeLock: {timeLock} seconds</div>
-                    <div>Owner Address: {owner} </div>
-                    <div> Pool Address: {poolAddress} </div>
+                    <h2>Withdraw Amount: {val} USDT</h2>
+                    <h2>Your Information:</h2>
+                    <div>Amount Funded: {fundAmount} USDT</div>
                 </div>
             ) : (
-                <div>No Fund Address Detected</div>
+                <div>No Funds Detected</div>
             )}
         </div>
     )
