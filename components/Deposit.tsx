@@ -16,7 +16,7 @@ export default function Deposit() {
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
-    
+
     const fundAddress = chainId in addresses ? addresses[chainId]["YieldFund"][0] : null
 
     //TODO: get helper-config working instead!... gets rid of decimal function
@@ -51,7 +51,6 @@ export default function Deposit() {
         },
     })
 
-
     const { runContractFunction: fund } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!, // specify the networkId
@@ -80,7 +79,6 @@ export default function Deposit() {
         functionName: "getOwner",
         params: {},
     })
-
 
     async function updateUI() {
         const timeFromCall = ((await getTimeLock()) as BigNumber).toString()

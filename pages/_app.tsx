@@ -3,9 +3,12 @@ import { MoralisProvider } from "react-moralis"
 import { NotificationProvider } from "web3uikit"
 import type { AppProps } from "next/app"
 
+const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ""
+const APP_ID = process.env.NEXT_PUBLIC_APP_ID || ""
+
 function MyApp({ Component, pageProps }: AppProps) {
     return (
-        <MoralisProvider initializeOnMount={false}>
+        <MoralisProvider serverUrl={SERVER_URL} appId={APP_ID}>
             <NotificationProvider>
                 <Component {...pageProps} />
             </NotificationProvider>
