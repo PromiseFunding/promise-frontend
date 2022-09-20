@@ -17,7 +17,11 @@ export default function Deposit() {
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
 
-    const fundAddress = chainId in addresses ? addresses[chainId]["YieldFund"][0] : null
+    const fundAddress =
+        chainId in addresses
+            ? addresses[chainId]["YieldFund"][addresses[chainId]["YieldFund"].length - 1]
+            : null
+    console.log(`fundAddress: ${fundAddress}`)
 
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)
@@ -169,10 +173,6 @@ export default function Deposit() {
                         )}
                     </button>
                     <h2>Deposit Amount: {val} USDT</h2>
-                    <h2>Pool Information:</h2>
-                    <div>TimeLock: {timeLock} seconds</div>
-                    <div>Owner Address: {owner} </div>
-                    <div> Pool Address: {poolAddress} </div>
                 </div>
             ) : (
                 <div>No Fund Address Detected</div>

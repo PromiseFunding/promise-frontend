@@ -6,6 +6,7 @@ import Header from "../components/Header"
 import Deposit from "../components/Deposit"
 import Withdraw from "../components/WithdrawFunder"
 import WithdrawProceeds from "../components/WithdrawProceeds"
+import PoolInfo from "../components/PoolInfo"
 
 const Home: NextPage = () => {
     return (
@@ -19,6 +20,9 @@ const Home: NextPage = () => {
                 <Deposit></Deposit>
                 <Withdraw></Withdraw>
                 <WithdrawProceeds></WithdrawProceeds>
+            </div>
+            <div>
+                <PoolInfo></PoolInfo>
             </div>
         </div>
     )
