@@ -14,7 +14,7 @@ interface contractAddressesInterface {
 //contract is already deployed... trying to look at features of contract
 export default function Withdraw() {
     const addresses: contractAddressesInterface = contractAddresses
-    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated } = useMoralis()
+    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
 
     const fundAddress = chainId in addresses ? addresses[chainId]["YieldFund"][0] : null
@@ -24,12 +24,7 @@ export default function Withdraw() {
 
     const decimals = chainId in addresses ? networkConfig[chainIdNum].decimals : null
 
-    //const tokenAddress = chainId in addresses ? networkConfig[chainIdNum].assetAddress : null
-
-    //const poolAddress = chainId in addresses ? networkConfig[chainIdNum].poolAddress : null
-
-    //setEntranceFee triggers the update
-    const [fundAmount, setFundAmount] = useState("")
+    const [amountFunded, setAmountFunded] = useState(0)
 
     const [val, setVal] = useState("")
 
@@ -46,25 +41,23 @@ export default function Withdraw() {
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
 
-    /* View Functions */
-    // const { runContractFunction: getFundAmount } = useWeb3Contract({
-    //     abi: abi,
-    //     contractAddress: fundAddress!, // specify the networkId
-    //     functionName: "getFundAmount",
-    //     params: { address: "0x861Aea40c9AcC62435cEa31b2078FF3e022D6627"},
-    // })
+    const { runContractFunction: getFundAmount } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getFundAmount",
+        params: { funder: account },
+    })
 
-    // async function updateUI() {
+    async function updateUI() {
+        const amountFundedFromCall = (await getFundAmount()) as number
+        setAmountFunded(amountFundedFromCall / 10 ** decimals!)
+    }
 
-    //     const fundFromCall = ((await getFundAmount()) as BigNumber).toString()
-    //     setFundAmount(fundFromCall)
-    // }
-
-    // useEffect(() => {
-    //     if (isWeb3Enabled && fundAddress) {
-    //         updateUI()
-    //     }
-    // }, [isWeb3Enabled, fundAddress])
+    useEffect(() => {
+        if (isWeb3Enabled && fundAddress) {
+            updateUI()
+        }
+    }, [isWeb3Enabled, fundAddress])
 
     const handleSuccess = async function (tx: ContractTransaction) {
         try {
@@ -74,12 +67,13 @@ export default function Withdraw() {
             console.log(error)
             handleNewNotification1()
         }
-        //updateUI()
+        updateUI()
     }
 
-    const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
-        setVal(event.target.value)
-        console.log("value is:", event.target.value)
+    const handleChange = async (event: { target: { value: SetStateAction<string> } }) => {
+        const max = amountFunded
+        const value = Math.max(0, Math.min(max as number, Number(event.target.value)))
+        setVal(value.toString())
     }
 
     const handleNewNotification = function () {
@@ -133,7 +127,7 @@ export default function Withdraw() {
                     </button>
                     <h2>Withdraw Amount: {val} USDT</h2>
                     <h2>Your Information:</h2>
-                    <div>Amount Funded: {fundAmount} USDT</div>
+                    <div>Amount Funded: {amountFunded} USDT</div>
                 </div>
             ) : (
                 <div>No Funds Detected</div>
