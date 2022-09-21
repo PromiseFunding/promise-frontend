@@ -27,7 +27,6 @@ export default function PoolInfo() {
     const poolAddress = chainId in addresses ? networkConfig[chainIdNum].poolAddress : null
 
     const [timeLock, setTimeLock] = useState("0") //changes entranceFee to a stateHook and triggers a rerender for us... entranceFee starts out as 0
-    const [timeLeft, setTimeLeft] = useState("0")
 
     //setEntranceFee triggers the update
     const [owner, setOwner] = useState("0")
@@ -46,21 +45,11 @@ export default function PoolInfo() {
         params: {},
     })
 
-    const { runContractFunction: getTimeLeft } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getTimeLeft",
-        params: { funder: account },
-    })
-
     async function updateUI() {
         const timeFromCall = ((await getTimeLock()) as BigNumber).toString()
         const ownerFromCall = ((await getOwner()) as BigNumber).toString()
-        const timeLeftFromCall = ((await getTimeLeft()) as BigNumber).toString()
-        setTimeLeft(timeLeftFromCall)
         setTimeLock(timeFromCall)
         setOwner(ownerFromCall)
-        //decimal = (await decimals()) as BigNumber
     }
 
     useEffect(() => {
@@ -75,7 +64,6 @@ export default function PoolInfo() {
                 <div className="">
                     <h2>Pool Information:</h2>
                     <div>TimeLock: {timeLock} seconds</div>
-                    <div>Time left: {timeLeft}</div>
                     <div>Owner Address: {owner} </div>
                     <div>User Address: {account}</div>
                     <div> Pool Address: {poolAddress} </div>

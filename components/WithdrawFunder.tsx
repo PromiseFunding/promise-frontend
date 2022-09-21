@@ -26,6 +26,8 @@ export default function Withdraw() {
 
     const [amountFunded, setAmountFunded] = useState(0)
 
+    const [timeLeft, setTimeLeft] = useState("0")
+
     const [val, setVal] = useState("")
 
     const dispatch = useNotification()
@@ -48,9 +50,18 @@ export default function Withdraw() {
         params: { funder: account },
     })
 
+    const { runContractFunction: getTimeLeft } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getTimeLeft",
+        params: { funder: account },
+    })
+
     async function updateUI() {
         const amountFundedFromCall = (await getFundAmount()) as number
-        setAmountFunded(amountFundedFromCall / 10 ** decimals!)
+        const timeLeftFromCall = ((await getTimeLeft()) as BigNumber).toString()
+        setTimeLeft(timeLeftFromCall)
+        setAmountFunded((amountFundedFromCall / 10 ** decimals!))
     }
 
     useEffect(() => {
@@ -128,6 +139,7 @@ export default function Withdraw() {
                     <h2>Withdraw Amount: {val} USDT</h2>
                     <h2>Your Information:</h2>
                     <div>Amount Funded: {amountFunded} USDT</div>
+                    <div>Time left: {timeLeft} seconds</div>
                 </div>
             ) : (
                 <div>No Funds Detected</div>
