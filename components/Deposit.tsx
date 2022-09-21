@@ -14,14 +14,13 @@ interface contractAddressesInterface {
 //contract is already deployed... trying to look at features of contract
 export default function Deposit() {
     const addresses: contractAddressesInterface = contractAddresses
-    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated } = useMoralis()
+    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
 
     const fundAddress =
         chainId in addresses
             ? addresses[chainId]["YieldFund"][addresses[chainId]["YieldFund"].length - 1]
             : null
-    console.log(`fundAddress: ${fundAddress}`)
 
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)
@@ -114,7 +113,6 @@ export default function Deposit() {
 
     const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
         setVal(event.target.value)
-        console.log("value is:", event.target.value)
     }
 
     const handleNewNotification = function () {

@@ -20,7 +20,6 @@ export default function WithdrawProceeds() {
         chainId in addresses
             ? addresses[chainId]["YieldFund"][addresses[chainId]["YieldFund"].length - 1]
             : null
-    console.log(fundAddress)
     const [owner, setOwner] = useState("0")
     const [userAddress, setAddress] = useState("0")
     const [withdrawableProceeds, setWithdrawableProceeds] = useState(0)
@@ -73,17 +72,20 @@ export default function WithdrawProceeds() {
         if (isWeb3Enabled) {
             const ownerFromCall = await getOwner()
             setOwner((ownerFromCall as string).toLowerCase())
-            const withdrawableProceedsFromCall = await getWithdrawableProceeds()
-            setWithdrawableProceeds(withdrawableProceedsFromCall as number)
-
-            console.log(owner)
+            let withdrawableProceedsFromCall = (await getWithdrawableProceeds()) as number
+            if (withdrawableProceedsFromCall > 0) {
+                setWithdrawableProceeds(withdrawableProceedsFromCall / 10 ** decimals!)
+            }
         }
     }
 
-    // Gets called only on load.
     useEffect(() => {
         initData()
-    }, [isWeb3Enabled])
+    }, [isWeb3Enabled, chainId])
+
+    useEffect(() => {
+        initData()
+    }, [])
 
     useEffect(() => {
         if (account) {
@@ -93,10 +95,8 @@ export default function WithdrawProceeds() {
 
     const handleChange = async (event: { target: { value: SetStateAction<string> } }) => {
         const max = withdrawableProceeds || 1
-        console.log("max is: ", max)
         const value = Math.max(0, Math.min(max as number, Number(event.target.value)))
         setVal(value.toString())
-        console.log("value is:", event.target.value)
     }
 
     const handleNewNotification = function () {
@@ -106,12 +106,13 @@ export default function WithdrawProceeds() {
             title: "Transaction Notification",
             position: "topR",
         })
+        initData()
     }
 
     const handleNewNotification1 = function () {
         dispatch({
             type: "info",
-            message: "Donation Failed!",
+            message: "Withdraw Failed!",
             title: "Transaction Notification",
             position: "topR",
         })
@@ -122,7 +123,7 @@ export default function WithdrawProceeds() {
             {" "}
             {isWeb3Enabled && owner == userAddress ? (
                 <div>
-                    You're the Owner :D Available to withdraw: {withdrawableProceeds.toString()}
+                    You're the Owner :D
                     <input
                         maxLength={21 - (decimals || 6)}
                         type="number"
@@ -150,6 +151,8 @@ export default function WithdrawProceeds() {
                             <div>Withdraw</div>
                         )}
                     </button>
+                    <br></br>
+                    Available to withdraw: {withdrawableProceeds.toString()}
                 </div>
             ) : (
                 // <div>Not Owner</div>
