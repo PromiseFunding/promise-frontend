@@ -69,7 +69,7 @@ export default function WithdrawProceeds() {
     }
 
     const initData = async function () {
-        if (isWeb3Enabled) {
+        if (isWeb3Enabled && fundAddress) {
             const ownerFromCall = await getOwner()
             setOwner((ownerFromCall as string).toLowerCase())
             let withdrawableProceedsFromCall = (await getWithdrawableProceeds()) as number
@@ -94,9 +94,20 @@ export default function WithdrawProceeds() {
     }, [account])
 
     const handleChange = async (event: { target: { value: SetStateAction<string> } }) => {
-        const max = withdrawableProceeds || 1
-        const value = Math.max(0, Math.min(max as number, Number(event.target.value)))
-        setVal(value.toString())
+        const max = withdrawableProceeds
+        if (withdrawableProceeds == 0) {
+            setVal("0")
+        } else if ((event.target.value as unknown as number) > 0) {
+            const value = Math.max(
+                1 * 10 ** -decimals!,
+                Math.min(max as number, Number(Number(event.target.value).toFixed(decimals!)))
+            )
+            setVal(value.toString())
+        } else if ((event.target.value as unknown as number) < 0) {
+            setVal("0")
+        } else {
+            setVal(event.target.value)
+        }
     }
 
     const handleNewNotification = function () {
@@ -127,7 +138,6 @@ export default function WithdrawProceeds() {
                     <input
                         maxLength={21 - (decimals || 6)}
                         type="number"
-                        min="0"
                         id="message"
                         name="message"
                         onChange={handleChange}

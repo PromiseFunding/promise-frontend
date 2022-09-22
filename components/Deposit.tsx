@@ -31,10 +31,6 @@ export default function Deposit() {
 
     const poolAddress = chainId in addresses ? networkConfig[chainIdNum].poolAddress : null
 
-    const [timeLock, setTimeLock] = useState("0") //changes entranceFee to a stateHook and triggers a rerender for us... entranceFee starts out as 0
-    //setEntranceFee triggers the update
-    const [owner, setOwner] = useState("0")
-
     const [val, setVal] = useState("")
 
     const dispatch = useNotification()
@@ -50,7 +46,6 @@ export default function Deposit() {
         params: {
             _spender: fundAddress,
             _value: BigNumber.from((Number(val) * 10 ** decimals!).toString()),
-            // _value: BigNumber.from(Number(val)).mul(BigNumber.from(10).pow(decimals)); might need to use this instead
         },
     })
 
@@ -61,45 +56,8 @@ export default function Deposit() {
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
 
-    /* View Functions */
-    // const { runContractFunction: getAssetAddress } = useWeb3Contract({
-    //     abi: abi,
-    //     contractAddress: fundAddress!, // specify the networkId
-    //     functionName: "getAssetAddress",
-    //     params: {},
-    // })
-
-    const { runContractFunction: getTimeLock } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!, // specify the networkId
-        functionName: "getTimeLock",
-        params: {},
-    })
-
-    const { runContractFunction: getOwner } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getOwner",
-        params: {},
-    })
-
-    async function updateUI() {
-        const timeFromCall = ((await getTimeLock()) as BigNumber).toString()
-        const ownerFromCall = ((await getOwner()) as BigNumber).toString()
-        setTimeLock(timeFromCall)
-        setOwner(ownerFromCall)
-        //decimal = (await decimals()) as BigNumber
-    }
-
-    useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
-            updateUI()
-        }
-    }, [isWeb3Enabled, fundAddress])
 
     const handleSuccess = async function () {
-        // await tx.wait(1)
-
         const fundTx: any = await fund()
         try {
             await fundTx.wait(1)
@@ -108,11 +66,22 @@ export default function Deposit() {
             console.log(error)
             handleNewNotification1()
         }
-        updateUI()
     }
 
     const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
-        setVal(event.target.value)
+        //making the max donation 100,000,000 tokens at a time
+        const max = 100000000
+        //for now we are only allowing to two decimal places for deposits and withdraws
+        // const value = Math.round((Math.max(0, Math.min(max as number, Number(event.target.value))) + Number.EPSILON) * 100) / 100
+        // setVal(value.toString())
+        if ((event.target.value as unknown as number) > 0) {
+            const value = Math.max(1 * 10 ** -(decimals!), Math.min(max as number, Number(Number(event.target.value).toFixed(decimals!))))
+            setVal(value.toString())
+        } else if ((event.target.value as unknown as number) < 0) {
+            setVal("0")
+        } else {
+            setVal(event.target.value)
+        }
     }
 
     const handleNewNotification = function () {
@@ -142,6 +111,7 @@ export default function Deposit() {
                         maxLength={21 - (decimals || 6)}
                         type="number"
                         min="0"
+                        placeholder="0.00"
                         id="message"
                         name="message"
                         onChange={handleChange}
@@ -151,12 +121,6 @@ export default function Deposit() {
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async function () {
-                            //gets asset address and decimals
-                            // const assetFromCall = (
-                            //     (await getAssetAddress()) as BigNumber
-                            // ).toString()
-                            // setAsset(assetFromCall)
-
                             await approve({
                                 onSuccess: () => handleSuccess(),
                                 onError: (error) => console.log(error),
