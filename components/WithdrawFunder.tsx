@@ -61,7 +61,7 @@ export default function Withdraw() {
         const amountFundedFromCall = (await getFundAmount()) as number
         const timeLeftFromCall = ((await getTimeLeft()) as BigNumber).toString()
         setTimeLeft(timeLeftFromCall)
-        setAmountFunded((amountFundedFromCall / 10 ** decimals!))
+        setAmountFunded(amountFundedFromCall / 10 ** decimals!)
     }
 
     useEffect(() => {
@@ -73,6 +73,7 @@ export default function Withdraw() {
     const handleSuccess = async function (tx: ContractTransaction) {
         try {
             await tx.wait(1)
+            setVal("0")
             handleNewNotification()
         } catch (error) {
             console.log(error)
@@ -83,8 +84,19 @@ export default function Withdraw() {
 
     const handleChange = async (event: { target: { value: SetStateAction<string> } }) => {
         const max = amountFunded
-        const value = Math.max(0, Math.min(max as number, Number(event.target.value)))
-        setVal(value.toString())
+        if (amountFunded == 0) {
+            setVal("0")
+        } else if ((event.target.value as unknown as number) > 0) {
+            const value = Math.max(
+                1 * 10 ** -decimals!,
+                Math.min(max as number, Number(Number(event.target.value).toFixed(decimals!)))
+            )
+            setVal(value.toString())
+        } else if ((event.target.value as unknown as number) <= 0) {
+            setVal("0")
+        } else {
+            setVal(event.target.value)
+        }
     }
 
     const handleNewNotification = function () {
@@ -99,7 +111,7 @@ export default function Withdraw() {
     const handleNewNotification1 = function () {
         dispatch({
             type: "info",
-            message: "Donation Failed!",
+            message: "Withdraw Failed!",
             title: "Transaction Notification",
             position: "topR",
         })
@@ -109,38 +121,47 @@ export default function Withdraw() {
         <div className="p-5">
             Withdraw from Contract
             {isWeb3Enabled && fundAddress ? (
-                <div className="">
-                    <input
-                        maxLength={21 - (decimals || 6)}
-                        type="number"
-                        min="0"
-                        id="message"
-                        name="message"
-                        onChange={handleChange}
-                        value={val}
-                        autoComplete="off"
-                    />
-                    <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
-                        onClick={async function () {
-                            await withdraw({
-                                onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
-                                onError: (error) => console.log(error),
-                            })
-                        }}
-                        disabled={isLoading || isFetching}
-                    >
-                        {isLoading || isFetching ? (
-                            <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
-                        ) : (
-                            <div>Withdraw</div>
-                        )}
-                    </button>
-                    <h2>Withdraw Amount: {val} USDT</h2>
-                    <h2>Your Information:</h2>
-                    <div>Amount Funded: {amountFunded} USDT</div>
-                    <div>Time left: {timeLeft} seconds</div>
-                </div>
+                timeLeft == "0" ? (
+                    <div className="">
+                        <input
+                            maxLength={21 - (decimals || 6)}
+                            type="number"
+                            placeholder="0.00"
+                            id="message1"
+                            name="message"
+                            onChange={handleChange}
+                            value={val}
+                            autoComplete="off"
+                        />
+                        <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
+                            onClick={async function () {
+                                await withdraw({
+                                    onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
+                                    onError: (error) => console.log(error),
+                                })
+                            }}
+                            disabled={isLoading || isFetching}
+                        >
+                            {isLoading || isFetching ? (
+                                <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
+                            ) : (
+                                <div>Withdraw</div>
+                            )}
+                        </button>
+                        <h2>Withdraw Amount: {val} USDT</h2>
+                        <h2>Your Information:</h2>
+                        <div>Amount Funded: {amountFunded} USDT</div>
+                        <div>Time left: {timeLeft} seconds</div>
+                    </div>
+                ) : (
+                    <>
+                        <h1>Time Lock Still Initiated. Unable to Withdraw</h1>
+                        <h2>Your Information:</h2>
+                        <div>Amount Funded: {amountFunded} USDT</div>
+                        <div>Time left: {timeLeft} seconds</div>
+                    </>
+                )
             ) : (
                 <div>No Funds Detected</div>
             )}
