@@ -51,7 +51,7 @@ export default function Deposit() {
 
     const { runContractFunction: fund } = useWeb3Contract({
         abi: abi,
-        contractAddress: fundAddress!, // specify the networkId
+        contractAddress: "0x3448Eb8182cD373c462a50E276E73ebaB5c4F681", // specify the networkId
         functionName: "fund",
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
