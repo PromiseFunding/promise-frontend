@@ -31,10 +31,19 @@ export default function PoolInfo() {
     //setEntranceFee triggers the update
     const [owner, setOwner] = useState("0")
 
+    const [asset, setAsset] = useState("0")
+
     const { runContractFunction: getTimeLock } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!, // specify the networkId
         functionName: "getTimeLock",
+        params: {},
+    })
+
+    const { runContractFunction: getAssetAddy } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!, // specify the networkId
+        functionName: "getAssetAddress",
         params: {},
     })
 
@@ -48,6 +57,8 @@ export default function PoolInfo() {
     async function updateUI() {
         const timeFromCall = ((await getTimeLock()) as BigNumber).toString()
         const ownerFromCall = ((await getOwner()) as BigNumber).toString()
+        const assetFromCall = ((await getAssetAddy()) as BigNumber).toString()
+        setAsset(assetFromCall)
         setTimeLock(timeFromCall)
         setOwner(ownerFromCall)
     }
@@ -67,6 +78,7 @@ export default function PoolInfo() {
                     <div>Owner Address: {owner} </div>
                     <div>User Address: {account}</div>
                     <div> Pool Address: {poolAddress} </div>
+                    <div> Asset Address: {asset} </div>
                 </div>
             ) : (
                 <div>No Fund Address Detected</div>

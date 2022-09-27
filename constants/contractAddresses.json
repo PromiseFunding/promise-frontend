@@ -1,1 +1,6 @@
-{"5":{"YieldFund":["0xed7494822620da9e15CeE453F1516AEf69cBB97F"]},"31337":{"YieldFund":["0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"]}}
+{
+    "5": {
+        "YieldFund": ["0x726A6533f4d8106859C938042AB904A495ADE169"],
+        "FundFactory": ["0x2DE640Ad124100a25F986c09D7b318413c27715a"]
+    }
+}
