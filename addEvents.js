@@ -19,6 +19,11 @@ async function main() {
             ? addresses[chainId]["YieldFund"][addresses[chainId]["YieldFund"].length - 1]
             : null
 
+    const factoryAddress =
+        chainId in addresses
+            ? addresses[chainId]["FundFactory"][addresses[chainId]["FundFactory"].length - 1]
+            : null
+
     await Moralis.start({ serverUrl, appId, masterKey })
     console.log(`Working with Contract Address: ${fundAddress}`)
 
@@ -131,6 +136,24 @@ async function main() {
         tableName: "ProceedsWithdrawn",
     }
 
+    let fundCreatedOptions = {
+        chainId: moralisChainID,
+        sync_historical: true,
+        address: factoryAddress,
+        topic: "Created(address,address,address)",
+        abi: {
+            type: "event",
+            anonymous: false,
+            name: "Created",
+            inputs: [
+                { type: "address", name: "owner", indexed: true },
+                { type: "address", name: "assetAddress", indexed: true },
+                { type: "address", name: "fundAddress", indexed: true },
+            ],
+        },
+        tableName: "Created",
+    }
+
     const fundResponse = await Moralis.Cloud.run("watchContractEvent", funderAddedOptions, {
         useMasterKey: true,
     })
@@ -148,10 +171,16 @@ async function main() {
             useMasterKey: true,
         }
     )
+
+    const fundCreatedResponse = await Moralis.Cloud.run("watchContractEvent", fundCreatedOptions, {
+        useMasterKey: true,
+    })
+
     if (
         fundResponse.success &&
         fundsWithdrawnResponse.success &&
-        proceedsWithdrawnResponse.success
+        proceedsWithdrawnResponse.success &&
+        fundCreatedResponse.success
     ) {
         console.log("Success! Database Updated with watching events")
     } else {
