@@ -135,6 +135,7 @@ export default function WithdrawProceeds() {
             {isWeb3Enabled && owner == userAddress ? (
                 <div>
                     You're the Owner :D
+                    <br></br>
                     <input
                         maxLength={21 - (decimals || 6)}
                         type="number"
@@ -144,7 +145,6 @@ export default function WithdrawProceeds() {
                         value={val}
                         autoComplete="off"
                     />
-                    <br></br>
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async function () {
