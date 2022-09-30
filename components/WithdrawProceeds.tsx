@@ -5,11 +5,8 @@ import { SetStateAction, useEffect, useState } from "react"
 import { Dropdown, useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { BigNumber, ethers, ContractTransaction } from "ethers"
 import { sendError } from "next/dist/server/api-utils"
-import { networkConfig } from "../helper-config"
-
-interface contractAddressesInterface {
-    [key: string]: { YieldFund: string[] }
-}
+import { networkConfig } from "../config/helper-config"
+import { contractAddressesInterface } from "../config/types"
 
 export default function WithdrawProceeds() {
     const addresses: contractAddressesInterface = contractAddresses
@@ -134,7 +131,7 @@ export default function WithdrawProceeds() {
             {" "}
             {isWeb3Enabled && owner == userAddress ? (
                 <div>
-                    You're the Owner :D
+                    You are the Owner :D
                     <br></br>
                     <input
                         maxLength={21 - (decimals || 6)}

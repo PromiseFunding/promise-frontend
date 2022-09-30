@@ -5,16 +5,9 @@ import { SetStateAction, useEffect, useState } from "react"
 import { Dropdown, useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { BigNumber, ethers, ContractTransaction } from "ethers"
 import { sendError } from "next/dist/server/api-utils"
-import { networkConfig } from "../helper-config"
-import { tokenConfig } from "../token-config"
-
-type Dictionary = {
-    [x: string]: string[];
-};
-
-interface contractAddressesInterface {
-    [key: string]: Dictionary
-}
+import { networkConfig } from "../config/helper-config"
+import { tokenConfig } from "../config/token-config"
+import { contractAddressesInterface } from "../config/types"
 
 //contract is already deployed... trying to look at features of contract
 export default function NewFund() {
@@ -92,16 +85,15 @@ export default function NewFund() {
 
     const handleChangeDetails = () => {
         const tokenAddress =
-            chainId in addresses ? tokenConfig[chainIdNum][assetValue].assetAddress : null
+            chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].assetAddress : null
         const poolAddress =
-            chainId in addresses ? tokenConfig[chainIdNum][assetValue].poolAddress : null
+            chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].poolAddress : null
         const aaveAddress =
-            chainId in addresses ? tokenConfig[chainIdNum][assetValue].aaveTokenAddress : null
+            chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].aaveTokenAddress : null
 
         setAssetAddy(tokenAddress!)
         setPoolAddy(poolAddress!)
         setAaveAddy(aaveAddress!)
-
     }
 
     const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
