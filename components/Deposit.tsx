@@ -5,11 +5,8 @@ import { SetStateAction, useEffect, useState } from "react"
 import { Dropdown, useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { BigNumber, ethers, ContractTransaction } from "ethers"
 import { sendError } from "next/dist/server/api-utils"
-import { networkConfig } from "../helper-config"
-
-interface contractAddressesInterface {
-    [key: string]: { YieldFund: string[] }
-}
+import { networkConfig } from "../config/helper-config"
+import { contractAddressesInterface } from "../config/types"
 
 //contract is already deployed... trying to look at features of contract
 export default function Deposit() {
@@ -56,7 +53,6 @@ export default function Deposit() {
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
 
-
     const handleSuccess = async function () {
         const fundTx: any = await fund()
         try {
@@ -75,7 +71,10 @@ export default function Deposit() {
         // const value = Math.round((Math.max(0, Math.min(max as number, Number(event.target.value))) + Number.EPSILON) * 100) / 100
         // setVal(value.toString())
         if ((event.target.value as unknown as number) > 0) {
-            const value = Math.max(1 * 10 ** -(decimals!), Math.min(max as number, Number(Number(event.target.value).toFixed(decimals!))))
+            const value = Math.max(
+                1 * 10 ** -decimals!,
+                Math.min(max as number, Number(Number(event.target.value).toFixed(decimals!)))
+            )
             setVal(value.toString())
         } else if ((event.target.value as unknown as number) < 0) {
             setVal("0")

@@ -5,11 +5,8 @@ import { SetStateAction, useEffect, useState } from "react"
 import { Dropdown, useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { BigNumber, ethers, ContractTransaction } from "ethers"
 import { sendError } from "next/dist/server/api-utils"
-import { networkConfig } from "../helper-config"
-
-interface contractAddressesInterface {
-    [key: string]: { YieldFund: string[] }
-}
+import { networkConfig } from "../config/helper-config"
+import { contractAddressesInterface } from "../config/types"
 
 //contract is already deployed... trying to look at features of contract
 export default function Withdraw() {
