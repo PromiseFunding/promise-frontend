@@ -18,7 +18,7 @@ export default function NewFund() {
     //fundaddress will be for factory pattern here
     const fundAddress =
         chainId in addresses
-            ? addresses[chainId]["YieldFund"][addresses[chainId]["YieldFund"].length - 1]
+            ? addresses[chainId]["YieldFundAAVE"][addresses[chainId]["YieldFundAAVE"].length - 1]
             : null
 
     const yieldAddress =
@@ -58,13 +58,13 @@ export default function NewFund() {
     }
 
     const {
-        runContractFunction: createYieldFund,
+        runContractFunction: createYieldFundAAVE,
         isLoading,
         isFetching,
     } = useWeb3Contract({
         abi: FundFactory,
         contractAddress: yieldAddress!,
-        functionName: "createYieldFund",
+        functionName: "createYieldFundAAVE",
         params: {
             lockTime: time,
             assetAddress: assetAddy,
@@ -145,7 +145,7 @@ export default function NewFund() {
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async function () {
-                            await createYieldFund()
+                            await createYieldFundAAVE()
                         }}
                     >
                         <div>Create New Fundraise</div>

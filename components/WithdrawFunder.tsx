@@ -14,7 +14,7 @@ export default function Withdraw() {
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
 
-    const fundAddress = chainId in addresses ? addresses[chainId]["YieldFund"][0] : null
+    const fundAddress = chainId in addresses ? addresses[chainId]["YieldFundAAVE"][0] : null
 
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)

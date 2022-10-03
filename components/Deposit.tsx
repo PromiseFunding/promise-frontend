@@ -16,7 +16,7 @@ export default function Deposit() {
 
     const fundAddress =
         chainId in addresses
-            ? addresses[chainId]["YieldFund"][addresses[chainId]["YieldFund"].length - 1]
+            ? addresses[chainId]["YieldFundAAVE"][addresses[chainId]["YieldFundAAVE"].length - 1]
             : null
 
     //TODO: get helper-config working instead!... gets rid of decimal function
@@ -48,7 +48,7 @@ export default function Deposit() {
 
     const { runContractFunction: fund } = useWeb3Contract({
         abi: abi,
-        contractAddress: "0x3448Eb8182cD373c462a50E276E73ebaB5c4F681", // specify the networkId
+        contractAddress: fundAddress!, // specify the networkId
         functionName: "fund",
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
