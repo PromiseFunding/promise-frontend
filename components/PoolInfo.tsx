@@ -68,18 +68,26 @@ export default function PoolInfo() {
 
     return (
         <div className="py-5 px-5">
-            {isWeb3Enabled && fundAddress ? (
-                <div className="">
-                    <h2>Pool Information:</h2>
-                    <div>TimeLock: {timeLock} seconds</div>
-                    <div>Owner Address: {owner} </div>
-                    <div>User Address: {account}</div>
-                    <div> Pool Address: {poolAddress} </div>
-                    <div> Asset Address: {asset} </div>
-                </div>
-            ) : (
-                <div>No Fund Address Detected</div>
-            )}
+            <div className="my-20 w-[600px] drop-shadow rounded-md">
+                <details className="bg-slate-400 open:bg-slate-200 duration-300">
+                    <summary className="bg-inherit px-5 py-3 text-lg cursor-pointer">
+                        Fund / Pool Information:
+                    </summary>
+                    <div className="bg-white px-5 py-3 border border-gray-300 text-sm font-light">
+                        {isWeb3Enabled && fundAddress ? (
+                            <div className="">
+                                <div>TimeLock: {timeLock} seconds</div>
+                                <div>Owner Address: {owner} </div>
+                                <div>User Address: {account}</div>
+                                <div> Pool Address: {poolAddress} </div>
+                                <div> Asset Address: {asset} </div>
+                            </div>
+                        ) : (
+                            <div>No Fund Address Detected</div>
+                        )}
+                    </div>
+                </details>
+            </div>
         </div>
     )
 }
