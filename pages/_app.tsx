@@ -2,7 +2,6 @@ import "../styles/globals.css"
 import { MoralisProvider } from "react-moralis"
 import { NotificationProvider } from "web3uikit"
 import type { AppProps } from "next/app"
-import Navbar from "../components/Navbar"
 import { BrowserRouter as Router, Routes, Route}
     from 'react-router-dom';
 import Home from './index';
@@ -15,7 +14,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     return (
         <MoralisProvider serverUrl={SERVER_URL} appId={APP_ID}>
             <NotificationProvider>
-                <Navbar />
                 <Component {...pageProps} />
             </NotificationProvider>
         </MoralisProvider>
