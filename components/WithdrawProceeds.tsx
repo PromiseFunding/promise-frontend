@@ -15,7 +15,7 @@ export default function WithdrawProceeds() {
 
     const fundAddress =
         chainId in addresses
-            ? addresses[chainId]["YieldFund"][addresses[chainId]["YieldFund"].length - 1]
+            ? addresses[chainId]["YieldFundAAVE"][addresses[chainId]["YieldFundAAVE"].length - 1]
             : null
     const [owner, setOwner] = useState("0")
     const [userAddress, setAddress] = useState("0")

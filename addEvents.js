@@ -2,10 +2,6 @@ const Moralis = require("moralis-v1/node")
 require("dotenv").config()
 const contractAddresses = require("./constants/contractAddresses.json")
 
-// interface contractAddressesInterface {
-//     [key: string]: { YieldFund: string[] }
-// }
-
 let chainId = process.env.chainId || 31337
 let moralisChainID = chainId == "31337" ? "1337" : chainId
 const addresses = contractAddresses
@@ -16,7 +12,7 @@ const masterKey = process.env.MASTER_KEY
 async function main() {
     const fundAddress =
         chainId in addresses
-            ? addresses[chainId]["YieldFund"][addresses[chainId]["YieldFund"].length - 1]
+            ? addresses[chainId]["YieldFundAAVE"][addresses[chainId]["YieldFundAAVE"].length - 1]
             : null
 
     const factoryAddress =
