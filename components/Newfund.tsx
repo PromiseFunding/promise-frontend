@@ -113,8 +113,8 @@ export default function NewFund() {
     //Locktime, assetaddress, aaveAddress, poolAddress
 
     return (
-        <div className="p-5">
-            Depositing To Contract
+        <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500 flex flex-col">
+            <h1 className="font-blog text-3xl text-slate-200 border-b-2">Create a New Fund</h1>
             {isWeb3Enabled && yieldAddress ? (
                 <div className="">
                     <div>Enter Locktime (in seconds)</div>
@@ -129,19 +129,21 @@ export default function NewFund() {
                         onChange={handleChange}
                         value={time}
                         autoComplete="off"
+                        className="text-slate-800"
                     />
-                    <br></br>
-                    <br></br>
                     <div>
-                        Choose Asset
-                        <select id="assetName" onChange={handleChangeAsset}>
+                        <p>Choose Asset: </p>
+                        <select
+                            id="assetName"
+                            onChange={handleChangeAsset}
+                            className="text-slate-800"
+                        >
                             <option value="USDC">USDC</option>
                             <option value="USDT">USDT</option>
                             <option value="DAI">DAI</option>
                             <option value="WETH">WETH</option>
                         </select>
                     </div>
-                    <br></br>
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async function () {

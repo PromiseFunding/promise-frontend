@@ -102,7 +102,7 @@ export default function Deposit() {
     }
 
     return (
-        <div className="p-5">
+        <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500">
             Depositing To Contract
             {isWeb3Enabled && fundAddress ? (
                 <div className="">

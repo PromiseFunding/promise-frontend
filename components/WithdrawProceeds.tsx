@@ -127,10 +127,9 @@ export default function WithdrawProceeds() {
     }
 
     return (
-        <div className="p-5">
-            {" "}
+        <div className="flex flex-col">
             {isWeb3Enabled && owner == userAddress ? (
-                <div>
+                <div className="flex-1 p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500">
                     You are the Owner :D
                     <br></br>
                     <input
@@ -163,7 +162,7 @@ export default function WithdrawProceeds() {
                 </div>
             ) : (
                 // <div>Not Owner</div>
-                <div></div>
+                <p></p>
             )}{" "}
         </div>
     )

@@ -115,7 +115,7 @@ export default function Withdraw() {
     }
 
     return (
-        <div className="p-5">
+        <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500">
             Withdraw from Contract
             {isWeb3Enabled && fundAddress ? (
                 timeLeft == "0" ? (
