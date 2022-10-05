@@ -5,18 +5,15 @@ import { SetStateAction, useEffect, useState } from "react"
 import { Dropdown, useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { BigNumber, ethers, ContractTransaction } from "ethers"
 import { networkConfig } from "../config/helper-config"
-import { contractAddressesInterface } from "../config/types"
+import { contractAddressesInterface, propType } from "../config/types"
 
 //contract is already deployed... trying to look at features of contract
-export default function PoolInfo() {
+export default function PoolInfo(props: propType) {
+    const fundAddress = props.fundAddress
+
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
-
-    const fundAddress =
-        chainId in addresses
-            ? addresses[chainId]["YieldFundAAVE"][addresses[chainId]["YieldFundAAVE"].length - 1]
-            : null
 
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)
@@ -37,7 +34,7 @@ export default function PoolInfo() {
         params: {},
     })
 
-    const { runContractFunction: getAssetAddy } = useWeb3Contract({
+    const { runContractFunction: getAssetAddress } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!, // specify the networkId
         functionName: "getAssetAddress",
@@ -54,7 +51,7 @@ export default function PoolInfo() {
     async function updateUI() {
         const timeFromCall = ((await getTimeLock()) as BigNumber).toString()
         const ownerFromCall = ((await getOwner()) as BigNumber).toString()
-        const assetFromCall = ((await getAssetAddy()) as BigNumber).toString()
+        const assetFromCall = ((await getAssetAddress()) as BigNumber).toString()
         setAsset(assetFromCall)
         setTimeLock(timeFromCall)
         setOwner(ownerFromCall)

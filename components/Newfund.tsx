@@ -1,62 +1,37 @@
-import { contractAddresses, erc20Abi, FundFactory, abi} from "../constants"
+import { contractAddresses, FundFactory } from "../constants"
 // dont export from moralis when using react
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { SetStateAction, useEffect, useState } from "react"
-import { Dropdown, useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-import { BigNumber, ethers, ContractTransaction } from "ethers"
-import { sendError } from "next/dist/server/api-utils"
+import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { networkConfig } from "../config/helper-config"
 import { tokenConfig } from "../config/token-config"
 import { contractAddressesInterface } from "../config/types"
 
-// type YieldFund = {
-//     abi: any;
-// };
 //contract is already deployed... trying to look at features of contract
 export default function NewFund() {
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
 
-    //fundaddress will be for factory pattern here
-    const fundAddress =
-        chainId in addresses
-            ? addresses[chainId]["YieldFundAAVE"][addresses[chainId]["YieldFundAAVE"].length - 1]
-            : null
-
     const yieldAddress =
         chainId in addresses
             ? addresses[chainId]["FundFactory"][addresses[chainId]["FundFactory"].length - 1]
             : null
-    //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)
 
     const decimals = chainId in addresses ? networkConfig[chainIdNum].decimals : null
 
-    //const tokenAddress = chainId in addresses ? tokenConfig[chainIdNum]["USDC"].assetAddress : null
-
-    // const poolAddress = chainId in addresses ? networkConfig[chainIdNum].poolAddress : null
-
     const [time, setTime] = useState("")
-
-    //const [amount, setAmount] = useState({})
 
     const [assetValue, setAssetValue] = useState("USDC")
 
-    const [assetAddy, setAssetAddy] = useState("")
+    const [assetAddress, setAssetAddress] = useState("")
 
-    const [poolAddy, setPoolAddy] = useState("")
+    const [poolAddress, setPoolAddress] = useState("")
 
-    const [aaveAddy, setAaveAddy] = useState("")
+    const [aaveAddress, setAaveAddress] = useState("")
 
     const dispatch = useNotification()
-
-    const { runContractFunction: getAllYieldFunds } = useWeb3Contract({
-        abi: FundFactory,
-        contractAddress: yieldAddress!, // specify the networkId
-        functionName: "getAllYieldFunds",
-        params: {},
-    })
 
     const {
         runContractFunction: createYieldFundAAVE,
@@ -68,9 +43,9 @@ export default function NewFund() {
         functionName: "createYieldFundAAVE",
         params: {
             lockTime: time,
-            assetAddress: assetAddy,
-            aaveTokenAddress: aaveAddy,
-            poolAddress: poolAddy,
+            assetAddress: assetAddress,
+            aaveTokenAddress: aaveAddress,
+            poolAddress: poolAddress,
         },
     })
 
@@ -92,9 +67,9 @@ export default function NewFund() {
         const aaveAddress =
             chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].aaveTokenAddress : null
 
-        setAssetAddy(tokenAddress!)
-        setPoolAddy(poolAddress!)
-        setAaveAddy(aaveAddress!)
+        setAssetAddress(tokenAddress!)
+        setPoolAddress(poolAddress!)
+        setAaveAddress(aaveAddress!)
     }
 
     const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
@@ -110,19 +85,6 @@ export default function NewFund() {
             setTime("0")
         }
     }
-
-    // async function updateUI() {
-    //     const amountFundedFromCall = (await getAllYieldFunds()) as YieldFund[]
-    //     setAmount(amountFundedFromCall)
-    // }
-
-    // useEffect(() => {
-    //     if (isWeb3Enabled && fundAddress) {
-    //         updateUI()
-    //     }
-    // }, [isWeb3Enabled, fundAddress])
-
-    //Locktime, assetaddress, aaveAddress, poolAddress
 
     return (
         <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500 flex flex-col">
@@ -142,7 +104,7 @@ export default function NewFund() {
                         value={time}
                         autoComplete="off"
                         className="text-slate-800"
-                    />                   
+                    />
                     <div>
                         <p>Choose Asset: </p>
                         <select
