@@ -9,6 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/material": "^5.10.8",
     "moralis": "^2.4.0",
     "moralis-admin-cli": "^2.1.16",
     "moralis-v1": "^1.11.0",
