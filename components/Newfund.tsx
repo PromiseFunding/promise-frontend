@@ -1,4 +1,4 @@
-import { contractAddresses, erc20Abi, FundFactory } from "../constants"
+import { contractAddresses, erc20Abi, FundFactory, abi} from "../constants"
 // dont export from moralis when using react
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { SetStateAction, useEffect, useState } from "react"
@@ -9,6 +9,9 @@ import { networkConfig } from "../config/helper-config"
 import { tokenConfig } from "../config/token-config"
 import { contractAddressesInterface } from "../config/types"
 
+// type YieldFund = {
+//     abi: any;
+// };
 //contract is already deployed... trying to look at features of contract
 export default function NewFund() {
     const addresses: contractAddressesInterface = contractAddresses
@@ -36,6 +39,8 @@ export default function NewFund() {
 
     const [time, setTime] = useState("")
 
+    //const [amount, setAmount] = useState({})
+
     const [assetValue, setAssetValue] = useState("USDC")
 
     const [assetAddy, setAssetAddy] = useState("")
@@ -46,16 +51,12 @@ export default function NewFund() {
 
     const dispatch = useNotification()
 
-    const handleSuccess = async function () {
-        // const fundTx: any = await create()
-        // try {
-        //     await createTx.wait(1)
-        //     handleNewNotification()
-        // } catch (error) {
-        //     console.log(error)
-        //    handleNewNotification1()
-        // }
-    }
+    const { runContractFunction: getAllYieldFunds } = useWeb3Contract({
+        abi: FundFactory,
+        contractAddress: yieldAddress!, // specify the networkId
+        functionName: "getAllYieldFunds",
+        params: {},
+    })
 
     const {
         runContractFunction: createYieldFundAAVE,
@@ -110,6 +111,17 @@ export default function NewFund() {
         }
     }
 
+    // async function updateUI() {
+    //     const amountFundedFromCall = (await getAllYieldFunds()) as YieldFund[]
+    //     setAmount(amountFundedFromCall)
+    // }
+
+    // useEffect(() => {
+    //     if (isWeb3Enabled && fundAddress) {
+    //         updateUI()
+    //     }
+    // }, [isWeb3Enabled, fundAddress])
+
     //Locktime, assetaddress, aaveAddress, poolAddress
 
     return (
@@ -130,7 +142,7 @@ export default function NewFund() {
                         value={time}
                         autoComplete="off"
                         className="text-slate-800"
-                    />
+                    />                   
                     <div>
                         <p>Choose Asset: </p>
                         <select

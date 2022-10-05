@@ -30,38 +30,53 @@ export default function Deposit() {
 
     const [val, setVal] = useState("")
 
+    const [owner, setOwner] = useState("0")
+
     const dispatch = useNotification()
 
     const {
-        runContractFunction: approve,
+        runContractFunction: transfer,
         isLoading,
         isFetching,
     } = useWeb3Contract({
         abi: erc20Abi,
         contractAddress: tokenAddress!,
-        functionName: "approve",
+        functionName: "transfer",
         params: {
-            _spender: fundAddress,
+            _to: owner,
             _value: BigNumber.from((Number(val) * 10 ** decimals!).toString()),
         },
     })
 
-    const { runContractFunction: fund } = useWeb3Contract({
+    const { runContractFunction: getOwner } = useWeb3Contract({
         abi: abi,
-        contractAddress: fundAddress!, // specify the networkId
-        functionName: "fund",
-        params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
+        contractAddress: fundAddress!,
+        functionName: "getOwner",
+        params: {},
     })
 
-    const handleSuccess = async function () {
-        const fundTx: any = await fund()
+    async function updateUI() {
+        const ownerFromCall = ((await getOwner()) as BigNumber).toString()
+        setOwner(ownerFromCall)
+    }
+
+    useEffect(() => {
+        if (isWeb3Enabled && fundAddress) {
+            updateUI()
+        }
+    }, [isWeb3Enabled, fundAddress])
+
+
+    const handleSuccess = async function (tx: ContractTransaction) {
         try {
-            await fundTx.wait(1)
+            await tx.wait(1)
+            setVal("0")
             handleNewNotification()
         } catch (error) {
             console.log(error)
             handleNewNotification1()
         }
+        updateUI()
     }
 
     const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
@@ -103,7 +118,7 @@ export default function Deposit() {
 
     return (
         <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500">
-            Lossless Yield Generating Donation
+            Straight Donation
             {isWeb3Enabled && fundAddress ? (
                 <div className="">
                     <input
@@ -120,8 +135,8 @@ export default function Deposit() {
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async function () {
-                            await approve({
-                                onSuccess: () => handleSuccess(),
+                            await transfer({
+                                onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
                                 onError: (error) => console.log(error),
                             })
                         }}
@@ -134,6 +149,8 @@ export default function Deposit() {
                         )}
                     </button>
                     <h2>Deposit Amount: {val} USDT</h2>
+                    <br></br>
+                    <h6 className="font-blog text-sm text-slate-200">Note: This is a non-refundable or withdrawable donation.</h6>
                 </div>
             ) : (
                 <div>No Fund Address Detected</div>
