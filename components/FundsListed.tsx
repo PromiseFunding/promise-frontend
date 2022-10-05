@@ -46,7 +46,7 @@ export default function FundsListed() {
                 <ul className="flex flex-row flex-wrap">
                     {allFunds.map((fund) => (
                         // eslint-disable-next-line react/jsx-key
-                        <li className="px-5 py-5">
+                        <li key={fund} className="px-5 py-5">
                             {" "}
                             <Card sx={{ maxWidth: 345, minHeight: 250 }}>
                                 <CardActionArea href={`/details/?fund=${fund}`}>

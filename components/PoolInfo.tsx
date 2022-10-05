@@ -34,7 +34,7 @@ export default function PoolInfo(props: propType) {
         params: {},
     })
 
-    const { runContractFunction: getAssetAddy } = useWeb3Contract({
+    const { runContractFunction: getAssetAddress } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!, // specify the networkId
         functionName: "getAssetAddress",
@@ -51,7 +51,7 @@ export default function PoolInfo(props: propType) {
     async function updateUI() {
         const timeFromCall = ((await getTimeLock()) as BigNumber).toString()
         const ownerFromCall = ((await getOwner()) as BigNumber).toString()
-        const assetFromCall = ((await getAssetAddy()) as BigNumber).toString()
+        const assetFromCall = ((await getAssetAddress()) as BigNumber).toString()
         setAsset(assetFromCall)
         setTimeLock(timeFromCall)
         setOwner(ownerFromCall)

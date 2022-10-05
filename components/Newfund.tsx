@@ -25,11 +25,11 @@ export default function NewFund() {
 
     const [assetValue, setAssetValue] = useState("USDC")
 
-    const [assetAddy, setAssetAddy] = useState("")
+    const [assetAddress, setAssetAddress] = useState("")
 
-    const [poolAddy, setPoolAddy] = useState("")
+    const [poolAddress, setPoolAddress] = useState("")
 
-    const [aaveAddy, setAaveAddy] = useState("")
+    const [aaveAddress, setAaveAddress] = useState("")
 
     const dispatch = useNotification()
 
@@ -43,9 +43,9 @@ export default function NewFund() {
         functionName: "createYieldFundAAVE",
         params: {
             lockTime: time,
-            assetAddress: assetAddy,
-            aaveTokenAddress: aaveAddy,
-            poolAddress: poolAddy,
+            assetAddress: assetAddress,
+            aaveTokenAddress: aaveAddress,
+            poolAddress: poolAddress,
         },
     })
 
@@ -67,9 +67,9 @@ export default function NewFund() {
         const aaveAddress =
             chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].aaveTokenAddress : null
 
-        setAssetAddy(tokenAddress!)
-        setPoolAddy(poolAddress!)
-        setAaveAddy(aaveAddress!)
+        setAssetAddress(tokenAddress!)
+        setPoolAddress(poolAddress!)
+        setAaveAddress(aaveAddress!)
     }
 
     const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
