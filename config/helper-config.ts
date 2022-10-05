@@ -26,14 +26,11 @@ export const networkConfig: networkConfigInfo = {
         callbackGasLimit: "500000", // 500,000 gas
         blockConfirmations: 1,
         poolAddress: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512",
-        assetAddress: "0x5FbDB2315678afecb367f032d93F642f64180aa3",
         decimals: 6,
     },
     5: {
         name: "goerli",
         blockConfirmations: 6,
-        assetAddress: "0xC2C527C0CACF457746Bd31B2a698Fe89de2b6d49",
-        assetName: "TetherToken",
         poolAddress: "0x368EedF3f56ad10b9bC57eed4Dac65B26Bb667f6",
         decimals: 6,
     },

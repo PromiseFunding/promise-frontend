@@ -5,18 +5,15 @@ import { SetStateAction, useEffect, useState } from "react"
 import { Dropdown, useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { BigNumber, ethers, ContractTransaction } from "ethers"
 import { networkConfig } from "../config/helper-config"
-import { contractAddressesInterface } from "../config/types"
+import { contractAddressesInterface, propType } from "../config/types"
 
 //contract is already deployed... trying to look at features of contract
-export default function PoolInfo() {
+export default function PoolInfo(props: propType) {
+    const fundAddress = props.fundAddress
+
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
-
-    const fundAddress =
-        chainId in addresses
-            ? addresses[chainId]["YieldFundAAVE"][addresses[chainId]["YieldFundAAVE"].length - 1]
-            : null
 
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)

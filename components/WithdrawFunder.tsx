@@ -1,25 +1,34 @@
-import { contractAddresses, abi, erc20Abi } from "../constants"
+import { contractAddresses, abi } from "../constants"
 // dont export from moralis when using react
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { SetStateAction, useEffect, useState } from "react"
-import { Dropdown, useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-import { BigNumber, ethers, ContractTransaction } from "ethers"
-import { sendError } from "next/dist/server/api-utils"
+import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
+import { BigNumber, ContractTransaction } from "ethers"
 import { networkConfig } from "../config/helper-config"
-import { contractAddressesInterface } from "../config/types"
+import { contractAddressesInterface, propType } from "../config/types"
+import { tokenConfig } from "../config/token-config"
 
 //contract is already deployed... trying to look at features of contract
-export default function Withdraw() {
+export default function Withdraw(props: propType) {
+    const fundAddress = props.fundAddress
+    const tokenAddress = props.assetAddress
+
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
-
-    const fundAddress = chainId in addresses ? addresses[chainId]["YieldFundAAVE"][0] : null
 
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)
 
     const decimals = chainId in addresses ? networkConfig[chainIdNum].decimals : null
+
+    let coinName
+
+    for (const coin in tokenConfig[chainIdNum]) {
+        if (tokenConfig[chainIdNum][coin].assetAddress == tokenAddress) {
+            coinName = coin
+        }
+    }
 
     const [amountFunded, setAmountFunded] = useState(0)
 
@@ -146,9 +155,13 @@ export default function Withdraw() {
                                 <div>Withdraw</div>
                             )}
                         </button>
-                        <h2>Withdraw Amount: {val} USDT</h2>
+                        <h2>
+                            Withdraw Amount: {val || 0} {coinName}
+                        </h2>
                         <h2>Your Information:</h2>
-                        <div>Amount Funded: {amountFunded} USDT</div>
+                        <div>
+                            Amount Funded: {amountFunded} {coinName}
+                        </div>
                         <div>Time left: {timeLeft} seconds</div>
                     </div>
                 ) : (

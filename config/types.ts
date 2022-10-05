@@ -5,3 +5,8 @@ type Dictionary = {
 export interface contractAddressesInterface {
     [key: string]: Dictionary
 }
+
+export interface propType {
+    fundAddress: string
+    assetAddress: string
+}

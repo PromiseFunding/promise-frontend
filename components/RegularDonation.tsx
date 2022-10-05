@@ -2,31 +2,33 @@ import { contractAddresses, abi, erc20Abi } from "../constants"
 // dont export from moralis when using react
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { SetStateAction, useEffect, useState } from "react"
-import { Dropdown, useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-import { BigNumber, ethers, ContractTransaction } from "ethers"
-import { sendError } from "next/dist/server/api-utils"
+import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
+import { BigNumber, ContractTransaction } from "ethers"
 import { networkConfig } from "../config/helper-config"
-import { contractAddressesInterface } from "../config/types"
+import { contractAddressesInterface, propType } from "../config/types"
+import { tokenConfig } from "../config/token-config"
 
 //contract is already deployed... trying to look at features of contract
-export default function Deposit() {
+export default function Deposit(props: propType) {
+    const fundAddress = props.fundAddress
+    const tokenAddress = props.assetAddress
+
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
-
-    const fundAddress =
-        chainId in addresses
-            ? addresses[chainId]["YieldFundAAVE"][addresses[chainId]["YieldFundAAVE"].length - 1]
-            : null
 
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)
 
     const decimals = chainId in addresses ? networkConfig[chainIdNum].decimals : null
 
-    const tokenAddress = chainId in addresses ? networkConfig[chainIdNum].assetAddress : null
+    let coinName
 
-    const poolAddress = chainId in addresses ? networkConfig[chainIdNum].poolAddress : null
+    for (const coin in tokenConfig[chainIdNum]) {
+        if (tokenConfig[chainIdNum][coin].assetAddress == tokenAddress) {
+            coinName = coin
+        }
+    }
 
     const [val, setVal] = useState("")
 
@@ -65,7 +67,6 @@ export default function Deposit() {
             updateUI()
         }
     }, [isWeb3Enabled, fundAddress])
-
 
     const handleSuccess = async function (tx: ContractTransaction) {
         try {
@@ -148,9 +149,13 @@ export default function Deposit() {
                             <div>Donate</div>
                         )}
                     </button>
-                    <h2>Deposit Amount: {val} USDT</h2>
+                    <h2>
+                        Deposit Amount: {val || 0} {coinName}
+                    </h2>
                     <br></br>
-                    <h6 className="font-blog text-sm text-slate-200">Note: This is a non-refundable or withdrawable donation.</h6>
+                    <h6 className="font-blog text-sm text-slate-200">
+                        Note: This is a non-refundable or withdrawable donation.
+                    </h6>
                 </div>
             ) : (
                 <div>No Fund Address Detected</div>
