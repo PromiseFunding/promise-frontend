@@ -57,26 +57,41 @@ export default function SearchBar(props: propTypeFunds) {
             <h1 className="font-blog text-4xl text-slate-200">Discover Fundraisers</h1>
             <br></br>
             <div className="py-5 px-5">
-                    <ul className="flex flex-row flex-wrap">
-                        {filteredData.map((fund) => (
-                            <li key={fund} className="px-5 py-5">
-                                {" "}
-                                <Card sx={{ maxWidth: 345, minHeight: 250 }}>
-                                    <CardActionArea href={`/details/?fund=${fund}`}>
-                                        <CardContent>
-                                            <Typography gutterBottom variant="h5" component="div">
+                <ul className="flex flex-row flex-wrap">
+                    {filteredData.map((fund) => (
+                        <li key={fund} className="px-5 py-5">
+                            {" "}
+                            <Card sx={{ maxWidth: 320, minHeight: 290 }}>
+                                <CardActionArea href={`/details/?fund=${fund}`}>
+                                    <CardContent>
+                                        <div
+                                            style={{
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                                wordWrap: "break-word",
+                                                
+                                            }}
+                                        >
+                                            <Typography
+                                                gutterBottom
+                                                align="left"
+                                                variant="h5"
+                                                component="div"
+                                                fontSize= '18px'
+                                            >
                                                 Fundraiser at {fund}
                                             </Typography>
                                             <Typography
                                                 variant="body2"
                                                 color="text.secondary"
                                             ></Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                </Card>
-                            </li>
-                        ))}
-                    </ul>
+                                        </div>
+                                    </CardContent>
+                                </CardActionArea>
+                            </Card>
+                        </li>
+                    ))}
+                </ul>
             </div>
         </>
     )
