@@ -3,14 +3,16 @@ import CardContent from "@mui/material/CardContent"
 import Typography from "@mui/material/Typography"
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { CardActionArea, TextField } from "@mui/material"
 import SearchIcon from "@mui/icons-material/Search"
 import CloseIcon from "@mui/icons-material/Close"
 import { propType, propTypeFunds } from "../config/types"
+import { useMoralis } from "react-moralis"
 
 export default function SearchBar(props: propTypeFunds) {
-    const [filteredData, setFilteredData] = useState<string[]>([])
+    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
+    const [filteredData, setFilteredData] = useState<string[]>(props.fundAddressArray)
     const [inputText, setInputText] = useState("")
 
     let inputHandler = (e: { target: { value: string } }) => {
@@ -22,11 +24,15 @@ export default function SearchBar(props: propTypeFunds) {
         })
 
         if (inputText === "") {
-            setFilteredData([])
+            setFilteredData(props.fundAddressArray)
         } else {
             setFilteredData(newFilter)
         }
     }
+
+    useEffect(() => {
+        setFilteredData(props.fundAddressArray)
+    }, [props.fundAddressArray])
 
     return (
         <>
@@ -51,7 +57,6 @@ export default function SearchBar(props: propTypeFunds) {
             <h1 className="font-blog text-4xl text-slate-200">Discover Fundraisers</h1>
             <br></br>
             <div className="py-5 px-5">
-                {inputText != "" ? (
                     <ul className="flex flex-row flex-wrap">
                         {filteredData.map((fund) => (
                             <li key={fund} className="px-5 py-5">
@@ -72,29 +77,6 @@ export default function SearchBar(props: propTypeFunds) {
                             </li>
                         ))}
                     </ul>
-                ) : (
-                    <ul className="flex flex-row flex-wrap">
-                        {props.fundAddressArray.map((fund) => (
-                            // eslint-disable-next-line react/jsx-key
-                            <li key={fund} className="px-5 py-5">
-                                {" "}
-                                <Card sx={{ maxWidth: 345, minHeight: 250 }}>
-                                    <CardActionArea href={`/details/?fund=${fund}`}>
-                                        <CardContent>
-                                            <Typography gutterBottom variant="h5" component="div">
-                                                Fundraiser at {fund}
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                color="text.secondary"
-                                            ></Typography>
-                                        </CardContent>
-                                    </CardActionArea>
-                                </Card>
-                            </li>
-                        ))}
-                    </ul>
-                )}
             </div>
         </>
     )

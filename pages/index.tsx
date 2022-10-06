@@ -46,10 +46,13 @@ const Home: NextPage = () => {
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
             </Head>
             <Header></Header>
-            <div>
-                <Search fundAddressArray={allFunds}></Search>
-            </div>
-            <br></br>
+            {isWeb3Enabled && fundFactoryAddress ? (
+            <><div>
+                    <Search fundAddressArray={allFunds}></Search>
+                </div><br></br></>
+            ) : (
+                <div>Not available on this chain</div>
+            )}
         </div>
     )
 }
