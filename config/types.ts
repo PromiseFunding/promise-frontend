@@ -10,3 +10,7 @@ export interface propType {
     fundAddress: string
     assetAddress: string
 }
+
+export interface propTypeFunds {
+    fundAddressArray: string[]
+}
