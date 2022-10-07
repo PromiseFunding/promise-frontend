@@ -135,7 +135,9 @@ export default function WithdrawProceeds(props: propType) {
         <div className="flex flex-col">
             {isWeb3Enabled && owner == userAddress ? (
                 <div className="flex-1 p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500">
-                    You are the Owner :D
+                    <div>
+                        <h1 className="text-xl font-bold">Withdraw Proceeds</h1>
+                    </div>
                     <br></br>
                     <input
                         maxLength={21 - (decimals || 6)}
@@ -163,8 +165,10 @@ export default function WithdrawProceeds(props: propType) {
                             <div>Withdraw</div>
                         )}
                     </button>
-                    <br></br>
-                    Available to withdraw: {withdrawableProceeds.toString()} {coinName}
+                    <div>
+                        <br></br>
+                        Available to withdraw: {withdrawableProceeds.toString()} {coinName}
+                    </div>
                 </div>
             ) : (
                 <p></p>

@@ -119,7 +119,10 @@ export default function Deposit(props: propType) {
 
     return (
         <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500">
-            Straight Donation
+            <div>
+                <h1 className="text-xl font-bold">Straight Donation</h1>
+                <br></br>
+            </div>
             {isWeb3Enabled && fundAddress ? (
                 <div className="">
                     <input
@@ -151,10 +154,11 @@ export default function Deposit(props: propType) {
                         )}
                     </button>
                     <h2>
+                        <br></br>
                         Deposit Amount: {val || 0} {coinName}
                     </h2>
                     <br></br>
-                    <h6 className="font-blog text-sm text-slate-200">
+                    <h6 className="font-blog text-sm text-slate-200 italic">
                         Note: This is a non-refundable or withdrawable donation.
                     </h6>
                 </div>

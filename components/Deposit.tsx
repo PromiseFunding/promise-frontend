@@ -3,7 +3,7 @@ import { contractAddresses, abi, erc20Abi } from "../constants"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { SetStateAction, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-import { BigNumber} from "ethers"
+import { BigNumber } from "ethers"
 import { networkConfig } from "../config/helper-config"
 import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
@@ -107,7 +107,11 @@ export default function Deposit(props: propType) {
 
     return (
         <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500">
-            Lossless Yield Generating Donation
+            <div>
+                <h1 className="text-xl font-bold">Lossless Yield Generating Donation</h1>
+                <br></br>
+            </div>
+
             {isWeb3Enabled && fundAddress ? (
                 <div className="">
                     <input
@@ -139,6 +143,7 @@ export default function Deposit(props: propType) {
                         )}
                     </button>
                     <h2>
+                        <br></br>
                         Deposit Amount: {val || 0} {coinName}
                     </h2>
                 </div>
