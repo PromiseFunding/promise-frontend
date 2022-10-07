@@ -125,7 +125,10 @@ export default function Withdraw(props: propType) {
 
     return (
         <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500">
-            Withdraw from Contract
+            <div>
+                <h1 className="text-xl font-bold">Withdraw from Contract</h1>
+                <br></br>
+            </div>
             {isWeb3Enabled && fundAddress ? (
                 timeLeft == "0" ? (
                     <div className="">
@@ -157,6 +160,7 @@ export default function Withdraw(props: propType) {
                             )}
                         </button>
                         <h2>
+                            <br></br>
                             Withdraw Amount: {val || 0} {coinName}
                         </h2>
                         <h2>Your Information:</h2>

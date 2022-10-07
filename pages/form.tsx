@@ -13,7 +13,7 @@ const Form: NextPage = () => {
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
             </Head>
             <Header></Header>
-            <div className="p-5 flex flex-row">
+            <div className="p-5 flex flex-col">
                 <NewFund></NewFund>
             </div>
         </div>

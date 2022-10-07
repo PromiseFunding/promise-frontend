@@ -69,7 +69,6 @@ export default function SearchBar(props: propTypeFunds) {
                                                 overflow: "hidden",
                                                 textOverflow: "ellipsis",
                                                 wordWrap: "break-word",
-                                                
                                             }}
                                         >
                                             <Typography
@@ -77,9 +76,11 @@ export default function SearchBar(props: propTypeFunds) {
                                                 align="left"
                                                 variant="h5"
                                                 component="div"
-                                                fontSize= '18px'
+                                                fontSize="18px"
                                             >
-                                                Fundraiser at {fund}
+                                                Fundraiser at {fund}.<br></br>
+                                                <br></br>
+                                                Description of fund and image to be added.
                                             </Typography>
                                             <Typography
                                                 variant="body2"

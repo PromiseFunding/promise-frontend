@@ -46,7 +46,7 @@ const Details: NextPage = () => {
             </Head>
             <Header></Header>
             <h1 className="text-slate-200">Fund Address: {router.query.fund}</h1>
-            <div className="p-5 flex flex-row">
+            <div className="p-5 text-center flex flex-col">
                 <RegularDonation
                     fundAddress={fundAddress}
                     assetAddress={assetAddress}

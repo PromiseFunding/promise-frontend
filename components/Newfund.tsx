@@ -88,9 +88,10 @@ export default function NewFund() {
 
     return (
         <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500 flex flex-col">
-            <h1 className="font-blog text-3xl text-slate-200 border-b-2">Create a New Fund</h1>
+            <h1 className="font-blog text-center text-3xl text-slate-200 border-b-2">Create a New Fund</h1>
             {isWeb3Enabled && yieldAddress ? (
                 <div className="">
+                    <br></br>
                     <div>Enter Locktime (in seconds)</div>
                     <input
                         maxLength={21 - (decimals || 6)}
@@ -106,6 +107,7 @@ export default function NewFund() {
                         className="text-slate-800"
                     />
                     <div>
+                        <br></br>
                         <p>Choose Asset: </p>
                         <select
                             id="assetName"
@@ -117,15 +119,20 @@ export default function NewFund() {
                             <option value="DAI">DAI</option>
                             <option value="WETH">WETH</option>
                         </select>
+                        <br></br>
                     </div>
-                    <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
-                        onClick={async function () {
-                            await createYieldFundAAVE()
-                        }}
-                    >
-                        <div>Create New Fundraise</div>
-                    </button>
+                    <br></br>
+                    <br></br>
+                    <div className="text-center">
+                        <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
+                            onClick={async function () {
+                                await createYieldFundAAVE()
+                            }}
+                        >
+                            <div>Create New Fundraise</div>
+                        </button>
+                    </div>
                 </div>
             ) : (
                 <div>No Create Yield Address Detected</div>
