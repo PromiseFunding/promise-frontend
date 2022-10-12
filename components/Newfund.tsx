@@ -19,7 +19,6 @@ export default function NewFund() {
             : null
     const chainIdNum = parseInt(chainIdHex!)
 
-    const decimals = chainId in addresses ? networkConfig[chainIdNum].decimals : null
 
     const [time, setTime] = useState("")
 
@@ -30,6 +29,8 @@ export default function NewFund() {
     const [poolAddress, setPoolAddress] = useState("")
 
     const [aaveAddress, setAaveAddress] = useState("")
+
+    const [decimalNumber, setDecimal] = useState(0)
 
     const dispatch = useNotification()
 
@@ -66,7 +67,10 @@ export default function NewFund() {
             chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].poolAddress : null
         const aaveAddress =
             chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].aaveTokenAddress : null
+        const decimal =
+            chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].decimals : null
 
+        setDecimal(decimal!)
         setAssetAddress(tokenAddress!)
         setPoolAddress(poolAddress!)
         setAaveAddress(aaveAddress!)
@@ -94,7 +98,7 @@ export default function NewFund() {
                     <br></br>
                     <div>Enter Locktime (in seconds)</div>
                     <input
-                        maxLength={21 - (decimals || 6)}
+                        maxLength={21 - (decimalNumber || 6)}
                         type="number"
                         min="0"
                         step="1"

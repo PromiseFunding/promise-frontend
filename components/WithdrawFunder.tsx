@@ -20,15 +20,15 @@ export default function Withdraw(props: propType) {
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)
 
-    const decimals = chainId in addresses ? networkConfig[chainIdNum].decimals : null
-
-    let coinName
+    let coinName = "USDT"
 
     for (const coin in tokenConfig[chainIdNum]) {
         if (tokenConfig[chainIdNum][coin].assetAddress == tokenAddress) {
             coinName = coin
         }
     }
+
+    const decimals = chainId in addresses ? tokenConfig[chainIdNum][coinName].decimals : null
 
     const [amountFunded, setAmountFunded] = useState(0)
 
@@ -173,7 +173,7 @@ export default function Withdraw(props: propType) {
                     <>
                         <h1>Time Lock Still Initiated. Unable to Withdraw</h1>
                         <h2>Your Information:</h2>
-                        <div>Amount Funded: {amountFunded} USDT</div>
+                        <div>Amount Funded: {amountFunded} {coinName}</div>
                         <div>Time left: {timeLeft} seconds</div>
                     </>
                 )
