@@ -6,6 +6,9 @@ import { useNotification } from "web3uikit" //wrapped components in this as well
 import { networkConfig } from "../config/helper-config"
 import { tokenConfig } from "../config/token-config"
 import { contractAddressesInterface } from "../config/types"
+import { set, ref as refDb } from "firebase/database"
+import { ref as refStore, getDownloadURL, uploadBytesResumable } from "firebase/storage"
+import { database, storage } from "../firebase-config"
 
 //contract is already deployed... trying to look at features of contract
 export default function NewFund() {
@@ -19,7 +22,6 @@ export default function NewFund() {
             : null
     const chainIdNum = parseInt(chainIdHex!)
 
-
     const [time, setTime] = useState("")
 
     const [assetValue, setAssetValue] = useState("USDC")
@@ -31,6 +33,8 @@ export default function NewFund() {
     const [aaveAddress, setAaveAddress] = useState("")
 
     const [decimalNumber, setDecimal] = useState(0)
+
+    const [file, setFile] = useState<File>()
 
     const dispatch = useNotification()
 
@@ -58,6 +62,34 @@ export default function NewFund() {
 
     const handleChangeAsset = (event: any) => {
         setAssetValue(event.target.value)
+    }
+
+    const handleNewFundraiser = async () => {
+        const createTx: any = await createYieldFundAAVE()
+        const fundAddress = await createTx.wait(1)
+        console.log(fundAddress)
+        // Get newly created YieldFund's address
+
+        const iconRef = refStore(storage, `/files/${file!.name}`)
+        const uploadTask = uploadBytesResumable(iconRef, file as Blob)
+        let imageUrl
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {},
+            (err) => console.log(err),
+            () => {
+                // download url
+                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                    imageUrl = url
+                    console.log(url)
+                })
+            }
+        )
+
+        set(refDb(database, "funds/" + "0x12345678912233213232"), {
+            imageURL: imageUrl,
+            email: "silas@lenihan.net",
+        })
     }
 
     const handleChangeDetails = () => {
@@ -90,13 +122,49 @@ export default function NewFund() {
         }
     }
 
+    function handleChangeImage(event: { target: { files: SetStateAction<any> } }) {
+        setFile(event.target.files[0])
+    }
+
     return (
         <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500 flex flex-col">
-            <h1 className="font-blog text-center text-3xl text-slate-200 border-b-2">Create a New Fund</h1>
+            <h1 className="font-blog text-center text-3xl text-slate-200 border-b-2">
+                Create a New Fund
+            </h1>
             {isWeb3Enabled && yieldAddress ? (
-                <div className="">
+                <div className="flex-col p-5">
                     <br></br>
-                    <div>Enter Locktime (in seconds)</div>
+                    <h1 className="font-blog text-2xl text-slate-200">
+                        Enter a Title For your Fund:
+                    </h1>
+                    <input
+                        maxLength={40}
+                        type="string"
+                        placeholder="My Fund"
+                        id="title"
+                        name="Title"
+                        // onChange={handleChange}
+                        // value={time}
+                        autoComplete="off"
+                        className="text-slate-800"
+                    ></input>
+                    <h1 className="font-blog text-2xl text-slate-200">
+                        Enter a Description For your Fund:
+                    </h1>
+                    <textarea
+                        className="text-slate-800"
+                        id="w3review"
+                        name="w3review"
+                        placeholder="This fund is for..."
+                        rows={4}
+                        cols={50}
+                    ></textarea>
+                    <div>
+                        <input type="file" accept="image/*" onChange={handleChangeImage} />
+                    </div>
+                    <h1 className="font-blog text-2xl text-slate-200">
+                        Enter a locktime For your Fund:
+                    </h1>
                     <input
                         maxLength={21 - (decimalNumber || 6)}
                         type="number"
@@ -111,8 +179,7 @@ export default function NewFund() {
                         className="text-slate-800"
                     />
                     <div>
-                        <br></br>
-                        <p>Choose Asset: </p>
+                        <h1 className="font-blog text-2xl text-slate-200">Choose Asset:</h1>
                         <select
                             id="assetName"
                             onChange={handleChangeAsset}
@@ -131,10 +198,10 @@ export default function NewFund() {
                         <button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                             onClick={async function () {
-                                await createYieldFundAAVE()
+                                handleNewFundraiser()
                             }}
                         >
-                            <div>Create New Fundraise</div>
+                            <div>Create New Fundraiser</div>
                         </button>
                     </div>
                 </div>
