@@ -21,15 +21,15 @@ export default function WithdrawProceeds(props: propType) {
 
     const chainIdNum = parseInt(chainIdHex!)
 
-    const decimals = chainId in addresses ? networkConfig[chainIdNum].decimals : null
-
-    let coinName
+    let coinName = "USDT"
 
     for (const coin in tokenConfig[chainIdNum]) {
         if (tokenConfig[chainIdNum][coin].assetAddress == tokenAddress) {
             coinName = coin
         }
     }
+
+    const decimals = chainId in addresses ? tokenConfig[chainIdNum][coinName].decimals : null
 
     const [val, setVal] = useState("")
 
