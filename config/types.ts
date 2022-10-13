@@ -11,6 +11,11 @@ export interface propType {
     assetAddress: string
 }
 
+export interface propTypeEntryNumber {
+    onChangeAmount(arg0: Number): void
+    amount: Number
+}
+
 export interface propTypeFunds {
     fundAddressArray: string[]
 }
