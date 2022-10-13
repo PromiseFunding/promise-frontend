@@ -3,8 +3,7 @@ import { contractAddresses, abi, erc20Abi } from "../constants"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { SetStateAction, useEffect, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-import { BigNumber, ethers, ContractTransaction } from "ethers"
-import { networkConfig } from "../config/helper-config"
+import { BigNumber, ContractTransaction } from "ethers"
 import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
 

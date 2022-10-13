@@ -1,9 +1,8 @@
-import { contractAddresses, abi, erc20Abi } from "../constants"
+import { contractAddresses, abi } from "../constants"
 // dont export from moralis when using react
 import { useMoralis, useWeb3Contract } from "react-moralis"
-import { SetStateAction, useEffect, useState } from "react"
-import { Dropdown, useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-import { BigNumber, ethers, ContractTransaction } from "ethers"
+import { useEffect, useState } from "react"
+import { BigNumber } from "ethers"
 import { networkConfig } from "../config/helper-config"
 import { contractAddressesInterface, propType } from "../config/types"
 

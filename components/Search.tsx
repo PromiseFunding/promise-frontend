@@ -1,13 +1,7 @@
-import Card from "@mui/material/Card"
-import CardContent from "@mui/material/CardContent"
-import Typography from "@mui/material/Typography"
-import Image from "next/image"
-import Link from "next/link"
+import FundCard from "./FundCard"
 import { useEffect, useState } from "react"
-import { CardActionArea, TextField } from "@mui/material"
-import SearchIcon from "@mui/icons-material/Search"
-import CloseIcon from "@mui/icons-material/Close"
-import { propType, propTypeFunds } from "../config/types"
+import { TextField } from "@mui/material"
+import { propTypeFunds } from "../config/types"
 import { useMoralis } from "react-moralis"
 
 export default function SearchBar(props: propTypeFunds) {
@@ -60,36 +54,7 @@ export default function SearchBar(props: propTypeFunds) {
                 <ul className="flex flex-row flex-wrap">
                     {filteredData.map((fund) => (
                         <li key={fund} className="px-5 py-5">
-                            {" "}
-                            <Card sx={{ maxWidth: 320, minHeight: 290 }}>
-                                <CardActionArea href={`/details/?fund=${fund}`}>
-                                    <CardContent>
-                                        <div
-                                            style={{
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                                wordWrap: "break-word",
-                                            }}
-                                        >
-                                            <Typography
-                                                gutterBottom
-                                                align="left"
-                                                variant="h5"
-                                                component="div"
-                                                fontSize="18px"
-                                            >
-                                                Fundraiser at {fund}.<br></br>
-                                                <br></br>
-                                                Description of fund and image to be added.
-                                            </Typography>
-                                            <Typography
-                                                variant="body2"
-                                                color="text.secondary"
-                                            ></Typography>
-                                        </div>
-                                    </CardContent>
-                                </CardActionArea>
-                            </Card>
+                            <FundCard fund={fund}></FundCard>
                         </li>
                     ))}
                 </ul>

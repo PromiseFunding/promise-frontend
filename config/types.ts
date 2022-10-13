@@ -14,3 +14,12 @@ export interface propType {
 export interface propTypeFunds {
     fundAddressArray: string[]
 }
+
+export interface databaseFundObject {
+    fundTitle: string
+    imageURL: string
+    description: string
+    category: string
+    locktime: string
+    asset: string
+}
