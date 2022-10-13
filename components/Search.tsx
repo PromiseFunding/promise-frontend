@@ -36,7 +36,6 @@ export default function SearchBar(props: propTypeFunds) {
 
     useEffect(() => {
         setFilteredData(props.fundAddressArray.slice(0, maxEntries))
-        console.log(props.fundAddressArray)
     }, [props.fundAddressArray, maxEntries])
 
     return (
