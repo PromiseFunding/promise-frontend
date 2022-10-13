@@ -17,7 +17,7 @@ export default function SearchBar(props: propTypeFunds) {
     const [filteredData, setFilteredData] = useState<string[]>(props.fundAddressArray)
     const [inputText, setInputText] = useState("")
     //shows only maxEntries amount... ShowMoreLess Component reveals more funds if they exist
-    const [maxEntries, setMaxEntries] = useState(2)
+    const [maxEntries, setMaxEntries] = useState(4)
 
     let inputHandler = (e: { target: { value: string } }) => {
         //convert input text to lower case
@@ -36,6 +36,7 @@ export default function SearchBar(props: propTypeFunds) {
 
     useEffect(() => {
         setFilteredData(props.fundAddressArray.slice(0, maxEntries))
+        console.log(props.fundAddressArray)
     }, [props.fundAddressArray, maxEntries])
 
     return (
@@ -69,7 +70,9 @@ export default function SearchBar(props: propTypeFunds) {
                     ))}
                 </ul>
 
-                <br></br>
+            </div>
+            <div>
+            <br></br>
                 <ShowMoreLess
                     amount={maxEntries}
                     onChangeAmount={(newAmount: SetStateAction<Number>) =>
