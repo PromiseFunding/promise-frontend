@@ -74,13 +74,18 @@ export default function NewFund() {
             console.log("Please fill in the required fields.")
             return
         }
+        console.log("test")
         const createTx: any = await createYieldFundAAVE({
-            onSuccess: (tx) => {
-                handleNewNotification()
+            onSuccess: (tx) => {},
+            onError: (err) => {
+                console.log(err)
+                handleNewNotificationError()
+                return
             },
-            onError: (err) => handleNewNotificationError(),
         })
         const txReceipt = await createTx.wait(1)
+        handleNewNotification()
+
         const fundAddress = txReceipt.events[2].args.fundAddress
 
         const iconRef = refStore(storage, `/files/${fundAddress}/${file!.name}`)
