@@ -31,6 +31,7 @@ const Home: NextPage = () => {
     async function updateUI() {
         const allFundsFromCall = (await getAllYieldFundsAAVE()) as string[]
         setAllFunds(allFundsFromCall)
+        console.log(allFunds)
     }
 
     useEffect(() => {

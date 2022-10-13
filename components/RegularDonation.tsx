@@ -117,6 +117,17 @@ export default function Deposit(props: propType) {
         })
     }
 
+    const handleError = async function (error: Error) {
+        console.log(error)
+        //console.log(error["message"])
+        dispatch({
+            type: "info",
+            message: "Regular Donation Failed. Insufficient funds.",
+            title: "Transaction Notification",
+            position: "topR",
+        })
+    }
+
     return (
         <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500">
             <div>
@@ -142,7 +153,7 @@ export default function Deposit(props: propType) {
                         onClick={async function () {
                             await transfer({
                                 onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
-                                onError: (error) => console.log(error),
+                                onError: (error) => handleError(error),
                             })
                         }}
                         disabled={isLoading || isFetching}

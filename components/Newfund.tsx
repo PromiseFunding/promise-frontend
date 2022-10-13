@@ -74,7 +74,7 @@ export default function NewFund() {
             console.log("Please fill in the required fields.")
             return
         }
-        console.log("test")
+
         const createTx: any = await createYieldFundAAVE({
             onSuccess: (tx) => {},
             onError: (err) => {

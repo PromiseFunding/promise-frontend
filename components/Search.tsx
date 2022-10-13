@@ -1,13 +1,23 @@
+import Card from "@mui/material/Card"
+import CardContent from "@mui/material/CardContent"
+import Typography from "@mui/material/Typography"
+import Image from "next/image"
+import Link from "next/link"
 import FundCard from "./FundCard"
-import { useEffect, useState } from "react"
-import { TextField } from "@mui/material"
-import { propTypeFunds } from "../config/types"
+import { SetStateAction, useEffect, useState } from "react"
+import { CardActionArea, TextField } from "@mui/material"
+import SearchIcon from "@mui/icons-material/Search"
+import CloseIcon from "@mui/icons-material/Close"
+import { propType, propTypeFunds } from "../config/types"
 import { useMoralis } from "react-moralis"
+import ShowMoreLess from "./ShowMoreLess"
+import { useNotification } from "web3uikit"
 
 export default function SearchBar(props: propTypeFunds) {
-    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const [filteredData, setFilteredData] = useState<string[]>(props.fundAddressArray)
     const [inputText, setInputText] = useState("")
+    //shows only maxEntries amount... ShowMoreLess Component reveals more funds if they exist
+    const [maxEntries, setMaxEntries] = useState(4)
 
     let inputHandler = (e: { target: { value: string } }) => {
         //convert input text to lower case
@@ -25,8 +35,8 @@ export default function SearchBar(props: propTypeFunds) {
     }
 
     useEffect(() => {
-        setFilteredData(props.fundAddressArray)
-    }, [props.fundAddressArray])
+        setFilteredData(props.fundAddressArray.slice(0, maxEntries))
+    }, [props.fundAddressArray, maxEntries])
 
     return (
         <>
@@ -58,6 +68,16 @@ export default function SearchBar(props: propTypeFunds) {
                         </li>
                     ))}
                 </ul>
+
+            </div>
+            <div>
+            <br></br>
+                <ShowMoreLess
+                    amount={maxEntries}
+                    onChangeAmount={(newAmount: SetStateAction<Number>) =>
+                        setMaxEntries(Number(newAmount))
+                    }
+                />
             </div>
         </>
     )
