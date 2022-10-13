@@ -20,7 +20,6 @@ export default function Deposit(props: propType) {
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)
 
-
     const poolAddress = chainId in addresses ? networkConfig[chainIdNum].poolAddress : null
 
     let coinName = "USDT"

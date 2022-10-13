@@ -15,5 +15,3 @@ signInAnonymously(auth)
         const errorCode = error.code
         const errorMessage = error.message
     })
-
-// Initialize Firebase
