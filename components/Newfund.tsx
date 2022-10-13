@@ -76,9 +76,9 @@ export default function NewFund() {
         }
         const createTx: any = await createYieldFundAAVE({
             onSuccess: (tx) => {
-                console.log(tx)
+                handleNewNotification()
             },
-            onError: (err) => console.log(err),
+            onError: (err) => handleNewNotificationError(),
         })
         const txReceipt = await createTx.wait(1)
         const fundAddress = txReceipt.events[2].args.fundAddress
@@ -133,6 +133,24 @@ export default function NewFund() {
         } else {
             setTime("0")
         }
+    }
+
+    const handleNewNotification = function () {
+        dispatch({
+            type: "info",
+            message: "Fund Creation Complete!",
+            title: "Transaction Notification",
+            position: "topR",
+        })
+    }
+
+    const handleNewNotificationError = function () {
+        dispatch({
+            type: "info",
+            message: "Fund Creation Failed",
+            title: "Transaction Notification",
+            position: "topR",
+        })
     }
 
     function handleChangeImage(event: { target: { files: SetStateAction<any> } }) {

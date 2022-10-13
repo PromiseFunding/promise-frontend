@@ -64,7 +64,7 @@ export default function Deposit(props: propType) {
             handleNewNotification()
         } catch (error) {
             console.log(error)
-            handleNewNotification1()
+            handleNewNotificationError()
         }
     }
 
@@ -96,7 +96,7 @@ export default function Deposit(props: propType) {
         })
     }
 
-    const handleNewNotification1 = function () {
+    const handleNewNotificationError = function () {
         dispatch({
             type: "info",
             message: "Donation Failed!",
