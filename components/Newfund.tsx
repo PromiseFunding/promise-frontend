@@ -8,6 +8,7 @@ import { contractAddressesInterface } from "../config/types"
 import { set, ref as refDb } from "firebase/database"
 import { ref as refStore, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { database, storage } from "../firebase-config"
+import { async } from "@firebase/util"
 
 //contract is already deployed... trying to look at features of contract
 export default function NewFund() {
@@ -76,14 +77,20 @@ export default function NewFund() {
         }
 
         const createTx: any = await createYieldFundAAVE({
-            onSuccess: (tx) => {},
+            onSuccess: (tx) => {
+                handleSuccess(tx)
+            },
             onError: (err) => {
                 console.log(err)
                 handleNewNotificationError()
                 return
             },
         })
-        const txReceipt = await createTx.wait(1)
+    }
+
+    const handleSuccess = async (tx:any) => {
+        const txReceipt = await tx.wait(1)
+
         handleNewNotification()
 
         const fundAddress = txReceipt.events[2].args.fundAddress

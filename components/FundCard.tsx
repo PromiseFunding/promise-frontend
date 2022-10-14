@@ -23,7 +23,10 @@ export default function FundCard(props: { fund: string }) {
         <div>
             {data ? (
                 <div className="main text-center">
-                    <Card sx={{ maxWidth: 345, minHeight: 290 }}>
+                    <Card
+                        sx={{ maxWidth: 345, height: 470, backgroundColor: "Gainsboro" }}
+                        color="gray"
+                    >
                         <CardActionArea href={`/details/?fund=${fund}`}>
                             <CardMedia
                                 component="img"
@@ -31,12 +34,31 @@ export default function FundCard(props: { fund: string }) {
                                 width="140"
                                 image={data.imageURL}
                                 alt="fundraiser"
+                                sx={{
+                                    width: 340,
+                                    height: 340,
+                                }}
                             />
                             <CardContent>
-                                <Typography gutterBottom variant="h5" component="div">
-                                    {data.fundTitle}
+                                <Typography
+                                    gutterBottom
+                                    variant="h5"
+                                    component="div"
+                                    noWrap={true}
+                                    color="black"
+                                >
+                                    <b>{data.fundTitle}</b>
                                 </Typography>
-                                <Typography variant="body2" color="text.secondary">
+                                <Typography
+                                    sx={{
+                                        display: "-webkit-box",
+                                        overflow: "hidden",
+                                        WebkitBoxOrient: "vertical",
+                                        WebkitLineClamp: 3,
+                                    }}
+                                    variant="body2"
+                                    color="black"
+                                >
                                     {data.description}
                                 </Typography>
                             </CardContent>
