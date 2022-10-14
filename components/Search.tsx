@@ -12,6 +12,8 @@ import { propType, propTypeFunds } from "../config/types"
 import { useMoralis } from "react-moralis"
 import ShowMoreLess from "./ShowMoreLess"
 import { useNotification } from "web3uikit"
+import { ref, onValue } from "firebase/database"
+import { database } from "../firebase-config"
 
 export default function SearchBar(props: propTypeFunds) {
     const [filteredData, setFilteredData] = useState<string[]>(props.fundAddressArray)
@@ -23,8 +25,17 @@ export default function SearchBar(props: propTypeFunds) {
         //convert input text to lower case
         var lowerCase = e.target.value.toLowerCase()
         setInputText(lowerCase)
-        const newFilter = props.fundAddressArray.filter((value) => {
-            return value.toLowerCase().includes(lowerCase)
+        const newFilter = props.fundAddressArray.filter((fund) => {let holder = fund
+            const titleRef = ref(database, "funds/" + fund + "/fundTitle")
+            onValue(titleRef, (snapshot) => {
+                holder += snapshot.val()
+            })
+            const descriptionRef = ref(database, "funds/" + fund + "/description")
+            onValue(descriptionRef, (snapshot) => {
+                holder += snapshot.val()
+            })
+            
+            return holder.toLowerCase().includes(lowerCase)
         })
 
         if (inputText === "") {
@@ -43,7 +54,7 @@ export default function SearchBar(props: propTypeFunds) {
         <>
             <div className="main text-center">
                 <h1 className="font-blog text-lg text-center text-slate-200">
-                    Search For Fundraiser by Address
+                    Search For Fundraiser
                 </h1>
                 <div className="search">
                     <TextField
