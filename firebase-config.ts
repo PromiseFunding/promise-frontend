@@ -16,6 +16,8 @@ const firebaseConfig = {
     measurementId: process.env.NEXT_PUBLIC_FIREBASECONFIG_MEASUREMENT_ID?.toString(),
 }
 
+console.log(firebaseConfig)
+
 export const app = initializeApp(firebaseConfig)
 export const database = getDatabase(app)
 export const storage = getStorage(app)

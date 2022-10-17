@@ -48,9 +48,11 @@ const Home: NextPage = () => {
             </Head>
             <Header></Header>
             {isWeb3Enabled && fundFactoryAddress ? (
-            <><div>
-                    <Search fundAddressArray={allFunds}></Search>
-                </div><br></br></>
+                <>
+                    <div>
+                        <Search fundAddressArray={allFunds}></Search>
+                    </div>
+                </>
             ) : (
                 <div>Not available on this chain</div>
             )}
