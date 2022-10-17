@@ -39,6 +39,11 @@ export const networkConfig: networkConfigInfo = {
         keepersUpdateInterval: "30",
         decimals: 6,
     },
+    421613: {
+        name: "arbitrum_goerli",
+        blockConfirmations: 6,
+        poolAddress: "0x6Cbb4E8eC402E07fDF96DbbC6c752aCfB0eB6075",
+    },
 }
 
 export const developmentChains = ["hardhat", "localhost"]
