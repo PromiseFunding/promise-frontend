@@ -77,6 +77,37 @@ export const tokenConfig: tokenConfigInfo = {
             decimals: 6,
         },
     },
+    421613: {
+        USDT: {
+            assetAddress: "0xbAc565f93f3192D35E9106E67B9d5c9348bD9389",
+            aaveTokenAddress: "0x4c78955a00c4b2a623267eb68bec88DFCb4cb4C4",
+            assetName: "USDT",
+            poolAddress: "0x6Cbb4E8eC402E07fDF96DbbC6c752aCfB0eB6075",
+            decimals: 6,
+        },
+        // DAI, USDC, WETH are just dummies
+        DAI: {
+            assetAddress: "0x7e752bC77eBE2225B327e6ebF09fAD7801873931",
+            aaveTokenAddress: "0x113B76f72294eC2aF8E8911AF864245B5d1cAbb4",
+            assetName: "DAI",
+            poolAddress: "0x6Cbb4E8eC402E07fDF96DbbC6c752aCfB0eB6075",
+            decimals: 6,
+        },
+        USDC: {
+            assetAddress: "0x6775842AE82BF2F0f987b10526768Ad89d79536E",
+            aaveTokenAddress: "0x4de6918B9D2c953bb003168D64A49A6A189510D5",
+            assetName: "USDC",
+            poolAddress: "0x6Cbb4E8eC402E07fDF96DbbC6c752aCfB0eB6075",
+            decimals: 6,
+        },
+        WETH: {
+            assetAddress: "0xCDa739D69067333974cD73A722aB92E5e0ad8a4F",
+            aaveTokenAddress: "0x4f57EAA84fe40cC1eCaa77D3db3108A146c9a39B",
+            assetName: "WETH",
+            poolAddress: "0x6Cbb4E8eC402E07fDF96DbbC6c752aCfB0eB6075",
+            decimals: 6,
+        },
+    },
 }
 
 // export const developmentChains = ["hardhat", "localhost"]
