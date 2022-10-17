@@ -23,31 +23,36 @@ export default function SearchBar(props: propTypeFunds) {
 
     let inputHandler = (e: { target: { value: string } }) => {
         //convert input text to lower case
-        var lowerCase = e.target.value.toLowerCase()
-        setInputText(lowerCase)
-        const newFilter = props.fundAddressArray.filter((fund) => {let holder = fund
-            const titleRef = ref(database, "funds/" + fund + "/fundTitle")
-            onValue(titleRef, (snapshot) => {
-                holder += snapshot.val()
-            })
-            const descriptionRef = ref(database, "funds/" + fund + "/description")
-            onValue(descriptionRef, (snapshot) => {
-                holder += snapshot.val()
-            })
-            
-            return holder.toLowerCase().includes(lowerCase)
-        })
+        let lowerCase = e.target.value.toLowerCase()
 
-        if (inputText === "") {
+        setInputText(lowerCase)
+
+        if (lowerCase === "") {
             setFilteredData(props.fundAddressArray)
         } else {
+            const newFilter = props.fundAddressArray.filter((fund) => {
+                if (lowerCase.slice(0, 2) == "0x") {
+                    return fund.toLowerCase().includes(lowerCase)
+                }
+
+                let holder = ""
+
+                const titleRef = ref(database, "funds/" + fund + "/fundTitle")
+                onValue(titleRef, (snapshot) => {
+                    holder += snapshot.val()
+                })
+                const descriptionRef = ref(database, "funds/" + fund + "/description")
+                onValue(descriptionRef, (snapshot) => {
+                    holder += snapshot.val()
+                })
+                return holder.toLowerCase().includes(lowerCase)
+            })
             setFilteredData(newFilter)
         }
     }
 
     useEffect(() => {
         setFilteredData(props.fundAddressArray.slice(0, maxEntries))
-        console.log(filteredData)
     }, [props.fundAddressArray, maxEntries])
 
     return (
