@@ -73,6 +73,7 @@ export default function PoolInfo(props: propType) {
                         {isWeb3Enabled && fundAddress ? (
                             <div className="">
                                 <div>TimeLock: {timeLock} seconds</div>
+                                <div>Fund Address: {fundAddress}</div>
                                 <div>Owner Address: {owner} </div>
                                 <div>User Address: {account}</div>
                                 <div> Pool Address: {poolAddress} </div>
