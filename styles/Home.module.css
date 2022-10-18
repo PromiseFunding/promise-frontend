@@ -4,25 +4,19 @@
 }
 
 .details {
-    display: flex;
-    flex-grow: 1 1 auto;
-    position: fixed;
-    right: 100px;
-    flex-direction: column;
-    padding: 4rem 0;
-    text-align: center;
+    --gap: 50px;
+    --num-cols: 2;
 
+    box-sizing: border-box;
+    padding: var(--gap);
+
+    display: grid;
+    grid-template-columns: repeat(var(--num-cols), 1fr);
+    gap: var(--gap)
 }
 
-.fundinfo {
-    
-    display: flex;
-    flex: 2 2 10%;
-    position: fixed;
-    left: 10px;
-    flex-direction: column;
-    padding: 4rem 0;
-    text-align: center;
+.details > div {
+    object-fit: cover;
 }
 
 .main {
