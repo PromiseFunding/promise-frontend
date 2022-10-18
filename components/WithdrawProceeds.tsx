@@ -133,7 +133,7 @@ export default function WithdrawProceeds(props: propType) {
     return (
         <div className="flex flex-col">
             {isWeb3Enabled && owner == userAddress ? (
-                <div className="flex-1 p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500">
+                <div className="flex-1 p-5 bg-slate-800 text-slate-200">
                     <div>
                         <h1 className="text-xl font-bold">Withdraw Proceeds</h1>
                     </div>
@@ -161,8 +161,8 @@ export default function WithdrawProceeds(props: propType) {
                         {isLoading || isFetching ? (
                             <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
                         ) : (
-                            <div>Withdraw</div>
-                        )}
+                                <div>Withdraw</div>
+                            )}
                     </button>
                     <div>
                         <br></br>
@@ -170,8 +170,8 @@ export default function WithdrawProceeds(props: propType) {
                     </div>
                 </div>
             ) : (
-                <p></p>
-            )}{" "}
+                    <p></p>
+                )}{" "}
         </div>
     )
 }

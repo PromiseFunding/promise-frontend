@@ -3,11 +3,11 @@ import { abi } from "../constants"
 import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import Header from "../components/Header"
-import Deposit from "../components/Deposit"
+import YieldDonation from "../components/YieldDonation"
 import Withdraw from "../components/WithdrawFunder"
 import WithdrawProceeds from "../components/WithdrawProceeds"
 import PoolInfo from "../components/PoolInfo"
-import RegularDonation from "../components/RegularDonation"
+import StraightDonation from "../components/StraightDonation"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useMoralis, useWeb3Contract } from "react-moralis"
@@ -60,69 +60,76 @@ const Details: NextPage = () => {
             </Head>
             <Header></Header>
             <br></br>
-            <div>
+            <div className="p-5 bg-slate-700 text-slate-200 rounded border-2 border-slate-500">
                 {data ? (
-                    <div className={styles.details}>
-                        <div className="">
-                            <div className="text-2xl font-bold text-slate-900">
-                                Fund Name: {data.fundTitle}
+                    <div>
+
+                        <div className={styles.details}>
+                            <div className="p-5 rounded content-center">
+                                <h1 className="text-5xl font-bold text-slate-200">
+                                    {data.fundTitle}
+                                </h1>
+                                <div className="py-5">
+                                    <CardMedia
+                                        component="img"
+                                        height="140"
+                                        width="140"
+                                        image={data.imageURL}
+                                        alt="fundraiser"
+                                        sx={{
+                                            width: 800,
+                                            height: 800,
+                                        }}
+                                    />
+                                </div>
+                                <br></br>
+                                <div className="font-bold">
+                                    <h1 className="text-2xl">Description:</h1>
+                                    <div className="font-normal">{data.description}</div>
+                                </div>
+                                <br></br>
+                                <div className="font-bold">
+
+                                    <div className="font-normal"> <b>Category:</b> {data.category}</div>
+                                </div>
+
                             </div>
-                            <br></br>
-                            <div>
-                                <CardMedia
-                                    component="img"
-                                    height="140"
-                                    width="140"
-                                    image={data.imageURL}
-                                    alt="fundraiser"
-                                    sx={{
-                                        width: 450,
-                                        height: 450,
-                                    }}
-                                />
-                            </div>
-                            <br></br>
-                            <div className="font-bold">
-                                Description of Fund:
-                                <div className="font-normal">{data.description}</div>
-                            </div>
-                            <br></br>
-                            <div className="font-bold">
-                                Category:
-                                <div className="font-normal"> {data.category}</div>
-                            </div>
-                            <div className="font-bold">
-                                <PoolInfo
-                                    fundAddress={router.query.fund as string}
-                                    assetAddress={assetAddress}
-                                ></PoolInfo>
-                            </div>
-                        </div>
-                        <div className="position-sticky">
-                            <div className="p-5 text-center flex flex-col">
-                                <WithdrawProceeds
-                                    fundAddress={fundAddress}
-                                    assetAddress={assetAddress}
-                                ></WithdrawProceeds>
-                                <RegularDonation
-                                    fundAddress={fundAddress}
-                                    assetAddress={assetAddress}
-                                ></RegularDonation>
-                                <Deposit
-                                    fundAddress={fundAddress}
-                                    assetAddress={assetAddress}
-                                ></Deposit>
-                                <Withdraw
-                                    fundAddress={fundAddress}
-                                    assetAddress={assetAddress}
-                                ></Withdraw>
+                            <div className="position-sticky py-5">
+                                <div className="text-center flex flex-col border-2 border-slate-500">
+                                    <WithdrawProceeds
+                                        fundAddress={fundAddress}
+                                        assetAddress={assetAddress}
+                                    ></WithdrawProceeds>
+                                    <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                                    <StraightDonation
+                                        fundAddress={fundAddress}
+                                        assetAddress={assetAddress}
+                                    ></StraightDonation>
+                                    <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                                    <YieldDonation
+                                        fundAddress={fundAddress}
+                                        assetAddress={assetAddress}
+                                    ></YieldDonation>
+                                    <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                                    <Withdraw
+                                        fundAddress={fundAddress}
+                                        assetAddress={assetAddress}
+                                    ></Withdraw>
+                                </div>
                             </div>
                         </div>
                     </div>
                 ) : (
-                    <div></div>
-                )}
+                        <div></div>
+                    )}
+                <div className="p-10">
+                    <PoolInfo
+                        fundAddress={router.query.fund as string}
+                        assetAddress={assetAddress}
+                    />
+                </div>
             </div>
+
         </div>
     )
 }

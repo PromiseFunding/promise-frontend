@@ -123,7 +123,7 @@ export default function Withdraw(props: propType) {
     }
 
     return (
-        <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500">
+        <div className="p-5 bg-slate-800 text-slate-200">
             <div>
                 <h1 className="text-xl font-bold">Withdraw from Contract</h1>
                 <br></br>

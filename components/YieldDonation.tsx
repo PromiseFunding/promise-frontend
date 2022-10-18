@@ -1,14 +1,15 @@
 import { contractAddresses, abi, erc20Abi } from "../constants"
 // dont export from moralis when using react
 import { useMoralis, useWeb3Contract } from "react-moralis"
-import { SetStateAction, useEffect, useState } from "react"
+import { SetStateAction, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-import { BigNumber, ContractTransaction } from "ethers"
+import { BigNumber } from "ethers"
+import { networkConfig } from "../config/helper-config"
 import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
 
 //contract is already deployed... trying to look at features of contract
-export default function Deposit(props: propType) {
+export default function YieldDonation(props: propType) {
     const fundAddress = props.fundAddress
     const tokenAddress = props.assetAddress
 
@@ -19,6 +20,7 @@ export default function Deposit(props: propType) {
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)
 
+    const poolAddress = chainId in addresses ? networkConfig[chainIdNum].poolAddress : null
 
     let coinName = "USDT"
 
@@ -32,52 +34,38 @@ export default function Deposit(props: propType) {
 
     const [val, setVal] = useState("")
 
-    const [owner, setOwner] = useState("0")
-
     const dispatch = useNotification()
 
     const {
-        runContractFunction: transfer,
+        runContractFunction: approve,
         isLoading,
         isFetching,
     } = useWeb3Contract({
         abi: erc20Abi,
         contractAddress: tokenAddress!,
-        functionName: "transfer",
+        functionName: "approve",
         params: {
-            _to: owner,
+            _spender: fundAddress,
             _value: BigNumber.from((Number(val) * 10 ** decimals!).toString()),
         },
     })
 
-    const { runContractFunction: getOwner } = useWeb3Contract({
+    const { runContractFunction: fund } = useWeb3Contract({
         abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getOwner",
-        params: {},
+        contractAddress: fundAddress!, // specify the networkId
+        functionName: "fund",
+        params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
 
-    async function updateUI() {
-        const ownerFromCall = ((await getOwner()) as BigNumber).toString()
-        setOwner(ownerFromCall)
-    }
-
-    useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
-            updateUI()
-        }
-    }, [isWeb3Enabled, fundAddress])
-
-    const handleSuccess = async function (tx: ContractTransaction) {
+    const handleSuccess = async function () {
+        const fundTx: any = await fund()
         try {
-            await tx.wait(1)
-            setVal("0")
+            await fundTx.wait(1)
             handleNewNotification()
         } catch (error) {
             console.log(error)
-            handleNewNotification1()
+            handleNewNotificationError()
         }
-        updateUI()
     }
 
     const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
@@ -108,7 +96,7 @@ export default function Deposit(props: propType) {
         })
     }
 
-    const handleNewNotification1 = function () {
+    const handleNewNotificationError = function () {
         dispatch({
             type: "info",
             message: "Donation Failed!",
@@ -117,23 +105,13 @@ export default function Deposit(props: propType) {
         })
     }
 
-    const handleError = async function (error: Error) {
-        console.log(error)
-        //console.log(error["message"])
-        dispatch({
-            type: "info",
-            message: "Regular Donation Failed. Insufficient funds.",
-            title: "Transaction Notification",
-            position: "topR",
-        })
-    }
-
     return (
-        <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500">
+        <div className="p-5 bg-slate-800 text-slate-200">
             <div>
-                <h1 className="text-xl font-bold">Straight Donation</h1>
+                <h1 className="text-xl font-bold">Lossless Yield Generating Donation</h1>
                 <br></br>
             </div>
+
             {isWeb3Enabled && fundAddress ? (
                 <div className="">
                     <input
@@ -151,9 +129,9 @@ export default function Deposit(props: propType) {
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async function () {
-                            await transfer({
-                                onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
-                                onError: (error) => handleError(error),
+                            await approve({
+                                onSuccess: () => handleSuccess(),
+                                onError: (error) => console.log(error),
                             })
                         }}
                         disabled={isLoading || isFetching}
@@ -161,21 +139,17 @@ export default function Deposit(props: propType) {
                         {isLoading || isFetching ? (
                             <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
                         ) : (
-                            <div>Donate</div>
-                        )}
+                                <div>Donate</div>
+                            )}
                     </button>
                     <h2>
                         <br></br>
                         Deposit Amount: {val || 0} {coinName}
                     </h2>
-                    <br></br>
-                    <h6 className="font-blog text-sm text-slate-200 italic">
-                        Note: This is a non-refundable or withdrawable donation.
-                    </h6>
                 </div>
             ) : (
-                <div>No Fund Address Detected</div>
-            )}
+                    <div>No Fund Address Detected</div>
+                )}
         </div>
     )
 }
