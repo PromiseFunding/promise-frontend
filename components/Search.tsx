@@ -75,7 +75,7 @@ export default function SearchBar(props: propTypeFunds) {
                 </div>
             </div>
             <br></br>
-            <h1 className="font-blog text-4xl text-slate-200">Discover Fundraisers</h1>
+            <h1 className="font-blog text-4xl text-slate-200">Discover Fundraisers Test</h1>
             <br></br>
             <div className="py-5 px-5">
                 <ul className="flex flex-row flex-wrap">
