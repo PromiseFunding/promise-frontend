@@ -6,7 +6,7 @@ export default function Header() {
     return (
         <nav className=" border-b-2 flex items-center justify-between flex-wrap p-6">
             <Image
-                src="/../public/yieldmeicon3.png"
+                src="https://firebasestorage.googleapis.com/v0/b/yieldme-39169.appspot.com/o/app%2Fimages%2Fyieldmeicon3.png?alt=media&token=d680f93e-d8a9-4103-84d9-822ab45faaf6"
                 alt="Picture of the author"
                 width={100}
                 height={100}
