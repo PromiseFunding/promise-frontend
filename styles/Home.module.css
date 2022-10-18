@@ -1,5 +1,22 @@
 .container {
-    padding: 0 2rem;
+    padding: 0 2rem;  
+    overflow-y: scroll;
+}
+
+.details {
+    --gap: 50px;
+    --num-cols: 2;
+
+    box-sizing: border-box;
+    padding: var(--gap);
+
+    display: grid;
+    grid-template-columns: repeat(var(--num-cols), 1fr);
+    gap: var(--gap)
+}
+
+.details > div {
+    object-fit: cover;
 }
 
 .main {
