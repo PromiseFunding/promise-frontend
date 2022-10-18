@@ -129,7 +129,7 @@ export default function Deposit(props: propType) {
     }
 
     return (
-        <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500">
+        <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-slate-500">
             <div>
                 <h1 className="text-xl font-bold">Straight Donation</h1>
                 <br></br>

@@ -60,69 +60,72 @@ const Details: NextPage = () => {
             </Head>
             <Header></Header>
             <br></br>
-            <div>
+            <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-slate-500">
                 {data ? (
-                    <div className={styles.details}>
-                        <div className="">
-                            <div className="text-2xl font-bold text-slate-900">
-                                Fund Name: {data.fundTitle}
+                    <div>
+                        <h1 className="p-5 text-8xl text-center font-bold text-slate-200">
+                            {data.fundTitle}
+                        </h1>
+                        <div className={styles.details}>
+                            <div className="rounded border-2 p-5 border-slate-500">
+
+                                <br></br>
+                                <div>
+                                    <CardMedia
+                                        component="img"
+                                        height="140"
+                                        width="140"
+                                        image={data.imageURL}
+                                        alt="fundraiser"
+                                        sx={{
+                                            width: 450,
+                                            height: 450,
+                                        }}
+                                    />
+                                </div>
+                                <br></br>
+                                <div className="font-bold">
+                                    <h1 className="text-2xl">Description:</h1>
+                                    <div className="font-normal">{data.description}</div>
+                                </div>
+                                <br></br>
+                                <div className="font-bold">
+
+                                    <div className="font-normal"> <b>Category:</b> {data.category}</div>
+                                </div>
+
                             </div>
-                            <br></br>
-                            <div>
-                                <CardMedia
-                                    component="img"
-                                    height="140"
-                                    width="140"
-                                    image={data.imageURL}
-                                    alt="fundraiser"
-                                    sx={{
-                                        width: 450,
-                                        height: 450,
-                                    }}
-                                />
-                            </div>
-                            <br></br>
-                            <div className="font-bold">
-                                Description of Fund:
-                                <div className="font-normal">{data.description}</div>
-                            </div>
-                            <br></br>
-                            <div className="font-bold">
-                                Category:
-                                <div className="font-normal"> {data.category}</div>
-                            </div>
-                            <div className="font-bold">
-                                <PoolInfo
-                                    fundAddress={router.query.fund as string}
-                                    assetAddress={assetAddress}
-                                ></PoolInfo>
-                            </div>
-                        </div>
-                        <div className="position-sticky">
-                            <div className="p-5 text-center flex flex-col">
-                                <WithdrawProceeds
-                                    fundAddress={fundAddress}
-                                    assetAddress={assetAddress}
-                                ></WithdrawProceeds>
-                                <RegularDonation
-                                    fundAddress={fundAddress}
-                                    assetAddress={assetAddress}
-                                ></RegularDonation>
-                                <Deposit
-                                    fundAddress={fundAddress}
-                                    assetAddress={assetAddress}
-                                ></Deposit>
-                                <Withdraw
-                                    fundAddress={fundAddress}
-                                    assetAddress={assetAddress}
-                                ></Withdraw>
+                            <div className="position-sticky">
+                                <div className="text-center flex flex-col">
+                                    <WithdrawProceeds
+                                        fundAddress={fundAddress}
+                                        assetAddress={assetAddress}
+                                    ></WithdrawProceeds>
+                                    <RegularDonation
+                                        fundAddress={fundAddress}
+                                        assetAddress={assetAddress}
+                                    ></RegularDonation>
+                                    <Deposit
+                                        fundAddress={fundAddress}
+                                        assetAddress={assetAddress}
+                                    ></Deposit>
+                                    <Withdraw
+                                        fundAddress={fundAddress}
+                                        assetAddress={assetAddress}
+                                    ></Withdraw>
+                                </div>
                             </div>
                         </div>
                     </div>
                 ) : (
-                    <div></div>
-                )}
+                        <div></div>
+                    )}
+
             </div>
+            <PoolInfo
+                fundAddress={router.query.fund as string}
+                assetAddress={assetAddress}
+            />
         </div>
     )
 }

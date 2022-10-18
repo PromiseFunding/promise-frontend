@@ -133,7 +133,7 @@ export default function WithdrawProceeds(props: propType) {
     return (
         <div className="flex flex-col">
             {isWeb3Enabled && owner == userAddress ? (
-                <div className="flex-1 p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500">
+                <div className="flex-1 p-5 bg-slate-800 text-slate-200 rounded border-2 border-slate-500">
                     <div>
                         <h1 className="text-xl font-bold">Withdraw Proceeds</h1>
                     </div>

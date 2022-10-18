@@ -12,7 +12,7 @@
 
     display: grid;
     grid-template-columns: repeat(var(--num-cols), 1fr);
-    gap: var(--gap)
+    gap: var(--gap);
 }
 
 .details > div {
