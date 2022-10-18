@@ -1,5 +1,28 @@
 .container {
-    padding: 0 2rem;
+    padding: 0 2rem;  
+    overflow-y: scroll;
+}
+
+.details {
+    display: flex;
+    flex-grow: 1 1 auto;
+    position: fixed;
+    right: 100px;
+    flex-direction: column;
+    padding: 4rem 0;
+    text-align: center;
+
+}
+
+.fundinfo {
+    
+    display: flex;
+    flex: 2 2 10%;
+    position: fixed;
+    left: 10px;
+    flex-direction: column;
+    padding: 4rem 0;
+    text-align: center;
 }
 
 .main {
