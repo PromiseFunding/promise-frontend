@@ -3,11 +3,11 @@ import { abi } from "../constants"
 import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import Header from "../components/Header"
-import Deposit from "../components/Deposit"
+import YieldDonation from "../components/YieldDonation"
 import Withdraw from "../components/WithdrawFunder"
 import WithdrawProceeds from "../components/WithdrawProceeds"
 import PoolInfo from "../components/PoolInfo"
-import RegularDonation from "../components/RegularDonation"
+import StraightDonation from "../components/StraightDonation"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useMoralis, useWeb3Contract } from "react-moralis"
@@ -60,17 +60,16 @@ const Details: NextPage = () => {
             </Head>
             <Header></Header>
             <br></br>
-            <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-slate-500">
+            <div className="p-5 bg-slate-700 text-slate-200 rounded border-2 border-slate-500">
                 {data ? (
                     <div>
-                        <h1 className="p-5 text-8xl text-center font-bold text-slate-200">
-                            {data.fundTitle}
-                        </h1>
-                        <div className={styles.details}>
-                            <div className="rounded border-2 p-5 border-slate-500">
 
-                                <br></br>
-                                <div>
+                        <div className={styles.details}>
+                            <div className="p-5 rounded content-center">
+                                <h1 className="text-5xl font-bold text-slate-200">
+                                    {data.fundTitle}
+                                </h1>
+                                <div className="py-5">
                                     <CardMedia
                                         component="img"
                                         height="140"
@@ -78,8 +77,8 @@ const Details: NextPage = () => {
                                         image={data.imageURL}
                                         alt="fundraiser"
                                         sx={{
-                                            width: 450,
-                                            height: 450,
+                                            width: 800,
+                                            height: 800,
                                         }}
                                     />
                                 </div>
@@ -95,20 +94,23 @@ const Details: NextPage = () => {
                                 </div>
 
                             </div>
-                            <div className="position-sticky">
-                                <div className="text-center flex flex-col">
+                            <div className="position-sticky py-5">
+                                <div className="text-center flex flex-col border-2 border-slate-500">
                                     <WithdrawProceeds
                                         fundAddress={fundAddress}
                                         assetAddress={assetAddress}
                                     ></WithdrawProceeds>
-                                    <RegularDonation
+                                    <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                                    <StraightDonation
                                         fundAddress={fundAddress}
                                         assetAddress={assetAddress}
-                                    ></RegularDonation>
-                                    <Deposit
+                                    ></StraightDonation>
+                                    <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                                    <YieldDonation
                                         fundAddress={fundAddress}
                                         assetAddress={assetAddress}
-                                    ></Deposit>
+                                    ></YieldDonation>
+                                    <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
                                     <Withdraw
                                         fundAddress={fundAddress}
                                         assetAddress={assetAddress}
@@ -120,12 +122,14 @@ const Details: NextPage = () => {
                 ) : (
                         <div></div>
                     )}
-
+                <div className="p-10">
+                    <PoolInfo
+                        fundAddress={router.query.fund as string}
+                        assetAddress={assetAddress}
+                    />
+                </div>
             </div>
-            <PoolInfo
-                fundAddress={router.query.fund as string}
-                assetAddress={assetAddress}
-            />
+
         </div>
     )
 }

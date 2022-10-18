@@ -8,7 +8,7 @@ import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
 
 //contract is already deployed... trying to look at features of contract
-export default function Deposit(props: propType) {
+export default function StraightDonation(props: propType) {
     const fundAddress = props.fundAddress
     const tokenAddress = props.assetAddress
 
@@ -129,7 +129,7 @@ export default function Deposit(props: propType) {
     }
 
     return (
-        <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-slate-500">
+        <div className="p-5 bg-slate-800 text-slate-200">
             <div>
                 <h1 className="text-xl font-bold">Straight Donation</h1>
                 <br></br>
@@ -161,8 +161,8 @@ export default function Deposit(props: propType) {
                         {isLoading || isFetching ? (
                             <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
                         ) : (
-                            <div>Donate</div>
-                        )}
+                                <div>Donate</div>
+                            )}
                     </button>
                     <h2>
                         <br></br>
@@ -174,8 +174,8 @@ export default function Deposit(props: propType) {
                     </h6>
                 </div>
             ) : (
-                <div>No Fund Address Detected</div>
-            )}
+                    <div>No Fund Address Detected</div>
+                )}
         </div>
     )
 }

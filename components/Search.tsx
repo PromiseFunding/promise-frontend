@@ -1,17 +1,8 @@
-import Card from "@mui/material/Card"
-import CardContent from "@mui/material/CardContent"
-import Typography from "@mui/material/Typography"
-import Image from "next/image"
-import Link from "next/link"
 import FundCard from "./FundCard"
 import { SetStateAction, useEffect, useState } from "react"
-import { CardActionArea, TextField } from "@mui/material"
-import SearchIcon from "@mui/icons-material/Search"
-import CloseIcon from "@mui/icons-material/Close"
-import { propType, propTypeFunds } from "../config/types"
-import { useMoralis } from "react-moralis"
+import { TextField } from "@mui/material"
+import { propTypeFunds } from "../config/types"
 import ShowMoreLess from "./ShowMoreLess"
-import { useNotification } from "web3uikit"
 import { ref, onValue } from "firebase/database"
 import { database } from "../firebase-config"
 
@@ -58,11 +49,11 @@ export default function SearchBar(props: propTypeFunds) {
     return (
         <>
             <div className="main text-center">
-                <h1 className="font-blog text-lg text-center text-slate-200">
+                <h1 className="p-5 font-blog text-lg text-center text-slate-200">
                     Search For Fundraiser
                 </h1>
                 <div className="search">
-                    <TextField
+                    <TextField className="text-slate-200"
                         sx={{
                             width: 500,
                         }}
@@ -96,8 +87,8 @@ export default function SearchBar(props: propTypeFunds) {
                         }
                     />
                 ) : (
-                    <div></div>
-                )}
+                        <div></div>
+                    )}
             </div>
         </>
     )

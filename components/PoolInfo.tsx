@@ -63,13 +63,13 @@ export default function PoolInfo(props: propType) {
     }, [isWeb3Enabled, fundAddress])
 
     return (
-        <div className="py-5 px-5">
+        <div className="py-5 px-5 text-slate-800">
             <div className="my-20 w-[600px] drop-shadow rounded-md">
                 <details className="bg-slate-400 open:bg-slate-200 duration-300">
                     <summary className="bg-inherit px-5 py-3 text-lg cursor-pointer">
                         Fund / Pool Information:
                     </summary>
-                    <div className="bg-white px-5 py-3 border border-gray-300 text-sm font-light">
+                    <div className="bg-white px-5 py-3 border border-gray-300 text-slate-800 text-sm font-light">
                         {isWeb3Enabled && fundAddress ? (
                             <div className="">
                                 <div>TimeLock: {timeLock} seconds</div>
@@ -80,8 +80,8 @@ export default function PoolInfo(props: propType) {
                                 <div> Asset Address: {asset} </div>
                             </div>
                         ) : (
-                            <div>No Fund Address Detected</div>
-                        )}
+                                <div>No Fund Address Detected</div>
+                            )}
                     </div>
                 </details>
             </div>
