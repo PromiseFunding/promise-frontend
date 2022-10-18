@@ -23,36 +23,12 @@ const Details: NextPage = () => {
     const fundRef = ref(database, "funds/" + fundAddress)
 
     const [data, setData] = useState<databaseFundObject>()
-    // const [title, setTitle] = useState("")
-    // const [image, setImage] = useState("")
-    // const [description, setDescription] = useState("")
-    // const [category, setCategory] = useState("")
 
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
             setData(snapshot.val())
         })
-        //updateData()
     }, [fundAddress])
-
-    // const updateData = function () {
-    //     const titleRef = ref(database, "funds/" + fundAddress + "/fundTitle")
-    //     onValue(titleRef, (snapshot) => {
-    //         setTitle(snapshot.val())
-    //     })
-    //     const descriptionRef = ref(database, "funds/" + fundAddress + "/description")
-    //     onValue(descriptionRef, (snapshot) => {
-    //         setDescription(snapshot.val())
-    //     })
-    //     const imageURLRef = ref(database, "funds/" + fundAddress + "/imageURL")
-    //     onValue(imageURLRef, (snapshot) => {
-    //         setImage(snapshot.val())
-    //     })
-    //     const categoryRef = ref(database, "funds/" + fundAddress + "/category")
-    //     onValue(categoryRef, (snapshot) => {
-    //         setCategory(snapshot.val())
-    //     })
-    // }
 
     const { isWeb3Enabled } = useMoralis()
 
