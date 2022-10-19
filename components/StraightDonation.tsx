@@ -11,6 +11,7 @@ import { tokenConfig } from "../config/token-config"
 export default function StraightDonation(props: propType) {
     const fundAddress = props.fundAddress
     const tokenAddress = props.assetAddress
+    const owner = props.ownerFund
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
@@ -32,8 +33,6 @@ export default function StraightDonation(props: propType) {
 
     const [val, setVal] = useState("")
 
-    const [owner, setOwner] = useState("0")
-
     const dispatch = useNotification()
 
     const {
@@ -50,24 +49,6 @@ export default function StraightDonation(props: propType) {
         },
     })
 
-    const { runContractFunction: getOwner } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getOwner",
-        params: {},
-    })
-
-    async function updateUI() {
-        const ownerFromCall = ((await getOwner()) as BigNumber).toString()
-        setOwner(ownerFromCall)
-    }
-
-    useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
-            updateUI()
-        }
-    }, [isWeb3Enabled, fundAddress])
-
     const handleSuccess = async function (tx: ContractTransaction) {
         try {
             await tx.wait(1)
@@ -77,7 +58,6 @@ export default function StraightDonation(props: propType) {
             console.log(error)
             handleNewNotification1()
         }
-        updateUI()
     }
 
     const handleChange = (event: { target: { value: SetStateAction<string> } }) => {

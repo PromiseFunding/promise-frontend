@@ -9,6 +9,7 @@ export interface contractAddressesInterface {
 export interface propType {
     fundAddress: string
     assetAddress: string
+    ownerFund?: string
 }
 
 export interface propTypeEntryNumber {
