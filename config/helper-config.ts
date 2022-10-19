@@ -14,6 +14,7 @@ export interface networkConfigItem {
     assetName?: string
     poolAddressProvider?: string
     decimals?: number
+    tracker?: string
 }
 
 export interface networkConfigInfo {
@@ -33,6 +34,7 @@ export const networkConfig: networkConfigInfo = {
         blockConfirmations: 6,
         poolAddress: "0x368EedF3f56ad10b9bC57eed4Dac65B26Bb667f6",
         decimals: 6,
+        tracker: "https://goerli.etherscan.io/address/"
     },
     1: {
         name: "mainnet",
@@ -43,6 +45,7 @@ export const networkConfig: networkConfigInfo = {
         name: "arbitrum_goerli",
         blockConfirmations: 6,
         poolAddress: "0x6Cbb4E8eC402E07fDF96DbbC6c752aCfB0eB6075",
+        tracker:"https://goerli.arbiscan.io/address/"
     },
 }
 

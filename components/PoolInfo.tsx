@@ -1,5 +1,5 @@
 import { contractAddresses, abi } from "../constants"
-// dont export from moralis when using react
+import styles from "../styles/Home.module.css"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { useEffect, useState } from "react"
 import { BigNumber } from "ethers"
@@ -18,6 +18,8 @@ export default function PoolInfo(props: propType) {
     const chainIdNum = parseInt(chainIdHex!)
 
     const poolAddress = chainId in addresses ? networkConfig[chainIdNum].poolAddress : null
+
+    const tracker = chainId in addresses ? networkConfig[chainIdNum].tracker : null
 
     const [timeLock, setTimeLock] = useState("0") //changes entranceFee to a stateHook and triggers a rerender for us... entranceFee starts out as 0
 
@@ -66,22 +68,27 @@ export default function PoolInfo(props: propType) {
         <div className="py-5 px-5 text-slate-800">
             <div className="my-20 w-[600px] drop-shadow rounded-md">
                 <details className="bg-slate-400 open:bg-slate-200 duration-300">
-                    <summary className="bg-inherit px-5 py-3 text-lg cursor-pointer">
+                    <summary className="bg-inherit px-5 py-3 text-lg cursor-pointer font-bold">
                         Fund / Pool Information:
                     </summary>
                     <div className="bg-white px-5 py-3 border border-gray-300 text-slate-800 text-sm font-light">
                         {isWeb3Enabled && fundAddress ? (
-                            <div className="">
+                            <div className="font-normal">
                                 <div>TimeLock: {timeLock} seconds</div>
-                                <div>Fund Address: {fundAddress}</div>
+                                <div>
+                                    Fund Address:
+                                    <a href={tracker + fundAddress}>
+                                        <u className={styles.fundinfo}><b className={styles.fundinfo}>{fundAddress}</b></u>
+                                    </a>
+                                </div>
                                 <div>Owner Address: {owner} </div>
                                 <div>User Address: {account}</div>
                                 <div> Pool Address: {poolAddress} </div>
                                 <div> Asset Address: {asset} </div>
                             </div>
                         ) : (
-                                <div>No Fund Address Detected</div>
-                            )}
+                            <div>No Fund Address Detected</div>
+                        )}
                     </div>
                 </details>
             </div>
