@@ -81,10 +81,30 @@ export default function PoolInfo(props: propType) {
                                         <u className={styles.fundinfo}><b className={styles.fundinfo}>{fundAddress}</b></u>
                                     </a>
                                 </div>
-                                <div>Owner Address: {owner} </div>
-                                <div>User Address: {account}</div>
-                                <div> Pool Address: {poolAddress} </div>
-                                <div> Asset Address: {asset} </div>
+                                <div>
+                                    Owner Address:
+                                    <a href={tracker + owner}>
+                                        <u className={styles.fundinfo}><b className={styles.fundinfo}>{owner}</b></u>
+                                    </a>
+                                </div>
+                                <div>
+                                    User Address:
+                                    <a href={tracker + account!}>
+                                        <u className={styles.fundinfo}><b className={styles.fundinfo}>{account}</b></u>
+                                    </a>
+                                </div>
+                                <div>
+                                    Pool Address:
+                                    <a href={tracker + poolAddress!}>
+                                        <u className={styles.fundinfo}><b className={styles.fundinfo}>{poolAddress}</b></u>
+                                    </a>
+                                </div>
+                                <div>
+                                    Asset Address:
+                                    <a href={tracker + asset}>
+                                        <u className={styles.fundinfo}><b className={styles.fundinfo}>{asset}</b></u>
+                                    </a>
+                                </div>
                             </div>
                         ) : (
                             <div>No Fund Address Detected</div>
