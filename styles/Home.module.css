@@ -1,6 +1,5 @@
 .container {
     padding: 0 2rem;  
-    overflow-y: scroll;
 }
 
 .details {
@@ -18,6 +17,12 @@
 
 .details > div {
     object-fit: cover;
+}
+
+.sticky {
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
 }
 
 .main {

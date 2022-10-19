@@ -63,7 +63,6 @@ const Details: NextPage = () => {
             <div className="p-5 bg-slate-700 text-slate-200 rounded border-2 border-slate-500">
                 {data ? (
                     <div>
-
                         <div className={styles.details}>
                             <div className="p-5 rounded content-center">
                                 <h1 className="text-5xl font-bold text-slate-200">
@@ -85,16 +84,18 @@ const Details: NextPage = () => {
                                 <br></br>
                                 <div className="font-bold">
                                     <h1 className="text-2xl">Description:</h1>
+                                    <br></br>
                                     <div className="font-normal">{data.description}</div>
                                 </div>
                                 <br></br>
                                 <div className="font-bold">
-
-                                    <div className="font-normal"> <b>Category:</b> {data.category}</div>
+                                    <div className="font-normal">
+                                        {" "}
+                                        <b className="text-2xl">Category:</b> {data.category}
+                                    </div>
                                 </div>
-
                             </div>
-                            <div className="position-sticky py-5">
+                            <div className={styles.sticky}>
                                 <div className="text-center flex flex-col border-2 border-slate-500">
                                     <WithdrawProceeds
                                         fundAddress={fundAddress}
@@ -120,8 +121,8 @@ const Details: NextPage = () => {
                         </div>
                     </div>
                 ) : (
-                        <div></div>
-                    )}
+                    <div></div>
+                )}
                 <div className="p-10">
                     <PoolInfo
                         fundAddress={router.query.fund as string}
@@ -129,7 +130,6 @@ const Details: NextPage = () => {
                     />
                 </div>
             </div>
-
         </div>
     )
 }
