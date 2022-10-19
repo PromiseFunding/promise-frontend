@@ -10,11 +10,11 @@ import { tokenConfig } from "../config/token-config"
 export default function WithdrawProceeds(props: propType) {
     const fundAddress = props.fundAddress
     const tokenAddress = props.assetAddress
+    const owner = props.ownerFund
 
     const addresses: contractAddressesInterface = contractAddresses
-    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
+    const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
-    const [owner, setOwner] = useState("0")
     const [userAddress, setAddress] = useState("0")
     const [withdrawableProceeds, setWithdrawableProceeds] = useState(0)
 
@@ -45,13 +45,6 @@ export default function WithdrawProceeds(props: propType) {
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
 
-    const { runContractFunction: getOwner } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getOwner",
-        params: {},
-    })
-
     const { runContractFunction: getWithdrawableProceeds } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!,
@@ -71,8 +64,6 @@ export default function WithdrawProceeds(props: propType) {
 
     const initData = async function () {
         if (isWeb3Enabled && fundAddress) {
-            const ownerFromCall = await getOwner()
-            setOwner((ownerFromCall as string).toLowerCase())
             let withdrawableProceedsFromCall = (await getWithdrawableProceeds()) as number
             if (withdrawableProceedsFromCall > 0) {
                 setWithdrawableProceeds(withdrawableProceedsFromCall / 10 ** decimals!)

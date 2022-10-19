@@ -15,22 +15,25 @@ import { ref, onValue } from "firebase/database"
 import { database } from "../firebase-config"
 import { databaseFundObject } from "../config/types"
 import { CardMedia } from "@mui/material"
+import { BigNumber } from "ethers"
 
 const Details: NextPage = () => {
     const router = useRouter()
     const fundAddress = router.query.fund as string
 
     const fundRef = ref(database, "funds/" + fundAddress)
-
+    const { isWeb3Enabled, account } = useMoralis()
     const [data, setData] = useState<databaseFundObject>()
+    const [assetAddress, setAssetAddress] = useState("")
+    const [userAddress, setAddress] = useState("0")
+    const [owner, setOwner] = useState("0")
 
-    useEffect(() => {
-        onValue(fundRef, (snapshot) => {
-            setData(snapshot.val())
-        })
-    }, [fundAddress])
-
-    const { isWeb3Enabled } = useMoralis()
+    const { runContractFunction: getOwner } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getOwner",
+        params: {},
+    })
 
     const { runContractFunction: getAssetAddress } = useWeb3Contract({
         abi: abi,
@@ -39,11 +42,23 @@ const Details: NextPage = () => {
         params: {},
     })
 
-    const [assetAddress, setAssetAddress] = useState("")
+    useEffect(() => {
+        onValue(fundRef, (snapshot) => {
+            setData(snapshot.val())
+        })
+    }, [fundAddress])
+
+    useEffect(() => {
+        if (account) {
+            setAddress(account.toLowerCase())
+        }
+    }, [account])
 
     async function updateUI() {
         const assetAddressFromCall = (await getAssetAddress()) as string
         setAssetAddress(assetAddressFromCall)
+        const ownerFromCall = await getOwner()
+        setOwner((ownerFromCall as string).toLowerCase())
     }
 
     useEffect(() => {
@@ -51,6 +66,7 @@ const Details: NextPage = () => {
             updateUI()
         }
     }, [isWeb3Enabled, fundAddress])
+    
 
     return (
         <div className={styles.container}>
@@ -63,7 +79,6 @@ const Details: NextPage = () => {
             <div className="p-5 bg-slate-700 text-slate-200 rounded border-2 border-slate-500">
                 {data ? (
                     <div>
-
                         <div className={styles.details}>
                             <div className="p-5 rounded content-center">
                                 <h1 className="text-5xl font-bold text-slate-200">
@@ -85,43 +100,53 @@ const Details: NextPage = () => {
                                 <br></br>
                                 <div className="font-bold">
                                     <h1 className="text-2xl">Description:</h1>
+                                    <br></br>
                                     <div className="font-normal">{data.description}</div>
                                 </div>
                                 <br></br>
                                 <div className="font-bold">
-
-                                    <div className="font-normal"> <b>Category:</b> {data.category}</div>
+                                    <div className="font-normal">
+                                        {" "}
+                                        <b className="text-2xl">Category:</b> {data.category}
+                                    </div>
                                 </div>
-
                             </div>
-                            <div className="position-sticky py-5">
+                            <div className={styles.sticky}>
                                 <div className="text-center flex flex-col border-2 border-slate-500">
                                     <WithdrawProceeds
                                         fundAddress={fundAddress}
                                         assetAddress={assetAddress}
+                                        ownerFund={owner}
                                     ></WithdrawProceeds>
                                     <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                                    <StraightDonation
-                                        fundAddress={fundAddress}
-                                        assetAddress={assetAddress}
-                                    ></StraightDonation>
-                                    <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                                    <YieldDonation
-                                        fundAddress={fundAddress}
-                                        assetAddress={assetAddress}
-                                    ></YieldDonation>
-                                    <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                                    <Withdraw
-                                        fundAddress={fundAddress}
-                                        assetAddress={assetAddress}
-                                    ></Withdraw>
+                                    {isWeb3Enabled && owner != userAddress ? (
+                                        <>
+                                            <StraightDonation
+                                                fundAddress={fundAddress}
+                                                assetAddress={assetAddress}
+                                                ownerFund={owner}
+                                            ></StraightDonation>
+                                            <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                                            <YieldDonation
+                                                fundAddress={fundAddress}
+                                                assetAddress={assetAddress}
+                                            ></YieldDonation>
+                                            <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                                            <Withdraw
+                                                fundAddress={fundAddress}
+                                                assetAddress={assetAddress}
+                                            ></Withdraw>
+                                        </>
+                                    ) : (
+                                        <p></p>
+                                    )}
                                 </div>
                             </div>
                         </div>
                     </div>
                 ) : (
-                        <div></div>
-                    )}
+                    <div></div>
+                )}
                 <div className="p-10">
                     <PoolInfo
                         fundAddress={router.query.fund as string}
@@ -129,7 +154,6 @@ const Details: NextPage = () => {
                     />
                 </div>
             </div>
-
         </div>
     )
 }
