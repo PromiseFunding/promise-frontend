@@ -25,6 +25,10 @@
     align-self: flex-start;
 }
 
+.fundinfo {
+    color: rgb(14, 79, 126);
+}
+
 .main {
     min-height: 100vh;
     padding: 4rem 0;
