@@ -99,7 +99,6 @@ export default function StraightDonation(props: propType) {
 
     const handleError = async function (error: Error) {
         console.log(error)
-        //console.log(error["message"])
         dispatch({
             type: "info",
             message: "Regular Donation Failed. Insufficient funds.",

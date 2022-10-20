@@ -1,11 +1,11 @@
 import FundCard from "./FundCard"
 import { SetStateAction, useEffect, useState } from "react"
+import { useRouter } from "next/router"
 import { TextField } from "@mui/material"
 import { propTypeFunds } from "../config/types"
 import ShowMoreLess from "./ShowMoreLess"
-import { ref, onValue } from "firebase/database"
+import { ref, onValue, get } from "firebase/database"
 import { database } from "../firebase-config"
-import { useRouter } from "next/router"
 
 export default function SearchBar(props: propTypeFunds) {
     const [filteredData, setFilteredData] = useState<string[]>(props.fundAddressArray)
@@ -14,58 +14,77 @@ export default function SearchBar(props: propTypeFunds) {
     const [maxEntries, setMaxEntries] = useState(12)
 
     const router = useRouter()
-    const category = router.query.category as string
+    const category = router.query.category as string || ""
 
-    const handleFunds = (lowerCase: string) => {
+
+    let inputHandler = (e: { target: { value: string } }) => {
         //convert input text to lower case
+        let lowerCase = e.target.value.toLowerCase()
+
         setInputText(lowerCase)
 
+
         const newFilter = props.fundAddressArray.filter((fund) => {
-            const categoryRef = ref(database, "funds/" + fund + "/category")
-            let categoryValue = ""
-            onValue(categoryRef, (snapshot) => {
-                if (snapshot.val() && snapshot.val().toLowerCase() != category.toLowerCase()) {
-                    categoryValue += snapshot.val()
-                }
-            })
-
-            if (categoryValue && categoryValue.toLowerCase() != category.toLowerCase()) {
-                return false
-            }
-
-            if (lowerCase == "") {
-                return true
-            }
             if (lowerCase.slice(0, 2) == "0x") {
                 return fund.toLowerCase().includes(lowerCase)
             }
+
             let holder = ""
+            let categoryVal = ""
+            const categoryRef = ref(database, "funds/" + fund + "/category")
 
-            const titleRef = ref(database, "funds/" + fund + "/fundTitle")
-            onValue(titleRef, (snapshot) => {
-                holder += snapshot.val()
-            })
-            const descriptionRef = ref(database, "funds/" + fund + "/description")
-            onValue(descriptionRef, (snapshot) => {
-                holder += snapshot.val()
+            onValue(categoryRef, (snapshot) => {
+                categoryVal += snapshot.val()
             })
 
-            return holder.toLowerCase().includes(lowerCase)
+            const categoryMatch = category == "" ? true : categoryVal.toLowerCase() == category.toLowerCase()
+
+            if (lowerCase === "" && categoryMatch) {
+                return true
+            } else {
+                const titleRef = ref(database, "funds/" + fund + "/fundTitle")
+                onValue(titleRef, (snapshot) => {
+                    holder += snapshot.val()
+                })
+                const descriptionRef = ref(database, "funds/" + fund + "/description")
+                onValue(descriptionRef, (snapshot) => {
+                    holder += snapshot.val()
+                })
+                return holder.toLowerCase().includes(lowerCase) && categoryMatch
+            }
         })
         setFilteredData(newFilter)
+
     }
 
-    let inputHandler = (e: { target: { value: string } }) => {
-        handleFunds(e.target.value.toLowerCase())
+    const filterCategories = async (funds: string[]) => {
+        const newFilter: string[] = []
+
+        if (category == "") {
+            return funds
+        } else {
+            for (const fund of funds) {
+                const categoryRef = ref(database, "funds/" + fund + "/category")
+                const snapshot = await get(categoryRef)
+                const categoryVal = snapshot.val()
+                if (categoryVal && categoryVal.toLowerCase() == category.toLowerCase()) {
+                    newFilter.push(fund)
+                }
+            }
+        }
+
+        return newFilter
+    }
+
+    const updateCategories = async () => {
+        filterCategories(props.fundAddressArray).then((value) => {
+            setFilteredData(value)
+        })
     }
 
     useEffect(() => {
-        setFilteredData(props.fundAddressArray.slice(0, maxEntries))
-    }, [props.fundAddressArray, maxEntries])
-
-    useEffect(() => {
-        handleFunds("")
-    }, [category, props.fundAddressArray])
+        updateCategories()
+    }, [props.fundAddressArray, maxEntries, category])
 
     return (
         <>
@@ -87,11 +106,11 @@ export default function SearchBar(props: propTypeFunds) {
                 </div>
             </div>
             <br></br>
-            <h1 className="font-blog text-4xl text-slate-200">Discover Fundraisers in {category}</h1>
+            <h1 className="font-blog text-4xl text-slate-200">Discover Fundraisers: {category}</h1>
             <br></br>
             <div className="py-5 px-5">
                 <ul className="flex flex-row flex-wrap">
-                    {filteredData.map((fund) => (
+                    {filteredData.slice(0, maxEntries).map((fund) => (
                         <li key={fund} className="px-5 py-5">
                             <FundCard fund={fund}></FundCard>
                         </li>
@@ -101,14 +120,13 @@ export default function SearchBar(props: propTypeFunds) {
             <div>
                 <br></br>
                 {filteredData.length > maxEntries ? (
+
                     <ShowMoreLess
                         amount={maxEntries}
                         onChangeAmount={(newAmount: SetStateAction<Number>) =>
                             setMaxEntries(Number(newAmount))
                         }
-                    />
-                ) : (
-                        <div></div>
+                    />) : (<div></div>
                     )}
             </div>
         </>

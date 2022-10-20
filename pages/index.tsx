@@ -7,6 +7,9 @@ import Search from "../components/Search"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { contractAddressesInterface } from "../config/types"
 import { contractAddresses, FundFactory } from "../constants"
+import { ref, onValue, get } from "firebase/database"
+
+import { database } from "../firebase-config"
 
 const Home: NextPage = () => {
     const addresses: contractAddressesInterface = contractAddresses
@@ -30,8 +33,16 @@ const Home: NextPage = () => {
 
     async function updateUI() {
         const allFundsFromCall = (await getAllYieldFundsAAVE()) as string[]
-        setAllFunds(allFundsFromCall)
-        console.log(allFunds)
+        const finalFunds: string[] = []
+        for (const fund of allFundsFromCall) {
+            const categoryRef = ref(database, "funds/" + fund + "/fundTitle")
+            const snapshot = await get(categoryRef)
+
+            if (snapshot.val()) {
+                finalFunds.push(fund)
+            }
+        }
+        setAllFunds(finalFunds)
     }
 
     useEffect(() => {
@@ -54,8 +65,8 @@ const Home: NextPage = () => {
                     </div>
                 </>
             ) : (
-                <div>Not available on this chain</div>
-            )}
+                    <div>Not available on this chain</div>
+                )}
         </div>
     )
 }
