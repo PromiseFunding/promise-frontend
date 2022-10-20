@@ -61,13 +61,14 @@ export default function FundCard(props: { fund: string }) {
                                 >
                                     {data.description}
                                 </Typography>
+                                <b>category:</b> {data.category}
                             </CardContent>
                         </CardActionArea>
                     </Card>
                 </div>
             ) : (
-                <div></div>
-            )}
+                    <div></div>
+                )}
         </div>
     )
 }
