@@ -24,7 +24,7 @@ export default function FundCard(props: { fund: string }) {
             {data ? (
                 <div className="main text-center">
                     <Card
-                        sx={{ maxWidth: 345, height: 470, backgroundColor: "Gainsboro" }}
+                        sx={{ maxWidth: 345, height: 490, backgroundColor: "Gainsboro" }}
                         color="gray"
                     >
                         <CardActionArea href={`/details/?fund=${fund}`}>

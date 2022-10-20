@@ -25,10 +25,6 @@ export default function SearchBar(props: propTypeFunds) {
 
 
         const newFilter = props.fundAddressArray.filter((fund) => {
-            if (lowerCase.slice(0, 2) == "0x") {
-                return fund.toLowerCase().includes(lowerCase)
-            }
-
             let holder = ""
             let categoryVal = ""
             const categoryRef = ref(database, "funds/" + fund + "/category")
@@ -38,6 +34,10 @@ export default function SearchBar(props: propTypeFunds) {
             })
 
             const categoryMatch = category == "" ? true : categoryVal.toLowerCase() == category.toLowerCase()
+
+            if (lowerCase.slice(0, 2) == "0x") {
+                return fund.toLowerCase().includes(lowerCase) && categoryMatch
+            }
 
             if (lowerCase === "" && categoryMatch) {
                 return true
