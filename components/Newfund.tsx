@@ -117,7 +117,6 @@ export default function NewFund() {
     }
 
     const handleChangeDetails = () => {
-        console.log(chainId)
         const tokenAddress =
             chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].assetAddress : null
         const poolAddress =
@@ -179,7 +178,6 @@ export default function NewFund() {
 
     function handleChangeCategory(event: { target: { value: SetStateAction<string> } }) {
         setCategory(event.target.value)
-        console.log(category)
     }
 
     return (

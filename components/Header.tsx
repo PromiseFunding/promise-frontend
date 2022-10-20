@@ -1,6 +1,7 @@
 import { ConnectButton } from "web3uikit"
 import Image from "next/image"
 import Link from "next/link"
+import CategorySelector from "./CategorySelector"
 
 export default function Header() {
     return (
@@ -24,6 +25,7 @@ export default function Header() {
                             Create New Fund
                         </a>
                     </Link>
+                    <CategorySelector></CategorySelector>
                 </div>
             </div>
 

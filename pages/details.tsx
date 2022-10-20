@@ -15,7 +15,6 @@ import { ref, onValue } from "firebase/database"
 import { database } from "../firebase-config"
 import { databaseFundObject } from "../config/types"
 import { CardMedia } from "@mui/material"
-import { BigNumber } from "ethers"
 
 const Details: NextPage = () => {
     const router = useRouter()
