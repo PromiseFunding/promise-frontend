@@ -10,6 +10,8 @@ export interface propType {
     fundAddress: string
     assetAddress: string
     ownerFund?: string
+    onChangeAmountFunded?(arg0: void): void
+    updateAmount?: number
 }
 
 export interface propTypeEntryNumber {
