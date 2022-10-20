@@ -86,6 +86,10 @@ export default function SearchBar(props: propTypeFunds) {
         updateCategories()
     }, [props.fundAddressArray, maxEntries, category])
 
+    useEffect(() => {
+        setMaxEntries(12)
+    }, [category])
+
     return (
         <>
             <div className="main text-center">
