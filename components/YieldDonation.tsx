@@ -61,6 +61,7 @@ export default function YieldDonation(props: propType) {
         const fundTx: any = await fund()
         try {
             await fundTx.wait(1)
+            props.onChangeAmountFunded!()
             handleNewNotification()
         } catch (error) {
             console.log(error)

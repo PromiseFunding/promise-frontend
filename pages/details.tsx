@@ -26,6 +26,7 @@ const Details: NextPage = () => {
     const [assetAddress, setAssetAddress] = useState("")
     const [userAddress, setAddress] = useState("0")
     const [owner, setOwner] = useState("0")
+    const [amt, setAmt] = useState(0)
 
     const { runContractFunction: getOwner } = useWeb3Contract({
         abi: abi,
@@ -40,6 +41,10 @@ const Details: NextPage = () => {
         functionName: "getAssetAddress",
         params: {},
     })
+
+    const updateAmountTrigger = function () {
+        setAmt(amt+1)
+    }
 
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
@@ -129,11 +134,15 @@ const Details: NextPage = () => {
                                             <YieldDonation
                                                 fundAddress={fundAddress}
                                                 assetAddress={assetAddress}
+                                                onChangeAmountFunded={() =>
+                                                    updateAmountTrigger()
+                                                }
                                             ></YieldDonation>
                                             <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
                                             <Withdraw
                                                 fundAddress={fundAddress}
                                                 assetAddress={assetAddress}
+                                                updateAmount={amt}
                                             ></Withdraw>
                                         </>
                                     ) : (

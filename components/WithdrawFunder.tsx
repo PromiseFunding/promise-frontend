@@ -11,6 +11,7 @@ import { tokenConfig } from "../config/token-config"
 export default function Withdraw(props: propType) {
     const fundAddress = props.fundAddress
     const tokenAddress = props.assetAddress
+    const updateAmount = props.updateAmount
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
@@ -73,7 +74,7 @@ export default function Withdraw(props: propType) {
         if (isWeb3Enabled && fundAddress) {
             updateUI()
         }
-    }, [isWeb3Enabled, fundAddress])
+    }, [isWeb3Enabled, fundAddress, updateAmount])
 
     const handleSuccess = async function (tx: ContractTransaction) {
         try {
