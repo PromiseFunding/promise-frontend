@@ -34,6 +34,8 @@ const Details: NextPage = () => {
     const [owner, setOwner] = useState("0")
     const [amt, setAmt] = useState(0)
     const [state, setState] = useState(0)
+    const [tranche, setTranche] = useState(0)
+
 
     const { runContractFunction: getOwner } = useWeb3Contract({
         abi: abi,
@@ -53,6 +55,13 @@ const Details: NextPage = () => {
         abi: abi,
         contractAddress: fundAddress,
         functionName: "getState",
+        params: {},
+    })
+
+    const { runContractFunction: getCurrentTranche } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress,
+        functionName: "getCurrentTranche",
         params: {},
     })
 
@@ -79,6 +88,8 @@ const Details: NextPage = () => {
         setOwner((ownerFromCall as string).toLowerCase())
         const stateFromCall = await getState() as number
         setState(stateFromCall)
+        const trancheFromCall = await getCurrentTranche() as number
+        setTranche(trancheFromCall)
     }
 
     useEffect(() => {
@@ -134,6 +145,12 @@ const Details: NextPage = () => {
                                     <div className="font-normal">
                                         {" "}
                                         <b className="text-2xl">Fund State:</b> {states[state]}
+                                    </div>
+                                </div>
+                                <div className="font-bold">
+                                    <div className="font-normal">
+                                        {" "}
+                                        <b className="text-2xl">Current Tranche:</b> {tranche}
                                     </div>
                                 </div>
                             </div>
@@ -203,7 +220,13 @@ const Details: NextPage = () => {
                                                             fundAddress={fundAddress}
                                                             assetAddress={assetAddress}
                                                             ownerFund={owner}
+                                                            tranche={tranche}
                                                         ></WithdrawProceeds>
+                                                    ) : (<></>)}
+
+                                                    {state == 3 ? (<h1 className="p-5 text-2xl font-bold bg-slate-800">
+                                                        The funders of this project have decided to close down this fundraiser.
+                                                        They will now be able to withdraw their funds.</h1>
                                                     ) : (<></>)}
                                                 </div>
                                             )}

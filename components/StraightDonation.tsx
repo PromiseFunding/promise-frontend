@@ -167,7 +167,7 @@ export default function StraightDonation(props: propType) {
                         <br></br>
                         Deposit Amount: {val || 0} {coinName}
                     </h2>
-                    Funds Contributed: {amountFunded} {coinName}
+                    Funds In Escrow: {amountFunded} {coinName}
                 </div>
             ) : (
                 <div>No Fund Address Detected</div>

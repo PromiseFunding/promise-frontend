@@ -155,7 +155,7 @@ export default function Withdraw(props: propType) {
                         </h2>
                         <h2>Your Information:</h2>
                         <div>
-                            Amount Funded: {amountFunded} {coinName}
+                            Amount Withdrawable: {amountFunded} {coinName}
                         </div>
                     </div>
                 ) : (

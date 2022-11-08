@@ -12,6 +12,7 @@ export interface propType {
     ownerFund?: string
     onChangeAmountFunded?(arg0: void): void
     updateAmount?: number
+    tranche?: number
 }
 
 export interface propTypeEntryNumber {
