@@ -11,6 +11,7 @@ export default function WithdrawProceeds(props: propType) {
     const fundAddress = props.fundAddress
     const tokenAddress = props.assetAddress
     const owner = props.ownerFund
+    const tranche = props.tranche
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
@@ -45,11 +46,11 @@ export default function WithdrawProceeds(props: propType) {
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
 
-    const { runContractFunction: getWithdrawableProceeds } = useWeb3Contract({
+    const { runContractFunction: getTrancheAmountRaised } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!,
-        functionName: "getWithdrawableProceeds",
-        params: {},
+        functionName: "getTrancheAmountRaised",
+        params: { level: tranche},
     })
 
     const handleSuccess = async function (tx: ContractTransaction) {
@@ -64,7 +65,7 @@ export default function WithdrawProceeds(props: propType) {
 
     const initData = async function () {
         if (isWeb3Enabled && fundAddress) {
-            let withdrawableProceedsFromCall = (await getWithdrawableProceeds()) as number
+            let withdrawableProceedsFromCall = (await getTrancheAmountRaised()) as number
             if (withdrawableProceedsFromCall > 0) {
                 setWithdrawableProceeds(withdrawableProceedsFromCall / 10 ** decimals!)
             }
@@ -152,8 +153,8 @@ export default function WithdrawProceeds(props: propType) {
                         {isLoading || isFetching ? (
                             <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
                         ) : (
-                                <div>Withdraw</div>
-                            )}
+                            <div>Withdraw</div>
+                        )}
                     </button>
                     <div>
                         <br></br>
@@ -161,8 +162,8 @@ export default function WithdrawProceeds(props: propType) {
                     </div>
                 </div>
             ) : (
-                    <p></p>
-                )}{" "}
+                <p></p>
+            )}{" "}
         </div>
     )
 }

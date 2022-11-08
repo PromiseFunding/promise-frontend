@@ -17,7 +17,9 @@ async function main() {
 
     const factoryAddress =
         chainId in addresses
-            ? addresses[chainId]["FundFactory"][addresses[chainId]["FundFactory"].length - 1]
+            ? addresses[chainId]["PromiseFundFactory"][
+                  addresses[chainId]["PromiseFundFactory"].length - 1
+              ]
             : null
 
     await Moralis.start({ serverUrl, appId, masterKey })

@@ -21,8 +21,6 @@ export default function PoolInfo(props: propType) {
 
     const tracker = chainId in addresses ? networkConfig[chainIdNum].tracker : null
 
-    const [timeLock, setTimeLock] = useState("0") //changes entranceFee to a stateHook and triggers a rerender for us... entranceFee starts out as 0
-
     //setEntranceFee triggers the update
     const [owner, setOwner] = useState("0")
 
@@ -50,11 +48,9 @@ export default function PoolInfo(props: propType) {
     })
 
     async function updateUI() {
-        const timeFromCall = ((await getTimeLock()) as BigNumber).toString()
         const ownerFromCall = ((await getOwner()) as BigNumber).toString()
         const assetFromCall = ((await getAssetAddress()) as BigNumber).toString()
         setAsset(assetFromCall)
-        setTimeLock(timeFromCall)
         setOwner(ownerFromCall)
     }
 
@@ -74,7 +70,6 @@ export default function PoolInfo(props: propType) {
                     <div className="bg-white px-5 py-3 border border-gray-300 text-slate-800 text-sm font-light">
                         {isWeb3Enabled && fundAddress ? (
                             <div className="font-normal">
-                                <div>TimeLock: {timeLock} seconds</div>
                                 <div>
                                     Fund Address:
                                     <a href={tracker + fundAddress}>

@@ -18,28 +18,30 @@ const Home: NextPage = () => {
 
     const fundFactoryAddress =
         chainId in addresses
-            ? addresses[chainId]["FundFactory"][addresses[chainId]["FundFactory"].length - 1]
+            ? addresses[chainId]["PromiseFundFactory"][addresses[chainId]["PromiseFundFactory"].length - 1]
             : null
 
     //TODO: get helper-config working instead!... gets rid of decimal function
     const [allFunds, setAllFunds] = useState<string[]>([])
 
-    const { runContractFunction: getAllYieldFundsAAVE } = useWeb3Contract({
+    const { runContractFunction: getAllPromiseFund } = useWeb3Contract({
         abi: FundFactory,
         contractAddress: fundFactoryAddress!,
-        functionName: "getAllYieldFundsAAVE",
+        functionName: "getAllPromiseFund",
         params: {},
     })
 
     async function updateUI() {
-        const allFundsFromCall = (await getAllYieldFundsAAVE()) as string[]
+        const allFundsFromCall = (await getAllPromiseFund()) as string[]
         const finalFunds: string[] = []
-        for (const fund of allFundsFromCall) {
-            const categoryRef = ref(database, "funds/" + fund + "/fundTitle")
-            const snapshot = await get(categoryRef)
+        if (allFundsFromCall) {
+            for (const fund of allFundsFromCall) {
+                const categoryRef = ref(database, "funds/" + fund + "/fundTitle")
+                const snapshot = await get(categoryRef)
 
-            if (snapshot.val()) {
-                finalFunds.push(fund)
+                if (snapshot.val()) {
+                    finalFunds.push(fund)
+                }
             }
         }
         setAllFunds(finalFunds)
@@ -65,8 +67,8 @@ const Home: NextPage = () => {
                     </div>
                 </>
             ) : (
-                    <div>Not available on this chain</div>
-                )}
+                <div>Not available on this chain</div>
+            )}
         </div>
     )
 }
