@@ -20,7 +20,6 @@ import { database } from "../firebase-config"
 import { databaseFundObject } from "../config/types"
 import { CardMedia } from "@mui/material"
 import { states } from "../config/helper-config"
-import { CpuChipIcon } from "@heroicons/react/20/solid"
 
 const Details: NextPage = () => {
     const router = useRouter()

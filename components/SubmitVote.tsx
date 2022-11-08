@@ -1,11 +1,10 @@
-import { contractAddresses, abi, erc20Abi } from "../constants"
+import { abi } from "../constants"
 // dont export from moralis when using react
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { SetStateAction, useEffect, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-import { BigNumber, ContractTransaction } from "ethers"
-import { contractAddressesInterface, propType } from "../config/types"
-import { tokenConfig } from "../config/token-config"
+import { ContractTransaction } from "ethers"
+import { propType } from "../config/types"
 
 export default function SubmitVote(props: propType) {
     const fundAddress = props.fundAddress

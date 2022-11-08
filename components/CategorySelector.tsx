@@ -12,7 +12,7 @@ export default function CategorySelector() {
             <div>
                 <Menu.Button className="inline-flex w-full justify-center rounded-md bg-slate-800 px-5 py-2 text-lg font-medium text-slate-200 shadow-sm hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-100">
                     Categories
-          <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
+                    <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
                 </Menu.Button>
             </div>
 

@@ -1,16 +1,15 @@
-import { contractAddresses, abi, erc20Abi } from "../constants"
+import { abi } from "../constants"
 // dont export from moralis when using react
 import { useMoralis, useWeb3Contract } from "react-moralis"
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-import { BigNumber, ContractTransaction } from "ethers"
-import { contractAddressesInterface, propType } from "../config/types"
-import { tokenConfig } from "../config/token-config"
+import { ContractTransaction } from "ethers"
+import { propType } from "../config/types"
 
 export default function EndVote(props: propType) {
     const fundAddress = props.fundAddress
 
-    const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
+    const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
 
     const [timeLeftVoting, setTimeLeftVoting] = useState(0)
 
@@ -79,7 +78,7 @@ export default function EndVote(props: propType) {
 
     return (
         <div className="flex flex-col">
-            {isWeb3Enabled && timeLeftVoting == 0? (
+            {isWeb3Enabled && timeLeftVoting == 0 ? (
                 <div className="flex-1 p-5 bg-slate-800 text-slate-200">
                     <div>
                         <h1 className="text-xl font-bold">End Vote</h1>

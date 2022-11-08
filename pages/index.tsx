@@ -7,7 +7,7 @@ import Search from "../components/Search"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { contractAddressesInterface } from "../config/types"
 import { contractAddresses, FundFactory } from "../constants"
-import { ref, onValue, get } from "firebase/database"
+import { ref, get } from "firebase/database"
 
 import { database } from "../firebase-config"
 
