@@ -32,8 +32,6 @@ export default function Withdraw(props: propType) {
 
     const [amountFunded, setAmountFunded] = useState(0)
 
-    const [timeLeft, setTimeLeft] = useState("0")
-
     const [val, setVal] = useState("")
 
     const dispatch = useNotification()
@@ -45,7 +43,7 @@ export default function Withdraw(props: propType) {
     } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!, // specify the networkId
-        functionName: "withdrawFundsFromPool",
+        functionName: "withdrawProceedsFunder",
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
 
@@ -56,17 +54,9 @@ export default function Withdraw(props: propType) {
         params: { funder: account },
     })
 
-    const { runContractFunction: getTimeLeft } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getTimeLeft",
-        params: { funder: account },
-    })
 
     async function updateUI() {
         const amountFundedFromCall = (await getFundAmount()) as number
-        const timeLeftFromCall = ((await getTimeLeft()) as BigNumber).toString()
-        setTimeLeft(timeLeftFromCall)
         setAmountFunded(amountFundedFromCall / 10 ** decimals!)
     }
 
@@ -130,7 +120,7 @@ export default function Withdraw(props: propType) {
                 <br></br>
             </div>
             {isWeb3Enabled && fundAddress ? (
-                timeLeft == "0" ? (
+                true ? (
                     <div className="">
                         <input
                             maxLength={21 - (decimals || 6)}
@@ -167,14 +157,12 @@ export default function Withdraw(props: propType) {
                         <div>
                             Amount Funded: {amountFunded} {coinName}
                         </div>
-                        <div>Time left: {timeLeft} seconds</div>
                     </div>
                 ) : (
                     <>
                         <h1>Time Lock Still Initiated. Unable to Withdraw</h1>
                         <h2>Your Information:</h2>
                         <div>Amount Funded: {amountFunded} {coinName}</div>
-                        <div>Time left: {timeLeft} seconds</div>
                     </>
                 )
             ) : (

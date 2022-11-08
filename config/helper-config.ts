@@ -45,9 +45,17 @@ export const networkConfig: networkConfigInfo = {
         name: "arbitrum_goerli",
         blockConfirmations: 6,
         poolAddress: "0x6Cbb4E8eC402E07fDF96DbbC6c752aCfB0eB6075",
-        tracker:"https://goerli.arbiscan.io/address/"
+        tracker: "https://goerli.arbiscan.io/address/"
     },
 }
+
+export const states = [
+    "PENDING",
+    "VOTING",
+    "OWNER_WITHDRAW",
+    "FUNDER_WITHDRAW",
+    "REVOTE"
+]
 
 export const developmentChains = ["hardhat", "localhost"]
 export const DEFAULT_ASSET_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"

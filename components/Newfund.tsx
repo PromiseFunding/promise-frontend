@@ -18,7 +18,7 @@ export default function NewFund() {
 
     const yieldAddress =
         chainId in addresses
-            ? addresses[chainId]["FundFactory"][addresses[chainId]["FundFactory"].length - 1]
+            ? addresses[chainId]["PromiseFundFactory"][addresses[chainId]["PromiseFundFactory"].length - 1]
             : null
     const chainIdNum = parseInt(chainIdHex!)
 
@@ -45,18 +45,17 @@ export default function NewFund() {
     const dispatch = useNotification()
 
     const {
-        runContractFunction: createYieldFundAAVE,
+        runContractFunction: createPromiseFund,
         isLoading,
         isFetching,
     } = useWeb3Contract({
         abi: FundFactory,
         contractAddress: yieldAddress!,
-        functionName: "createYieldFundAAVE",
+        functionName: "createPromiseFund",
         params: {
-            lockTime: time,
             assetAddress: assetAddress,
-            aaveTokenAddress: aaveAddress,
-            poolAddress: poolAddress,
+            numberOfMilestones: 4,
+            milestoneDuration: 600,
         },
     })
 
@@ -75,8 +74,8 @@ export default function NewFund() {
             console.log("Please fill in the required fields.")
             return
         }
-
-        const createTx: any = await createYieldFundAAVE({
+        console.log('test')
+        const createTx: any = await createPromiseFund({
             onSuccess: (tx) => {
                 handleSuccess(tx)
             },
@@ -88,7 +87,7 @@ export default function NewFund() {
         })
     }
 
-    const handleSuccess = async (tx:any) => {
+    const handleSuccess = async (tx: any) => {
         const txReceipt = await tx.wait(1)
 
         handleNewNotification()
@@ -99,7 +98,7 @@ export default function NewFund() {
         const uploadTask = uploadBytesResumable(iconRef, file as Blob)
         uploadTask.on(
             "state_changed",
-            (snapshot) => {},
+            (snapshot) => { },
             (err) => console.log(err),
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((url) => {
