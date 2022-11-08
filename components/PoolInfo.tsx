@@ -26,13 +26,6 @@ export default function PoolInfo(props: propType) {
 
     const [asset, setAsset] = useState("0")
 
-    const { runContractFunction: getTimeLock } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!, // specify the networkId
-        functionName: "getTimeLock",
-        params: {},
-    })
-
     const { runContractFunction: getAssetAddress } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!, // specify the networkId

@@ -3,8 +3,7 @@ import { contractAddresses, abi, erc20Abi } from "../constants"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { SetStateAction, useState, useEffect } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-import { BigNumber, ContractTransaction } from "ethers"
-import { networkConfig } from "../config/helper-config"
+import { BigNumber } from "ethers"
 import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
 
@@ -93,8 +92,6 @@ export default function StraightDonation(props: propType) {
         //making the max donation 100,000,000 tokens at a time
         const max = 100000000
         //for now we are only allowing to two decimal places for deposits and withdraws
-        // const value = Math.round((Math.max(0, Math.min(max as number, Number(event.target.value))) + Number.EPSILON) * 100) / 100
-        // setVal(value.toString())
         if ((event.target.value as unknown as number) > 0) {
             const value = Math.max(
                 1 * 10 ** -decimals!,

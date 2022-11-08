@@ -8,7 +8,6 @@ import { contractAddressesInterface } from "../config/types"
 import { set, ref as refDb } from "firebase/database"
 import { ref as refStore, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { database, storage } from "../firebase-config"
-import { async } from "@firebase/util"
 
 //contract is already deployed... trying to look at features of contract
 export default function NewFund() {
@@ -33,10 +32,6 @@ export default function NewFund() {
     const [category, setCategory] = useState("--")
 
     const [assetAddress, setAssetAddress] = useState("")
-
-    const [poolAddress, setPoolAddress] = useState("")
-
-    const [aaveAddress, setAaveAddress] = useState("")
 
     const [decimalNumber, setDecimal] = useState(0)
 
@@ -74,7 +69,6 @@ export default function NewFund() {
             console.log("Please fill in the required fields.")
             return
         }
-        console.log('test')
         const createTx: any = await createPromiseFund({
             onSuccess: (tx) => {
                 handleSuccess(tx)
@@ -127,8 +121,6 @@ export default function NewFund() {
 
         setDecimal(decimal!)
         setAssetAddress(tokenAddress!)
-        setPoolAddress(poolAddress!)
-        setAaveAddress(aaveAddress!)
     }
 
     const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
