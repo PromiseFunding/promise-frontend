@@ -28,7 +28,7 @@ export default function PoolInfo(props: propType) {
 
     const { runContractFunction: getAssetAddress } = useWeb3Contract({
         abi: abi,
-        contractAddress: fundAddress!, // specify the networkId
+        contractAddress: fundAddress!,
         functionName: "getAssetAddress",
         params: {},
     })

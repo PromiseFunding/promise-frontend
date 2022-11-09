@@ -13,8 +13,9 @@ export default function SubmitVote(props: propType) {
 
     const [voteVal, setVoteVal] = useState<boolean>(true)
 
-    const dispatch = useNotification()
+    const [alreadyVoted, setAlreadyVoted] = useState<boolean>(false)
 
+    const dispatch = useNotification()
 
     const {
         runContractFunction: submitVote,
@@ -22,15 +23,36 @@ export default function SubmitVote(props: propType) {
         isFetching,
     } = useWeb3Contract({
         abi: abi,
-        contractAddress: fundAddress!, // specify the networkId
+        contractAddress: fundAddress!,
         functionName: "submitVote",
         params: { support: voteVal },
     })
+
+    const {
+        runContractFunction: didFunderVote,
+    } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "didFunderVote",
+        params: { funder: account },
+    })
+
+    async function updateUI() {
+        const didFunderVoteFromCall = (await didFunderVote()) as boolean
+        setAlreadyVoted(didFunderVoteFromCall)
+    }
+
+    useEffect(() => {
+        if (isWeb3Enabled && fundAddress) {
+            updateUI()
+        }
+    }, [isWeb3Enabled, fundAddress])
 
     const handleSuccess = async function (tx: ContractTransaction) {
         try {
             await tx.wait(1)
             handleNewNotification()
+            updateUI()
         } catch (error) {
             console.log(error)
             handleNewNotification1()
@@ -62,7 +84,7 @@ export default function SubmitVote(props: propType) {
 
     return (
         <div className="flex flex-col">
-            {isWeb3Enabled ? (
+            {!alreadyVoted && isWeb3Enabled ? (
                 <div className="flex-1 p-5 bg-slate-800 text-slate-200">
                     <div>
                         <h1 className="text-xl font-bold">Submit Vote</h1>
@@ -96,7 +118,8 @@ export default function SubmitVote(props: propType) {
                     Do you believe the project followed through on the promises they made for this milestone?
                 </div>
             ) : (
-                <p></p>
+                <h1 className="p-5 text-2xl font-bold bg-slate-800">
+                    You have successfully submitted your vote for this milestone. Thank you!</h1>
             )}{" "}
         </div>
     )

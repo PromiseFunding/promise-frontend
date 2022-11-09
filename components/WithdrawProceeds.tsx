@@ -41,7 +41,7 @@ export default function WithdrawProceeds(props: propType) {
         isFetching,
     } = useWeb3Contract({
         abi: abi,
-        contractAddress: fundAddress!, // specify the networkId
+        contractAddress: fundAddress!,
         functionName: "withdrawProceeds",
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
@@ -50,12 +50,13 @@ export default function WithdrawProceeds(props: propType) {
         abi: abi,
         contractAddress: fundAddress!,
         functionName: "getTrancheAmountRaised",
-        params: { level: tranche},
+        params: { level: tranche },
     })
 
     const handleSuccess = async function (tx: ContractTransaction) {
         try {
             await tx.wait(1)
+            props.onChangeState!()
             handleNewNotification()
         } catch (error) {
             console.log(error)

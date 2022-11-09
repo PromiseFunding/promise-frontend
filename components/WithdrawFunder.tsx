@@ -42,7 +42,7 @@ export default function Withdraw(props: propType) {
         isFetching,
     } = useWeb3Contract({
         abi: abi,
-        contractAddress: fundAddress!, // specify the networkId
+        contractAddress: fundAddress!,
         functionName: "withdrawProceedsFunder",
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })

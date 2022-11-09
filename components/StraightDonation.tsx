@@ -58,7 +58,7 @@ export default function StraightDonation(props: propType) {
 
     const { runContractFunction: fund } = useWeb3Contract({
         abi: abi,
-        contractAddress: fundAddress!, // specify the networkId
+        contractAddress: fundAddress!,
         functionName: "fund",
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
@@ -76,6 +76,7 @@ export default function StraightDonation(props: propType) {
 
     const handleSuccess = async function () {
         const fundTx: any = await fund()
+        setVal("0")
         try {
             await fundTx.wait(1)
             // props.onChangeAmountFunded!()
