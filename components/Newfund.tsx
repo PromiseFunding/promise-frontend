@@ -21,8 +21,6 @@ export default function NewFund() {
             : null
     const chainIdNum = parseInt(chainIdHex!)
 
-    const [time, setTime] = useState("")
-
     const [assetValue, setAssetValue] = useState("USDT")
 
     const [title, setTitle] = useState("")
@@ -34,6 +32,10 @@ export default function NewFund() {
     const [assetAddress, setAssetAddress] = useState("")
 
     const [decimalNumber, setDecimal] = useState(0)
+
+    const [milestones, setMilestones] = useState("")
+
+    const [duration, setDuration] = useState("")
 
     const [file, setFile] = useState<File>()
 
@@ -49,8 +51,8 @@ export default function NewFund() {
         functionName: "createPromiseFund",
         params: {
             assetAddress: assetAddress,
-            numberOfMilestones: 4,
-            milestoneDuration: 600,
+            numberOfMilestones: milestones,
+            milestoneDuration: duration,
         },
     })
 
@@ -65,7 +67,7 @@ export default function NewFund() {
     }
 
     const handleNewFundraiser = async () => {
-        if (category == "--" || !description || !assetValue || !time || !file) {
+        if (category == "--" || !description || !assetValue || !file || !milestones || !duration) {
             console.log("Please fill in the required fields.")
             return
         }
@@ -101,7 +103,8 @@ export default function NewFund() {
                         imageURL: url,
                         description: description,
                         category: category,
-                        locktime: time,
+                        numberOfMilestones: milestones,
+                        milestoneDuration: duration,
                         asset: assetValue,
                     })
                 })
@@ -123,20 +126,6 @@ export default function NewFund() {
         setAssetAddress(tokenAddress!)
     }
 
-    const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
-        //max for now is 20 years
-        const max = 630720000
-        if ((event.target.value as unknown as number) > 0) {
-            const value = Math.max(
-                0,
-                Math.min(max as number, Number(Number(event.target.value).toFixed(0)))
-            )
-            setTime(value.toString())
-        } else {
-            setTime("0")
-        }
-    }
-
     const handleNewNotification = function () {
         dispatch({
             type: "info",
@@ -153,6 +142,34 @@ export default function NewFund() {
             title: "Transaction Notification",
             position: "topR",
         })
+    }
+
+    const handleChangeDuration = (event: { target: { value: SetStateAction<string> } }) => {
+        //max for now is 120 days
+        const max = 10368000
+        if ((event.target.value as unknown as number) > 0) {
+            const value = Math.max(
+                0,
+                Math.min(max as number, Number(Number(event.target.value).toFixed(0)))
+            )
+            setDuration(value.toString())
+        } else {
+            setDuration("")
+        }
+    }
+
+    const handleChangeMilestones = (event: { target: { value: SetStateAction<string> } }) => {
+        //max for now is 120 days
+        const max = 5
+        if ((event.target.value as unknown as number) > 0) {
+            const value = Math.max(
+                0,
+                Math.min(max as number, Number(Number(event.target.value).toFixed(0)))
+            )
+            setMilestones(value.toString())
+        } else {
+            setMilestones("1")
+        }
     }
 
     function handleChangeImage(event: { target: { files: SetStateAction<any> } }) {
@@ -228,7 +245,22 @@ export default function NewFund() {
                         <input type="file" accept="image/*" onChange={handleChangeImage} />
                     </div>
                     <h1 className="font-blog text-2xl text-slate-200">
-                        Enter a locktime For your Fund:
+                        Enter a number of milestones:
+                    </h1>
+                    <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        placeholder="# of Milestones..."
+                        id="message"
+                        name="Milestones"
+                        onChange={handleChangeMilestones}
+                        value={milestones}
+                        autoComplete="off"
+                        className="text-slate-800"
+                    />
+                    <h1 className="font-blog text-2xl text-slate-200">
+                        Enter a duration for your milestones:
                     </h1>
                     <input
                         maxLength={21 - (decimalNumber || 6)}
@@ -237,9 +269,9 @@ export default function NewFund() {
                         step="1"
                         placeholder="0 seconds"
                         id="message"
-                        name="Locktime"
-                        onChange={handleChange}
-                        value={time}
+                        name="Duration"
+                        onChange={handleChangeDuration}
+                        value={duration}
                         autoComplete="off"
                         className="text-slate-800"
                     />
