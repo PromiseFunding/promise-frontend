@@ -22,7 +22,7 @@ export default function EndVote(props: propType) {
         isFetching,
     } = useWeb3Contract({
         abi: abi,
-        contractAddress: fundAddress!, // specify the networkId
+        contractAddress: fundAddress!,
         functionName: "endVote",
         params: {},
     })
@@ -31,7 +31,7 @@ export default function EndVote(props: propType) {
         runContractFunction: getTimeLeftVoting,
     } = useWeb3Contract({
         abi: abi,
-        contractAddress: fundAddress!, // specify the networkId
+        contractAddress: fundAddress!,
         functionName: "getTimeLeftVoting",
         params: {},
     })

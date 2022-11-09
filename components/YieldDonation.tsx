@@ -52,7 +52,7 @@ export default function YieldDonation(props: propType) {
 
     const { runContractFunction: fund } = useWeb3Contract({
         abi: abi,
-        contractAddress: fundAddress!, // specify the networkId
+        contractAddress: fundAddress!,
         functionName: "fund",
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
@@ -140,8 +140,8 @@ export default function YieldDonation(props: propType) {
                         {isLoading || isFetching ? (
                             <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
                         ) : (
-                                <div>Donate</div>
-                            )}
+                            <div>Donate</div>
+                        )}
                     </button>
                     <h2>
                         <br></br>
@@ -149,8 +149,8 @@ export default function YieldDonation(props: propType) {
                     </h2>
                 </div>
             ) : (
-                    <div>No Fund Address Detected</div>
-                )}
+                <div>No Fund Address Detected</div>
+            )}
         </div>
     )
 }

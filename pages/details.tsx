@@ -45,7 +45,7 @@ const Details: NextPage = () => {
 
     const { runContractFunction: getAssetAddress } = useWeb3Contract({
         abi: abi,
-        contractAddress: fundAddress, // specify the networkId
+        contractAddress: fundAddress,
         functionName: "getAssetAddress",
         params: {},
     })
@@ -64,9 +64,9 @@ const Details: NextPage = () => {
         params: {},
     })
 
-    const updateAmountTrigger = function () {
-        setAmt(amt + 1)
-    }
+    // const updateStateTrigger = function () {
+    //     update
+    // }
 
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
@@ -205,6 +205,9 @@ const Details: NextPage = () => {
                                                         <StartVote
                                                             fundAddress={fundAddress}
                                                             assetAddress={assetAddress}
+                                                            onChangeState={() => {
+                                                                updateUI()
+                                                            }}
                                                         ></StartVote>
                                                     ) : (<></>)}
 

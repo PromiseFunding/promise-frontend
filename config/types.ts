@@ -11,6 +11,7 @@ export interface propType {
     assetAddress: string
     ownerFund?: string
     onChangeAmountFunded?(arg0: void): void
+    onChangeState?(arg0: void): void
     updateAmount?: number
     tranche?: number
 }

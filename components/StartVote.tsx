@@ -22,7 +22,7 @@ export default function StartVote(props: propType) {
         isFetching,
     } = useWeb3Contract({
         abi: abi,
-        contractAddress: fundAddress!, // specify the networkId
+        contractAddress: fundAddress!,
         functionName: "startVote",
         params: { length: val },
     })
@@ -30,6 +30,7 @@ export default function StartVote(props: propType) {
     const handleSuccess = async function (tx: ContractTransaction) {
         try {
             await tx.wait(1)
+            props.onChangeState!()
             handleNewNotification()
         } catch (error) {
             console.log(error)
