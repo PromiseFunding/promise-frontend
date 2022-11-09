@@ -8,7 +8,7 @@ export interface contractAddressesInterface {
 
 export interface propType {
     fundAddress: string
-    assetAddress: string
+    assetAddress?: string
     ownerFund?: string
     onChangeAmountFunded?(arg0: void): void
     onChangeState?(arg0: void): void

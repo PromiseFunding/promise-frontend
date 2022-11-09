@@ -39,6 +39,7 @@ export default function EndVote(props: propType) {
     const handleSuccess = async function (tx: ContractTransaction) {
         try {
             await tx.wait(1)
+            props.onChangeState!()
             handleNewNotification()
         } catch (error) {
             console.log(error)

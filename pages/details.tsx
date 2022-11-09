@@ -180,12 +180,19 @@ const Details: NextPage = () => {
                                                             <EndVote
                                                                 fundAddress={fundAddress}
                                                                 assetAddress={assetAddress}
+                                                                onChangeState={() => {
+                                                                    updateUI()
+                                                                }}
                                                             ></EndVote>
                                                         </div>
 
                                                     ) : (
                                                         <></>
                                                     )}
+                                                    {state == 2 ? (<h1 className="p-5 text-2xl font-bold bg-slate-800">
+                                                        The funders of this project have voted to approve the funds for this
+                                                        milestone to be released. The owner will now be able to withdraw the funds.</h1>
+                                                    ) : (<></>)}
 
                                                     <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
                                                     <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
@@ -211,10 +218,24 @@ const Details: NextPage = () => {
                                                         ></StartVote>
                                                     ) : (<></>)}
 
-                                                    {state == 1 ? (<h1 className="p-5 text-2xl font-bold bg-slate-800">
-                                                        There is currently a vote going on.
-                                                        You must wait for the vote to complete before
-                                                        you can take another action.</h1>
+                                                    {state == 1 ? (<div>
+                                                        <h1 className="p-5 text-2xl font-bold bg-slate-800">
+
+                                                            There is currently a vote going on.
+                                                            You must wait for the vote to complete before
+                                                            you can take another action.</h1>
+
+                                                        <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+
+
+                                                        <EndVote
+                                                            fundAddress={fundAddress}
+                                                            assetAddress={assetAddress}
+                                                            onChangeState={() => {
+                                                                updateUI()
+                                                            }}
+                                                        ></EndVote>
+                                                    </div>
                                                     ) : (<></>)}
 
                                                     {state == 2 ? (
@@ -223,6 +244,9 @@ const Details: NextPage = () => {
                                                             assetAddress={assetAddress}
                                                             ownerFund={owner}
                                                             tranche={tranche}
+                                                            onChangeState={() => {
+                                                                updateUI()
+                                                            }}
                                                         ></WithdrawProceeds>
                                                     ) : (<></>)}
 
@@ -239,8 +263,15 @@ const Details: NextPage = () => {
                                     )}
 
                                 </div>
+
                             </div>
+
                         </div>
+                        <StatusBar
+                            fundAddress={fundAddress}
+                            tranche={tranche}
+                        ></StatusBar>
+
                     </div>
                 ) : (
                     <div></div>
@@ -252,7 +283,7 @@ const Details: NextPage = () => {
                     />
                 </div>
             </div>
-        </div>
+        </div >
     )
 }
 

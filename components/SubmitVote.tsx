@@ -52,6 +52,7 @@ export default function SubmitVote(props: propType) {
         try {
             await tx.wait(1)
             handleNewNotification()
+            updateUI()
         } catch (error) {
             console.log(error)
             handleNewNotification1()
@@ -117,7 +118,8 @@ export default function SubmitVote(props: propType) {
                     Do you believe the project followed through on the promises they made for this milestone?
                 </div>
             ) : (
-                <p></p>
+                <h1 className="p-5 text-2xl font-bold bg-slate-800">
+                    You have successfully submitted your vote for this milestone. Thank you!</h1>
             )}{" "}
         </div>
     )
