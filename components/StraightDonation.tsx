@@ -24,7 +24,6 @@ export default function StraightDonation(props: propType) {
     let coinName = "USDT"
 
     for (const coin in tokenConfig[chainIdNum]) {
-        console.log(tokenAddress)
         if (tokenConfig[chainIdNum][coin].assetAddress == tokenAddress) {
             coinName = coin
         }
