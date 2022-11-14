@@ -97,7 +97,7 @@ const Details: NextPage = () => {
     return (
         <div className={styles.container}>
             <Head>
-                <title>YieldMe Version 1.0</title>
+                <title>Promise</title>
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
             </Head>
             <Header></Header>
