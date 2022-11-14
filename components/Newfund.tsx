@@ -8,6 +8,7 @@ import { contractAddressesInterface } from "../config/types"
 import { set, ref as refDb } from "firebase/database"
 import { ref as refStore, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { database, storage } from "../firebase-config"
+import { milestone } from "../config/types"
 
 //contract is already deployed... trying to look at features of contract
 export default function NewFund() {
@@ -33,6 +34,11 @@ export default function NewFund() {
 
     const [decimalNumber, setDecimal] = useState(0)
 
+    const [milestonesArray, setMilestonesArray] = useState<milestone[]>([{
+        "name": "Milestone 1",
+        "description": ""
+    }])
+
     const [milestones, setMilestones] = useState("")
 
     const [duration, setDuration] = useState("")
@@ -51,7 +57,7 @@ export default function NewFund() {
         functionName: "createPromiseFund",
         params: {
             assetAddress: assetAddress,
-            numberOfMilestones: milestones,
+            numberOfMilestones: milestonesArray.length,
             milestoneDuration: duration,
         },
     })
@@ -67,10 +73,16 @@ export default function NewFund() {
     }
 
     const handleNewFundraiser = async () => {
-        if (category == "--" || !description || !assetValue || !file || !milestones || !duration) {
-            console.log("Please fill in the required fields.")
+        if (category == "--" || !description || !assetValue || !file || !duration) {
+            handleGenericAlert("Please fill in the required fields.")
             return
         }
+        milestonesArray.map((milestone) => {
+            if (milestone.description == "") {
+                handleGenericAlert("Please fill all milestone descriptions.")
+                return
+            }
+        })
         const createTx: any = await createPromiseFund({
             onSuccess: (tx) => {
                 handleSuccess(tx)
@@ -103,7 +115,7 @@ export default function NewFund() {
                         imageURL: url,
                         description: description,
                         category: category,
-                        numberOfMilestones: milestones,
+                        milestones: milestonesArray,
                         milestoneDuration: duration,
                         asset: assetValue,
                     })
@@ -142,6 +154,26 @@ export default function NewFund() {
             title: "Transaction Notification",
             position: "topR",
         })
+    }
+
+    const handleGenericAlert = function (message: string) {
+        dispatch({
+            type: "error",
+            message: message,
+            title: "",
+            position: "topR",
+        })
+    }
+
+    const newMilestone = () => {
+        if (milestonesArray.length < 5) {
+            setMilestonesArray(milestonesArray => [...milestonesArray, {
+                "name": `Milestone ${milestonesArray.length + 1}`,
+                "description": ""
+            }])
+        } else {
+            handleGenericAlert("The maximum number of milestones is 5")
+        }
     }
 
     const handleChangeDuration = (event: { target: { value: SetStateAction<string> } }) => {
@@ -186,6 +218,22 @@ export default function NewFund() {
 
     function handleChangeCategory(event: { target: { value: SetStateAction<string> } }) {
         setCategory(event.target.value)
+    }
+
+    function handleChangeMilestoneName(event: { target: { value: SetStateAction<string> } }, index: number) {
+        let items = [...milestonesArray];
+        let item = { ...items[index] };
+        item.name = event.target.value as string;
+        items[index] = item;
+        setMilestonesArray(items)
+    }
+
+    function handleChangeMilestoneDescription(event: { target: { value: SetStateAction<string> } }, index: number) {
+        let items = [...milestonesArray];
+        let item = { ...items[index] };
+        item.description = event.target.value as string;
+        items[index] = item;
+        setMilestonesArray(items)
     }
 
     return (
@@ -244,21 +292,58 @@ export default function NewFund() {
                     <div>
                         <input type="file" accept="image/*" onChange={handleChangeImage} />
                     </div>
-                    <h1 className="font-blog text-2xl text-slate-200">
-                        Enter a number of milestones:
-                    </h1>
-                    <input
-                        type="number"
-                        min="0"
-                        step="1"
-                        placeholder="# of Milestones..."
-                        id="message"
-                        name="Milestones"
-                        onChange={handleChangeMilestones}
-                        value={milestones}
-                        autoComplete="off"
-                        className="text-slate-800"
-                    />
+                    <br></br>
+
+                    <div className="p-5 rounded border-2 border-black bg-slate-500">
+                        <ul className="flex flex-col flex-wrap ">
+                            {milestonesArray.map((curr, index) => (
+                                <li key={index}>
+                                    <h1 className="font-blog text-2xl text-slate-200">
+                                        Milestone {index + 1}
+                                    </h1>
+                                    <input
+                                        maxLength={40}
+                                        type="string"
+                                        placeholder="Milestone Name"
+                                        id="title"
+                                        name="Title"
+                                        onChange={(e) => {
+                                            handleChangeMilestoneName(e, index)
+                                        }}
+                                        value={milestonesArray[index].name}
+                                        autoComplete="off"
+                                        className="text-slate-800"
+                                    ></input>
+                                    <h1 className="font-blog text-2xl text-slate-200">
+                                        Enter a specific, detailed, and complete description of the goals of this milestone:
+                                    </h1>
+                                    <textarea
+                                        className="text-slate-800"
+                                        id="w3review"
+                                        name="w3review"
+                                        value={milestonesArray[index].description}
+                                        onChange={(e) => {
+                                            handleChangeMilestoneDescription(e, index)
+                                        }}
+                                        placeholder="During this milestone we promise to..."
+                                        rows={4}
+                                        cols={50}
+                                    ></textarea>
+
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+
+                    <button
+                        className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded ml-auto"
+                        onClick={async function () {
+                            newMilestone()
+                        }}
+                    >
+                        <div>Add Milestone</div>
+                    </button>
+
                     <h1 className="font-blog text-2xl text-slate-200">
                         Enter a duration for your milestones:
                     </h1>
@@ -302,7 +387,8 @@ export default function NewFund() {
                 </div>
             ) : (
                 <div>No Create Yield Address Detected</div>
-            )}
-        </div>
+            )
+            }
+        </div >
     )
 }

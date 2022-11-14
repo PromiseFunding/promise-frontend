@@ -64,10 +64,6 @@ const Details: NextPage = () => {
         params: {},
     })
 
-    // const updateStateTrigger = function () {
-    //     update
-    // }
-
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
             setData(snapshot.val())
