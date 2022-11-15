@@ -5,7 +5,7 @@ import CategorySelector from "./CategorySelector"
 import SearchBar from "material-ui-search-bar";
 import styles from "../styles/Home.module.css"
 
-export default function Header(props: { onChangeQuery?(arg0: string): void }) {
+export default function Header(props: { onChangeQuery?(arg0: string): void, main: boolean }) {
     return (
         <nav className="flex items-center justify-between flex-nowrap p-6 space-x-5">
             <Image
@@ -16,9 +16,10 @@ export default function Header(props: { onChangeQuery?(arg0: string): void }) {
             />
             <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
                 <div className="text-lg lg:flex-grow flex flex-row  flex-nowrap ">
-                    <SearchBar className={styles.searchbar} onChange={(query) => {
+                    {props.main ? (<SearchBar className={styles.searchbar} onChange={(query) => {
                         props.onChangeQuery!(query)
-                    }}></SearchBar>
+                    }}></SearchBar>) : (<></>)}
+
 
                     <CategorySelector></CategorySelector>
 

@@ -100,7 +100,7 @@ const Details: NextPage = () => {
                 <title>Promise</title>
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
             </Head>
-            <Header></Header>
+            <Header main={false}></Header>
             <br></br>
             <div className="p-5 bg-slate-700 text-slate-200 rounded border-2 border-slate-500">
                 {data ? (

@@ -98,18 +98,6 @@ export default function Search(props: propTypeFunds) {
 
     return (
         <>
-            {/* <div>
-                <div className="main text-center pt-5">
-                    <div className="search">
-                        <SearchBar className={styles.searchbar}
-                            value={inputText}
-                            onChange={inputHandler}
-                        />
-                    </div>
-                </div>
-                <h1 className="font-blog text-4xl text-slate-200">Discover Fundraisers: {category}</h1>
-            </div> */}
-
             <div className="py-5 px-5">
                 <ul className="flex flex-row flex-wrap">
                     {filteredData.slice(0, maxEntries).map((fund) => (

@@ -62,25 +62,27 @@ const Home: NextPage = () => {
             </Head>
             <Header onChangeQuery={(queryString) => {
                 setQuery(queryString)
-            }}></Header>
+            }} main={true}></Header>
             <div className={styles.fundsWeLove}>
                 <h1 id="tableCell">Funds We Love...</h1>
             </div>
 
-            {isWeb3Enabled && fundFactoryAddress ? (
-                <>
-                    <div>
+            {
+        isWeb3Enabled && fundFactoryAddress ? (
+            <>
+                <div>
 
-                        <Search
-                            fundAddressArray={allFunds}
-                            query={query}>
-                        </Search>
-                    </div>
-                </>
-            ) : (
-                <div>Not available on this chain</div>
-            )}
-        </div>
+                    <Search
+                        fundAddressArray={allFunds}
+                        query={query}>
+                    </Search>
+                </div>
+            </>
+        ) : (
+        <div>Not available on this chain</div>
+    )
+    }
+        </div >
     )
 }
 
