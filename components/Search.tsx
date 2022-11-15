@@ -6,8 +6,10 @@ import { propTypeFunds } from "../config/types"
 import ShowMoreLess from "./ShowMoreLess"
 import { ref, onValue, get } from "firebase/database"
 import { database } from "../firebase-config"
+import SearchBar from "material-ui-search-bar"
+import styles from "../styles/Home.module.css"
 
-export default function SearchBar(props: propTypeFunds) {
+export default function Search(props: propTypeFunds) {
     const [filteredData, setFilteredData] = useState<string[]>(props.fundAddressArray)
     const [inputText, setInputText] = useState("")
     //shows only maxEntries amount... ShowMoreLess Component reveals more funds if they exist
@@ -17,9 +19,9 @@ export default function SearchBar(props: propTypeFunds) {
     const category = router.query.category as string || ""
 
 
-    let inputHandler = (e: { target: { value: string } }) => {
+    let inputHandler = (query: string) => {
         //convert input text to lower case
-        let lowerCase = e.target.value.toLowerCase()
+        let lowerCase = query.toLowerCase()
 
         setInputText(lowerCase)
 
@@ -83,6 +85,10 @@ export default function SearchBar(props: propTypeFunds) {
     }
 
     useEffect(() => {
+        inputHandler(props.query!)
+    }, [props.query])
+
+    useEffect(() => {
         updateCategories()
     }, [props.fundAddressArray, maxEntries, category])
 
@@ -92,26 +98,18 @@ export default function SearchBar(props: propTypeFunds) {
 
     return (
         <>
-            <div className="main text-center">
-                <h1 className="p-5 font-blog text-lg text-center text-slate-200">
-                    Search For Fundraiser
-                </h1>
-                <div className="search">
-                    <TextField className="text-slate-200"
-                        sx={{
-                            width: 500,
-                        }}
-                        id="address-search"
-                        onChange={inputHandler}
-                        value={inputText}
-                        variant="outlined"
-                        label="Search"
-                    />
+            {/* <div>
+                <div className="main text-center pt-5">
+                    <div className="search">
+                        <SearchBar className={styles.searchbar}
+                            value={inputText}
+                            onChange={inputHandler}
+                        />
+                    </div>
                 </div>
-            </div>
-            <br></br>
-            <h1 className="font-blog text-4xl text-slate-200">Discover Fundraisers: {category}</h1>
-            <br></br>
+                <h1 className="font-blog text-4xl text-slate-200">Discover Fundraisers: {category}</h1>
+            </div> */}
+
             <div className="py-5 px-5">
                 <ul className="flex flex-row flex-wrap">
                     {filteredData.slice(0, maxEntries).map((fund) => (
@@ -131,7 +129,7 @@ export default function SearchBar(props: propTypeFunds) {
                             setMaxEntries(Number(newAmount))
                         }
                     />) : (<div></div>
-                    )}
+                )}
             </div>
         </>
     )

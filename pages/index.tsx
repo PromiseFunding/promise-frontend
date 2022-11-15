@@ -23,6 +23,7 @@ const Home: NextPage = () => {
 
     //TODO: get helper-config working instead!... gets rid of decimal function
     const [allFunds, setAllFunds] = useState<string[]>([])
+    const [query, setQuery] = useState("")
 
     const { runContractFunction: getAllPromiseFund } = useWeb3Contract({
         abi: FundFactory,
@@ -54,16 +55,26 @@ const Home: NextPage = () => {
     }, [isWeb3Enabled, fundFactoryAddress])
 
     return (
-        <div className={styles.container}>
+        <div >
             <Head>
                 <title>Promise</title>
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
             </Head>
-            <Header></Header>
+            <Header onChangeQuery={(queryString) => {
+                setQuery(queryString)
+            }}></Header>
+            <div className={styles.fundsWeLove}>
+                <h1 id="tableCell">Funds We Love...</h1>
+            </div>
+
             {isWeb3Enabled && fundFactoryAddress ? (
                 <>
                     <div>
-                        <Search fundAddressArray={allFunds}></Search>
+
+                        <Search
+                            fundAddressArray={allFunds}
+                            query={query}>
+                        </Search>
                     </div>
                 </>
             ) : (
