@@ -25,6 +25,11 @@ export interface propTypeFunds {
     fundAddressArray: string[]
 }
 
+export interface milestone {
+    name: string,
+    description: string
+}
+
 export interface databaseFundObject {
     fundTitle: string
     imageURL: string

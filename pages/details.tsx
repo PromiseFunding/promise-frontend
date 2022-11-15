@@ -64,10 +64,6 @@ const Details: NextPage = () => {
         params: {},
     })
 
-    // const updateStateTrigger = function () {
-    //     update
-    // }
-
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
             setData(snapshot.val())
@@ -101,7 +97,7 @@ const Details: NextPage = () => {
     return (
         <div className={styles.container}>
             <Head>
-                <title>YieldMe Version 1.0</title>
+                <title>Promise</title>
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
             </Head>
             <Header></Header>

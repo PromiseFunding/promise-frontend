@@ -7,12 +7,12 @@ export default function Header() {
     return (
         <nav className=" border-b-2 flex items-center justify-between flex-wrap p-6">
             <Image
-                src="https://firebasestorage.googleapis.com/v0/b/yieldme-39169.appspot.com/o/app%2Fimages%2Fyieldmeicon3.png?alt=media&token=d680f93e-d8a9-4103-84d9-822ab45faaf6"
+                src="https://firebasestorage.googleapis.com/v0/b/yieldme-39169.appspot.com/o/app%2Fimages%2Fpromise-logo.png?alt=media&token=b5d1d5aa-83c6-4b51-aa5b-e919ac3adcd1"
                 alt="Picture of the author"
                 width={100}
                 height={100}
             />
-            <h1 className="py-4 px-4 font-blog text-5xl text-slate-200">YieldMe</h1>
+            <h1 className="py-4 px-4 font-blog text-5xl text-slate-200"></h1>
             <div className="w-full block flex-grow lg:flex lg:items-center lg:w-auto">
                 <div className="text-lg lg:flex-grow">
                     <Link href="/">
