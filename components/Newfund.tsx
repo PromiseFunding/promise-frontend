@@ -9,6 +9,7 @@ import { set, ref as refDb } from "firebase/database"
 import { ref as refStore, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { database, storage } from "../firebase-config"
 import { milestone } from "../config/types"
+import styles from "../styles/Home.module.css"
 
 //contract is already deployed... trying to look at features of contract
 export default function NewFund() {
@@ -104,6 +105,7 @@ export default function NewFund() {
 
         const iconRef = refStore(storage, `/files/${fundAddress}/${file!.name}`)
         const uploadTask = uploadBytesResumable(iconRef, file as Blob)
+
         uploadTask.on(
             "state_changed",
             (snapshot) => { },
@@ -317,8 +319,7 @@ export default function NewFund() {
                                     <h1 className="font-blog text-2xl text-slate-200">
                                         Enter a specific, detailed, and complete description of the goals of this milestone:
                                     </h1>
-                                    <textarea
-                                        className="text-slate-800"
+                                    <textarea className={styles.textarea}
                                         id="w3review"
                                         name="w3review"
                                         value={milestonesArray[index].description}

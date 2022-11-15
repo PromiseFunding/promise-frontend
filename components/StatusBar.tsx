@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography';
 import { contractAddressesInterface, propType, milestone } from "../config/types"
 import { ref, onValue, get } from "firebase/database"
 import { database } from "../firebase-config"
+import styles from "../styles/Home.module.css"
 
 const steps = ['Milestone 1', 'Milestone 2', 'Milestone 3', 'Milestone 4', 'Milestone 5'];
 
@@ -59,7 +60,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
                             </Stepper>
                             <div>
                                 <Fragment>
-                                    <Typography className="font-blog font-bold text-black text-2xl" sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
+                                    <Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
                                         {milestonesArray[activeStep].description.toString()}
                                     </Typography>
 
