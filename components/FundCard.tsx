@@ -35,7 +35,7 @@ export default function FundCard(props: { fund: string }) {
                                 image={data.imageURL}
                                 alt="fundraiser"
                                 sx={{
-                                    width: 340,
+                                    width: "100%",
                                     height: 340,
                                 }}
                             />
@@ -67,8 +67,8 @@ export default function FundCard(props: { fund: string }) {
                     </Card>
                 </div>
             ) : (
-                    <div></div>
-                )}
+                <div></div>
+            )}
         </div>
     )
 }

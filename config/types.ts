@@ -16,6 +16,8 @@ export interface propType {
     tranche?: number
 }
 
+
+
 export interface propTypeEntryNumber {
     onChangeAmount(arg0: Number): void
     amount: Number
@@ -23,6 +25,7 @@ export interface propTypeEntryNumber {
 
 export interface propTypeFunds {
     fundAddressArray: string[]
+    query?: string
 }
 
 export interface milestone {
