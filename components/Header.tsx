@@ -9,7 +9,7 @@ export default function Header(props: { onChangeQuery?(arg0: string): void }) {
     return (
         <nav className="flex items-center justify-between flex-nowrap p-6 space-x-5">
             <Image
-                src="https://firebasestorage.googleapis.com/v0/b/yieldme-39169.appspot.com/o/app%2Fimages%2Fpromise-logo.png?alt=media&token=b5d1d5aa-83c6-4b51-aa5b-e919ac3adcd1"
+                src="https://firebasestorage.googleapis.com/v0/b/yieldme-39169.appspot.com/o/app%2Fimages%2Fpromise-logo.png?alt=media&token=8a440e85-05db-4da0-acb1-88d61d56c4f6"
                 alt="Picture of the author"
                 width={100}
                 height={100}
