@@ -7,6 +7,7 @@ import { CardActionArea } from "@mui/material"
 import { ref, onValue } from "firebase/database"
 import { database } from "../firebase-config"
 import { databaseFundObject } from "../config/types"
+import styles from "../styles/Home.module.css"
 
 export default function FundCard(props: { fund: string }) {
     const fund = props.fund
@@ -20,14 +21,14 @@ export default function FundCard(props: { fund: string }) {
     }, [])
 
     return (
-        <div>
+        <div className={styles.container}>
             {data ? (
                 <div className="main text-center">
                     <Card
                         sx={{ maxWidth: 345, height: 490, backgroundColor: "Gainsboro" }}
                         color="gray"
                     >
-                        <CardActionArea href={`/details/?fund=${fund}`}>
+                        <CardActionArea href={`/details/?fund=${fund}`} sx={{ display: "flex", flexDirection: "column" }}>
                             <CardMedia
                                 component="img"
                                 height="140"
@@ -68,7 +69,8 @@ export default function FundCard(props: { fund: string }) {
                 </div>
             ) : (
                 <div></div>
-            )}
-        </div>
+            )
+            }
+        </div >
     )
 }
