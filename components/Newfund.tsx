@@ -18,6 +18,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
 import Image from "next/image"
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const categories = ["--", "Tech", "Film", "Product", "Gaming"];
 
@@ -45,7 +46,7 @@ export default function NewFund() {
     const [assetAddress, setAssetAddress] = useState(chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].assetAddress : null)
 
     const [milestonesArray, setMilestonesArray] = useState<milestone[]>([{
-        "name": "Milestone 1",
+        "name": "",
         "description": ""
     }])
 
@@ -86,12 +87,24 @@ export default function NewFund() {
             handleGenericAlert("Please fill in the required fields.")
             return
         }
+        let descriptionFull = true
+        let nameFull = true
         milestonesArray.map((milestone) => {
             if (milestone.description == "") {
-                handleGenericAlert("Please fill all milestone descriptions.")
-                return
+                descriptionFull = false
+            }
+            if (milestone.name == "") {
+                nameFull = false
             }
         })
+        if (!descriptionFull) {
+            handleGenericAlert("Please fill all milestone descriptions.")
+            return
+        }
+        if (!nameFull) {
+            handleGenericAlert("Please fill all milestone names.")
+            return
+        }
         const createTx: any = await createPromiseFund({
             onSuccess: (tx) => {
                 handleSuccess(tx)
@@ -171,7 +184,7 @@ export default function NewFund() {
     const newMilestone = () => {
         if (milestonesArray.length < 5) {
             setMilestonesArray(milestonesArray => [...milestonesArray, {
-                "name": `Milestone ${milestonesArray.length + 1}`,
+                "name": "",
                 "description": ""
             }])
         } else {
@@ -225,16 +238,23 @@ export default function NewFund() {
         setMilestonesArray(items)
     }
 
+    function handleDeleteMilestone(index: number) {
+        console.log(`Delete index ${index}`)
+        let items = [...milestonesArray]
+        items.splice(index, 1)
+        setMilestonesArray(items)
+    }
+
     return (
-        <div className="p-5 bg-slate-200 text-black rounded">
-            <h1 className="font-blog text-5xl text-center border-b-2">
-                Create a New Fund
-            </h1>
+        <div className={styles.newFund}>
+            <div className={styles.createNewFund}>
+                <h1 style={{ position: "relative" }}>Create A New Fund</h1>
+            </div>
             {isWeb3Enabled && yieldAddress ? (
                 <Box
                 >
                     <div style={{
-                        display: "flex", flexDirection: "row", width: "100%", gap: "40px"
+                        display: "flex", flexDirection: "row", width: "100%", gap: "40px", paddingRight: "50px", paddingLeft: "50px"
                     }}
                     >
                         <div style={{
@@ -299,41 +319,42 @@ export default function NewFund() {
                             <TextField
                                 type="number"
                                 name="duration"
-                                label="Duration"
+                                label="Milestones Duration"
                                 variant="filled"
                                 value={duration}
                                 onChange={handleChangeDuration}
-                                style={{ width: "200px" }}
-                                helperText="Duration of Milestones"
+                                style={{ width: "300px" }}
+                                helperText="Duration of Milestones (seconds)"
                             />
 
 
-                            <div style={{ display: "flex", width: "100%", gap: "20px", paddingTop: "20px" }}>
-                                <h1>Select an image:</h1>
-                                <input type="file" accept="image/*" onChange={handleChangeImage} />
-                            </div>
 
-                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "50px" }}>
+
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", alignContent: "center", gap: "50px" }}>
+                                <div style={{ display: "flex", gap: "20px", paddingTop: "20px" }}>
+                                    <h1 style={{ fontSize: "26px", paddingLeft: "80px" }}>Select an image:</h1>
+                                    <input type="file" accept="image/*" onChange={handleChangeImage} style={{ paddingTop: "7px" }} />
+                                </div>
                                 {file ? (
-                                    <div style={{ paddingTop: "40px" }}>
+                                    <div >
                                         <Image
                                             src={URL.createObjectURL(file)}
-                                            alt="Picture of the author"
+                                            alt="Fund Picture"
                                             width={500}
                                             height={500}
                                         />
                                     </div>
-                                ) : (<div style={{ paddingTop: "40px" }}>
+                                ) : (<div>
                                     <Image
                                         src={"/../public/image-preview.png"}
-                                        alt="Picture of the author"
+                                        alt="Fund Picture"
                                         width={500}
                                         height={500}
                                     />
                                 </div>)}
 
                                 <button
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold text-5xl py-5 px-8 rounded-lg"
+                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold text-5xl py-5 px-8 rounded-lg mb-10"
                                     onClick={async function () {
                                         handleNewFundraiser()
                                     }}
@@ -349,16 +370,30 @@ export default function NewFund() {
                                         {milestonesArray.map((curr, index) => (
                                             <li key={index}>
                                                 <div style={{ display: "flex", flexDirection: "column", gap: "14px", paddingBottom: "20px" }}>
-                                                    <TextField
-                                                        id="outlined-basic"
-                                                        label={`Milestone ${index + 1}`}
-                                                        onChange={(e) => {
-                                                            handleChangeMilestoneName(e, index)
-                                                        }}
-                                                        value={milestonesArray[index].name}
-                                                        helperText="Input a title for the milestone"
-                                                        variant="filled"
-                                                    />
+                                                    <div style={{ display: "flex", flexDirection: "row" }}>
+                                                        <TextField
+                                                            id="outlined-basic"
+                                                            label={`Milestone ${index + 1}`}
+                                                            onChange={(e) => {
+                                                                handleChangeMilestoneName(e, index)
+                                                            }}
+                                                            value={milestonesArray[index].name}
+                                                            helperText="Input a title for the milestone"
+                                                            variant="filled"
+                                                            style={{ width: "75%" }}
+                                                        />
+                                                        {milestonesArray.length > 1 ? (
+                                                            <div style={{ paddingLeft: "30px", paddingTop: "15px" }}>
+                                                                <DeleteIcon
+                                                                    className={styles.deleteIcon}
+                                                                    onClick={(e) => {
+                                                                        handleDeleteMilestone(index)
+                                                                    }} />
+                                                            </div>) : (<></>)}
+
+
+                                                    </div>
+
                                                     <TextField
                                                         id="outlined-multiline-flexible"
                                                         label="Description"

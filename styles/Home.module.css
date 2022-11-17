@@ -89,6 +89,38 @@
     background-image: url("../public/milad-fakurian-iLHDO19h0ng-unsplash.jpeg");
 }
 
+.newFund {
+    color: black;
+    background-color: #fafafa;
+    border-radius: 10px;
+}
+
+.createNewFund {
+    position: relative;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    margin: auto;
+    width: 100%;
+    padding: 125px;
+    height: 350px;
+    font-size: 60px;
+    background-size: 100% 100%;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    background-image: url("../public/milad-fakurian-nVLuYYzYn80-unsplash.jpeg");
+}
+
+.deleteIcon {
+    background-color: rgb(232, 241, 250);
+    transform: scale(2.3);
+    border-radius: 1px;
+}
+
+.deleteIcon:hover {
+    background-color: red;
+}
+
 .formSection {
     display: flex;
     flex-direction: row;
