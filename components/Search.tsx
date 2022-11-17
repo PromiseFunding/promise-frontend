@@ -99,7 +99,7 @@ export default function Search(props: propTypeFunds) {
     return (
         <>
             <div className="py-5 px-5">
-                <ul className="flex flex-row flex-wrap">
+                <ul className={styles.funds}>
                     {filteredData.slice(0, maxEntries).map((fund) => (
                         <li key={fund} className="px-5 py-5">
                             <FundCard fund={fund}></FundCard>

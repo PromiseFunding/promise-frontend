@@ -1,5 +1,5 @@
 .container {
-    padding: 0 2rem;
+    padding: 0 1rem;
 }
 
 .details {
@@ -67,7 +67,16 @@
     align-items: "center";
 }
 
+.funds {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 95%;
+    margin: auto;
+}
+
 .fundsWeLove {
+    position: relative;
     color: white;
     text-align: center;
     vertical-align: middle;
@@ -78,6 +87,25 @@
     font-size: 60px;
     background-size: 100% 100%;
     background-image: url("../public/milad-fakurian-iLHDO19h0ng-unsplash.jpeg");
+}
+
+.formSection {
+    display: flex;
+    flex-direction: row;
+    padding-top: 50px;
+    gap: 10px;
+    padding-bottom: 15px;
+    width: 100%;
+}
+
+.fundsWeLove::before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    background-color: rgba(0, 0, 0, 0.15);
 }
 
 .newFundButton {

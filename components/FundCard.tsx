@@ -25,10 +25,10 @@ export default function FundCard(props: { fund: string }) {
             {data ? (
                 <div className="main text-center">
                     <Card
-                        sx={{ maxWidth: 345, height: 490, backgroundColor: "Gainsboro" }}
+                        sx={{ maxWidth: 345, height: 490, backgroundColor: "Gainsboro", width: 340 }}
                         color="gray"
                     >
-                        <CardActionArea href={`/details/?fund=${fund}`} sx={{ display: "flex", flexDirection: "column" }}>
+                        <CardActionArea href={`/details/?fund=${fund}`} sx={{ display: "flex", flexDirection: "column"}}>
                             <CardMedia
                                 component="img"
                                 height="140"

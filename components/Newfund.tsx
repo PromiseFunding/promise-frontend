@@ -10,6 +10,17 @@ import { ref as refStore, getDownloadURL, uploadBytesResumable } from "firebase/
 import { database, storage } from "../firebase-config"
 import { milestone } from "../config/types"
 import styles from "../styles/Home.module.css"
+import TextField from '@mui/material/TextField';
+import FormHelperText from '@mui/material/FormHelperText';
+import FormControl from '@mui/material/FormControl';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select from '@mui/material/Select';
+import Image from "next/image"
+
+const categories = ["--", "Tech", "Film", "Product", "Gaming"];
+
 
 //contract is already deployed... trying to look at features of contract
 export default function NewFund() {
@@ -31,16 +42,12 @@ export default function NewFund() {
 
     const [category, setCategory] = useState("--")
 
-    const [assetAddress, setAssetAddress] = useState("")
-
-    const [decimalNumber, setDecimal] = useState(0)
+    const [assetAddress, setAssetAddress] = useState(chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].assetAddress : null)
 
     const [milestonesArray, setMilestonesArray] = useState<milestone[]>([{
         "name": "Milestone 1",
         "description": ""
     }])
-
-    const [milestones, setMilestones] = useState("")
 
     const [duration, setDuration] = useState("")
 
@@ -67,13 +74,14 @@ export default function NewFund() {
         if (isWeb3Enabled && yieldAddress) {
             handleChangeDetails()
         }
-    }, [assetValue])
+    }, [assetValue, isWeb3Enabled])
 
     const handleChangeAsset = (event: any) => {
         setAssetValue(event.target.value)
     }
 
     const handleNewFundraiser = async () => {
+        console.log(assetAddress)
         if (category == "--" || !description || !assetValue || !file || !duration) {
             handleGenericAlert("Please fill in the required fields.")
             return
@@ -129,14 +137,7 @@ export default function NewFund() {
     const handleChangeDetails = () => {
         const tokenAddress =
             chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].assetAddress : null
-        const poolAddress =
-            chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].poolAddress : null
-        const aaveAddress =
-            chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].aaveTokenAddress : null
-        const decimal =
-            chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].decimals : null
 
-        setDecimal(decimal!)
         setAssetAddress(tokenAddress!)
     }
 
@@ -192,20 +193,6 @@ export default function NewFund() {
         }
     }
 
-    const handleChangeMilestones = (event: { target: { value: SetStateAction<string> } }) => {
-        //max for now is 120 days
-        const max = 5
-        if ((event.target.value as unknown as number) > 0) {
-            const value = Math.max(
-                0,
-                Math.min(max as number, Number(Number(event.target.value).toFixed(0)))
-            )
-            setMilestones(value.toString())
-        } else {
-            setMilestones("1")
-        }
-    }
-
     function handleChangeImage(event: { target: { files: SetStateAction<any> } }) {
         setFile(event.target.files[0])
     }
@@ -239,153 +226,168 @@ export default function NewFund() {
     }
 
     return (
-        <div className="p-5 bg-slate-800 text-slate-200 rounded border-2 border-rose-500 flex flex-col">
-            <h1 className="font-blog text-center text-3xl text-slate-200 border-b-2">
+        <div className="p-5 bg-slate-200 text-black rounded">
+            <h1 className="font-blog text-5xl text-center border-b-2">
                 Create a New Fund
             </h1>
             {isWeb3Enabled && yieldAddress ? (
-                <div className="flex-col p-5">
-                    <br></br>
-                    <h1 className="font-blog text-2xl text-slate-200">
-                        Enter a Title For your Fund:
-                    </h1>
-                    <input
-                        maxLength={40}
-                        type="string"
-                        placeholder="My Fund"
-                        id="title"
-                        name="Title"
-                        onChange={handleChangeTitle}
-                        value={title}
-                        autoComplete="off"
-                        className="text-slate-800"
-                    ></input>
-                    <h1 className="font-blog text-2xl text-slate-200">
-                        Enter a Description For your Fund:
-                    </h1>
-                    <textarea
-                        className="text-slate-800"
-                        id="w3review"
-                        name="w3review"
-                        value={description}
-                        onChange={handleChangeDescription}
-                        placeholder="This fund is for..."
-                        rows={4}
-                        cols={50}
-                    ></textarea>
-                    <div>
-                        <h1 className="font-blog text-2xl text-slate-200">Choose a category</h1>
-                        <select
-                            id="assetName"
-                            onChange={handleChangeCategory}
-                            className="text-slate-800"
-                            value={category}
-                        >
-                            <option value="--">--</option>
-                            <option value="Tech">Tech</option>
-                            <option value="Film">Film</option>
-                            <option value="Product">Product</option>
-                            <option value="Gaming">Gaming</option>
-                        </select>
-                        <br></br>
-                    </div>
-                    <h1 className="font-blog text-2xl text-slate-200">Select an image:</h1>
-
-                    <div>
-                        <input type="file" accept="image/*" onChange={handleChangeImage} />
-                    </div>
-                    <br></br>
-
-                    <div className="p-5 rounded border-2 border-black bg-slate-500">
-                        <ul className="flex flex-col flex-wrap ">
-                            {milestonesArray.map((curr, index) => (
-                                <li key={index}>
-                                    <h1 className="font-blog text-2xl text-slate-200">
-                                        Milestone {index + 1}
-                                    </h1>
-                                    <input
-                                        maxLength={40}
-                                        type="string"
-                                        placeholder="Milestone Name"
-                                        id="title"
-                                        name="Title"
-                                        onChange={(e) => {
-                                            handleChangeMilestoneName(e, index)
-                                        }}
-                                        value={milestonesArray[index].name}
-                                        autoComplete="off"
-                                        className="text-slate-800"
-                                    ></input>
-                                    <h1 className="font-blog text-2xl text-slate-200">
-                                        Enter a specific, detailed, and complete description of the goals of this milestone:
-                                    </h1>
-                                    <textarea className={styles.textarea}
-                                        id="w3review"
-                                        name="w3review"
-                                        value={milestonesArray[index].description}
-                                        onChange={(e) => {
-                                            handleChangeMilestoneDescription(e, index)
-                                        }}
-                                        placeholder="During this milestone we promise to..."
-                                        rows={4}
-                                        cols={50}
-                                    ></textarea>
-
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-
-                    <button
-                        className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded ml-auto"
-                        onClick={async function () {
-                            newMilestone()
-                        }}
+                <Box
+                >
+                    <div style={{
+                        display: "flex", flexDirection: "row", width: "100%", gap: "40px"
+                    }}
                     >
-                        <div>Add Milestone</div>
-                    </button>
+                        <div style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            width: "50%"
 
-                    <h1 className="font-blog text-2xl text-slate-200">
-                        Enter a duration for your milestones:
-                    </h1>
-                    <input
-                        maxLength={21 - (decimalNumber || 6)}
-                        type="number"
-                        min="0"
-                        step="1"
-                        placeholder="0 seconds"
-                        id="message"
-                        name="Duration"
-                        onChange={handleChangeDuration}
-                        value={duration}
-                        autoComplete="off"
-                        className="text-slate-800"
-                    />
-                    <div>
-                        <h1 className="font-blog text-2xl text-slate-200">Choose Asset:</h1>
-                        <select
-                            id="assetName"
-                            onChange={handleChangeAsset}
-                            className="text-slate-800"
-                        >
-                            <option value="USDC">USDC</option>
-                            <option value="USDT">USDT</option>
-                            <option value="DAI">DAI</option>
-                            <option value="WETH">WETH</option>
-                        </select>
-                        <br></br>
+                        }}>
+                            <div className={styles.formSection}>
+                                <TextField
+                                    id="outlined-basic"
+                                    label="Fund Title"
+                                    variant="filled"
+                                    onChange={handleChangeTitle}
+                                    value={title}
+                                    helperText="Input a title for your fund"
+                                />
+                                <FormControl variant="filled">
+                                    <InputLabel>Category</InputLabel>
+
+                                    <Select
+                                        value={category}
+                                        label="Category"
+                                        onChange={handleChangeCategory}
+                                    >
+                                        <MenuItem value="--">
+                                            <em>None</em>
+                                        </MenuItem>
+                                        <MenuItem value={"Tech"}>Tech</MenuItem>
+                                        <MenuItem value={"Film"}>Film</MenuItem>
+                                        <MenuItem value={"Product"}>Product</MenuItem>
+                                        <MenuItem value={"Gaming"}>Gaming</MenuItem>
+                                    </Select>
+                                    <FormHelperText>Select a Category</FormHelperText>
+                                </FormControl>
+                                <FormControl variant="filled">
+                                    <InputLabel>Asset</InputLabel>
+                                    <Select
+                                        value={assetValue}
+                                        label="Category"
+                                        onChange={handleChangeAsset}
+                                    >
+                                        <MenuItem value={"USDC"}>USDC</MenuItem>
+                                        <MenuItem value={"USDT"}>USDT</MenuItem>
+                                        <MenuItem value={"DAI"}>DAI</MenuItem>
+                                        <MenuItem value={"WETH"}>WETH</MenuItem>
+                                    </Select>
+                                    <FormHelperText>The fund&apos;s accepted asset</FormHelperText>
+                                </FormControl>
+                            </div>
+
+                            <TextField
+                                id="outlined-multiline-flexible"
+                                label="Description"
+                                multiline
+                                rows={10}
+                                onChange={handleChangeDescription}
+                                style={{ paddingBottom: "20px" }}
+                                variant="filled"
+                            />
+
+                            <TextField
+                                type="number"
+                                name="duration"
+                                label="Duration"
+                                variant="filled"
+                                value={duration}
+                                onChange={handleChangeDuration}
+                                style={{ width: "200px" }}
+                                helperText="Duration of Milestones"
+                            />
+
+
+                            <div style={{ display: "flex", width: "100%", gap: "20px", paddingTop: "20px" }}>
+                                <h1>Select an image:</h1>
+                                <input type="file" accept="image/*" onChange={handleChangeImage} />
+                            </div>
+
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "50px" }}>
+                                {file ? (
+                                    <div style={{ paddingTop: "40px" }}>
+                                        <Image
+                                            src={URL.createObjectURL(file)}
+                                            alt="Picture of the author"
+                                            width={500}
+                                            height={500}
+                                        />
+                                    </div>
+                                ) : (<div style={{ paddingTop: "40px" }}>
+                                    <Image
+                                        src={"/../public/image-preview.png"}
+                                        alt="Picture of the author"
+                                        width={500}
+                                        height={500}
+                                    />
+                                </div>)}
+
+                                <button
+                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold text-5xl py-5 px-8 rounded-lg"
+                                    onClick={async function () {
+                                        handleNewFundraiser()
+                                    }}
+                                >
+                                    <div>Create New Fundraiser</div>
+                                </button>
+                            </div>
+                        </div>
+                        <div style={{ width: "50%", }}>
+                            <div className={styles.formSection}>
+                                <div style={{ display: "flex", flexDirection: "column", gap: "14px", width: "100%" }}>
+                                    <ul>
+                                        {milestonesArray.map((curr, index) => (
+                                            <li key={index}>
+                                                <div style={{ display: "flex", flexDirection: "column", gap: "14px", paddingBottom: "20px" }}>
+                                                    <TextField
+                                                        id="outlined-basic"
+                                                        label={`Milestone ${index + 1}`}
+                                                        onChange={(e) => {
+                                                            handleChangeMilestoneName(e, index)
+                                                        }}
+                                                        value={milestonesArray[index].name}
+                                                        helperText="Input a title for the milestone"
+                                                        variant="filled"
+                                                    />
+                                                    <TextField
+                                                        id="outlined-multiline-flexible"
+                                                        label="Description"
+                                                        multiline
+                                                        rows={10}
+                                                        onChange={(e) => {
+                                                            handleChangeMilestoneDescription(e, index)
+                                                        }}
+                                                        variant="filled"
+                                                    />
+                                                </div>
+
+
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <button
+                                        className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded ml-auto"
+                                        onClick={async function () {
+                                            newMilestone()
+                                        }}
+                                    >
+                                        <div>Add Milestone</div>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div className="text-center">
-                        <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
-                            onClick={async function () {
-                                handleNewFundraiser()
-                            }}
-                        >
-                            <div>Create New Fundraiser</div>
-                        </button>
-                    </div>
-                </div>
+                </Box>
             ) : (
                 <div>No Create Yield Address Detected</div>
             )
