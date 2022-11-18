@@ -29,6 +29,12 @@ export default function Header(props: { onChangeQuery?(arg0: string): void, main
                         </a>
                     </Link>
 
+                    <Link href="/info">
+                        <a className="block mt-4 lg:inline-block lg:mt-0 text-slate-200 mr-4 rounded px-5 py-2 ">
+                            How does it work?
+                        </a>
+                    </Link>
+
                     <Link href="/form" >
                         <a className={styles.newFundButton}>
                             Create New Fund
