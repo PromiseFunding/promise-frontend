@@ -89,6 +89,12 @@
     background-image: url("../public/milad-fakurian-iLHDO19h0ng-unsplash.jpeg");
 }
 
+.tutorialPanel {
+    height: 800px;
+    width: 100%;
+    background-color: blue;
+}
+
 .newFund {
     color: black;
     background-color: #fafafa;
