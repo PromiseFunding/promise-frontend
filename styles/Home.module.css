@@ -92,7 +92,18 @@
 .tutorialPanel {
     height: 800px;
     width: 100%;
-    background-color: blue;
+    display: flex;
+    flex-direction: row;
+}
+
+.tutorialText {
+    vertical-align: middle;
+    line-height: 800px;
+    text-align: center;
+    width: 60%;
+    margin-left: auto;
+    color: white;
+    font-size: 50px;
 }
 
 .newFund {
@@ -150,12 +161,7 @@
     padding: 10px;
     color: white;
 
-    background: linear-gradient(
-        125.78deg,
-        rgba(229, 80, 154, 0.8) 17.93%,
-        rgba(176, 37, 136, 0.8) 42.06%,
-        rgba(105, 77, 203, 0.8) 73.89%
-    );
+    background: linear-gradient(125.78deg, #e5509acc 17.93%, #b02588cc 42.06%, #694dcbcc 73.89%);
     border-radius: 10px;
 }
 
