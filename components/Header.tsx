@@ -23,19 +23,19 @@ export default function Header(props: { onChangeQuery?(arg0: string): void, main
 
                     <CategorySelector></CategorySelector>
 
-                    <Link href="/">
+                    <Link legacyBehavior href="/">
                         <a className="block mt-4 lg:inline-block lg:mt-0 text-slate-200 mr-4 rounded px-5 py-2 ">
                             Discover
                         </a>
                     </Link>
 
-                    <Link href="/info">
+                    <Link legacyBehavior href="/info">
                         <a className="block mt-4 lg:inline-block lg:mt-0 text-slate-200 mr-4 rounded px-5 py-2 ">
                             How It Works
                         </a>
                     </Link>
 
-                    <Link href="/form" >
+                    <Link legacyBehavior href="/form" >
                         <a className={styles.newFundButton}>
                             Create New Fund
                         </a>

@@ -63,7 +63,7 @@ const Home: NextPage = () => {
                 setQuery(queryString)
             }} main={true}></Header>
             <div className={styles.fundsWeLove}>
-                <h1 style={{ position: "relative" }}>Funds We Love...</h1>
+                <h1 style={{ position: "relative", fontWeight: "700" }}>Funds We Love...</h1>
             </div>
 
             {

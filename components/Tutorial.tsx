@@ -12,7 +12,7 @@ export default function Tutorial() {
                     <Image src="/../public/info-images/idea/idea.png" height="800" width="800" alt="image"></Image>
                 </div>
                 <div className={styles.tutorialText} >
-                    Create your idea.
+                    IDEA
                 </div>
             </div>
             <div className={styles.tutorialPanel}>
