@@ -65,12 +65,10 @@ const Home: NextPage = () => {
             <div className={styles.fundsWeLove}>
                 <h1 style={{ position: "relative", fontWeight: "700" }}>Funds We Love...</h1>
             </div>
-
             {
                 isWeb3Enabled && fundFactoryAddress ? (
                     <>
                         <div>
-
                             <Search
                                 fundAddressArray={allFunds}
                                 query={query}>

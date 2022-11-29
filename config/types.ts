@@ -1,3 +1,5 @@
+import React from 'react';
+
 type Dictionary = {
     [x: string]: string[]
 }
@@ -26,6 +28,7 @@ export interface propTypeEntryNumber {
 export interface propTypeFunds {
     fundAddressArray: string[]
     query?: string
+    children: React.ReactNode;
 }
 
 export interface milestone {
