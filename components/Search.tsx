@@ -1,18 +1,14 @@
 import FundCard from "./FundCard"
 import { SetStateAction, useEffect, useState } from "react"
 import { useRouter } from "next/router"
-import { TextField } from "@mui/material"
 import { propTypeFunds } from "../config/types"
 import ShowMoreLess from "./ShowMoreLess"
 import { ref, onValue, get } from "firebase/database"
 import { database } from "../firebase-config"
-import SearchBar from "material-ui-search-bar"
 import styles from "../styles/Home.module.css"
 
 export default function Search(props: propTypeFunds) {
     const [filteredData, setFilteredData] = useState<string[]>(props.fundAddressArray)
-    const [inputText, setInputText] = useState("")
-    //shows only maxEntries amount... ShowMoreLess Component reveals more funds if they exist
     const [maxEntries, setMaxEntries] = useState(12)
 
     const router = useRouter()
@@ -22,9 +18,6 @@ export default function Search(props: propTypeFunds) {
     let inputHandler = (query: string) => {
         //convert input text to lower case
         let lowerCase = query.toLowerCase()
-
-        setInputText(lowerCase)
-
 
         const newFilter = props.fundAddressArray.filter((fund) => {
             let holder = ""

@@ -1,12 +1,11 @@
-import { SetStateAction, useEffect, useState, Fragment } from "react"
+import { useEffect, useState, Fragment } from "react"
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { contractAddressesInterface, propType, milestone } from "../config/types"
-import { ref, onValue, get } from "firebase/database"
+import { propType, milestone } from "../config/types"
+import { ref, get } from "firebase/database"
 import { database } from "../firebase-config"
 import styles from "../styles/Home.module.css"
 

@@ -19,7 +19,6 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import Image from "next/image"
 import DeleteIcon from '@material-ui/icons/Delete'
-import { SliderValueLabel } from "@mui/material"
 
 const categories = ["--", "Tech", "Film", "Product", "Gaming"]
 
