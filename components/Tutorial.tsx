@@ -15,7 +15,7 @@ export default function Tutorial() {
                     <div style={{
                         textAlign: "center", width: "50%", marginTop: "auto", marginBottom: "auto"
                     }}>
-                        <Image src="/../public/info-images/idea/idea.png" height="800" width="800" alt="image"></Image>
+                        <Image src="/info-images/idea/idea.png" height="800" width="800" alt="image"></Image>
                     </div>
                     <div className={styles.tutorialText} >
                         <div>
@@ -40,14 +40,14 @@ export default function Tutorial() {
                     <div style={{
                         textAlign: "center", width: "50%", marginTop: "auto", marginBottom: "auto"
                     }}>
-                        <Image src="/../public/info-images/milestones2/milestones.png" height="800" width="800" alt="image"></Image>
+                        <Image src="/info-images/milestones2/milestones.png" height="800" width="800" alt="image"></Image>
                     </div>
                 </div>
                 <div className={styles.tutorialPanel}>
                     <div style={{
                         textAlign: "center", width: "50%", marginTop: "auto", marginBottom: "auto"
                     }}>
-                        <Image src="/../public/info-images/contract/contract.png" height="800" width="800" alt="image"></Image>
+                        <Image src="/info-images/contract/contract.png" height="800" width="800" alt="image"></Image>
                     </div>
                     <div className={styles.tutorialText} >
                         <div>
@@ -67,14 +67,14 @@ export default function Tutorial() {
                     <div style={{
                         textAlign: "center", width: "50%", marginTop: "auto", marginBottom: "auto"
                     }}>
-                        <Image src="/../public/info-images/working/working.png" height="400" width="800" alt="image"></Image>
+                        <Image src="/info-images/working/working.png" height="400" width="800" alt="image"></Image>
                     </div>
                 </div>
                 <div className={styles.tutorialPanel}>
                     <div style={{
                         textAlign: "center", width: "50%", marginTop: "auto", marginBottom: "auto"
                     }}>
-                        <Image src="/../public/info-images/vote/vote.png" height="800" width="800" alt="image"></Image>
+                        <Image src="/info-images/vote/vote.png" height="800" width="800" alt="image"></Image>
                     </div>
                     <div className={styles.tutorialText} >
                         <div>
@@ -93,7 +93,7 @@ export default function Tutorial() {
                     <div style={{
                         textAlign: "center", width: "50%", marginTop: "auto", marginBottom: "auto"
                     }}>
-                        <Image src="/../public/info-images/approved/approved.png" height="800" width="800" alt="image"></Image>
+                        <Image src="/info-images/approved/approved.png" height="800" width="800" alt="image"></Image>
                     </div>
                 </div>
                 <a href="http://www.freepik.com" style={{ color: "white", textAlign: "center" }}>Images designed by vectorjuice / Freepik</a>
