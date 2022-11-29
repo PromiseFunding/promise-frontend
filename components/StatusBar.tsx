@@ -38,7 +38,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
     return (
         <div className="bg-slate-300 rounded p-10 border-2 border-slate-400">
             {
-                milestonesArray.length > 0 ? (
+                milestonesArray.length > 0 && milestoneDurations ? (
                     <div>
                         <div className="pb-20">
                             <h1 className="text-5xl font-bold text-center text-slate-900">Milestone Overview:</h1>
