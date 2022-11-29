@@ -6,7 +6,7 @@ import Tutorial from "../components/Tutorial"
 
 const Info: NextPage = () => {
     return (
-        <div className={styles.container}>
+        <div>
             <Head>
                 <title>Promise</title>
                 <meta name="description" content="Version one of the FundMe Smart Contract" />

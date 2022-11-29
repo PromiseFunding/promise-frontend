@@ -86,31 +86,7 @@
     height: 350px;
     font-size: 60px;
     background-size: 100% 100%;
-    background-image: url("../public/milad-fakurian-iLHDO19h0ng-unsplash.jpeg");
-}
-
-.tutorialPanel {
-    height: 800px;
-    width: 100%;
-    display: flex;
-    flex-direction: row;
-}
-
-.tutorialText {
-    vertical-align: middle;
-    line-height: 800px;
-    text-align: center;
-    width: 60%;
-    margin-left: auto;
-    color: white;
-    font-size: 50px;
-    font-weight: 400%;
-}
-
-.newFund {
-    color: black;
-    background-color: #fafafa;
-    border-radius: 10px;
+    background-image: url("../public/background-images/funds-we-love-banner.jpeg");
 }
 
 .createNewFund {
@@ -126,7 +102,55 @@
     background-size: 100% 100%;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    background-image: url("../public/milad-fakurian-nVLuYYzYn80-unsplash.jpeg");
+    background-image: url("../public/background-images/new-fund-banner.jpeg");
+}
+
+.truncateLineClamp {
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    font-size: 22px;
+    -webkit-box-orient: vertical;
+    margin-left: 200px;
+    margin-right: 200px;
+    overflow: hidden;
+}
+
+.howItWorks {
+    position: relative;
+    color: white;
+    text-align: center;
+    vertical-align: middle;
+    margin: auto;
+    width: 100%;
+    padding: 80px;
+    height: 350px;
+    font-size: 60px;
+    background-size: 100% 100%;
+    background-image: url("../public/background-images/how-it-works-banner.jpg");
+}
+
+.tutorialPanel {
+    height: 650px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+}
+
+.tutorialText {
+    vertical-align: middle;
+    text-align: center;
+    /* padding-top: 200px; */
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 50%;
+    margin-left: auto;
+    color: white;
+}
+
+.newFund {
+    color: black;
+    background-color: #fafafa;
+    border-radius: 10px;
 }
 
 .deleteIcon {
