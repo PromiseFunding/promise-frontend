@@ -14,8 +14,8 @@ export interface propType {
     onChangeState?(arg0: void): void
     updateAmount?: number
     tranche?: number
+    milestoneDurations?: number[]
 }
-
 
 
 export interface propTypeEntryNumber {
@@ -30,7 +30,8 @@ export interface propTypeFunds {
 
 export interface milestone {
     name: string,
-    description: string
+    description: string,
+    duration: string
 }
 
 export interface databaseFundObject {

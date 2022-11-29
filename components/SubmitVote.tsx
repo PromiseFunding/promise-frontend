@@ -1,5 +1,4 @@
 import { abi } from "../constants"
-// dont export from moralis when using react
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { SetStateAction, useEffect, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
