@@ -20,6 +20,7 @@ import { database } from "../firebase-config"
 import { databaseFundObject } from "../config/types"
 import { CardMedia } from "@mui/material"
 import { states } from "../config/helper-config"
+import { BigNumber } from "ethers"
 
 const Details: NextPage = () => {
     const router = useRouter()
@@ -34,6 +35,7 @@ const Details: NextPage = () => {
     const [amt, setAmt] = useState(0)
     const [state, setState] = useState(0)
     const [tranche, setTranche] = useState(0)
+    const [milestoneDurations, setMilestoneDurations] = useState<number[]>()
 
 
     const { runContractFunction: getOwner } = useWeb3Contract({
@@ -64,6 +66,13 @@ const Details: NextPage = () => {
         params: {},
     })
 
+    const { runContractFunction: getMilestoneDurations } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress,
+        functionName: "getMilestoneDurations",
+        params: {},
+    })
+
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
             setData(snapshot.val())
@@ -85,6 +94,8 @@ const Details: NextPage = () => {
         setState(stateFromCall)
         const trancheFromCall = await getCurrentTranche() as number
         setTranche(trancheFromCall)
+        const durationsFromCall = await getMilestoneDurations()
+        setMilestoneDurations((durationsFromCall as BigNumber[]).map(num => num.toNumber()))
     }
 
     useEffect(() => {
@@ -266,6 +277,7 @@ const Details: NextPage = () => {
                         <StatusBar
                             fundAddress={fundAddress}
                             tranche={tranche}
+                            milestoneDurations={milestoneDurations}
                         ></StatusBar>
 
                     </div>

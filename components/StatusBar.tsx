@@ -15,6 +15,7 @@ const steps = ['Milestone 1', 'Milestone 2', 'Milestone 3', 'Milestone 4', 'Mile
 export default function HorizontalNonLinearStepper(props: propType) {
     const fundAddress = props.fundAddress
     const tranche = props.tranche
+    const milestoneDurations = props.milestoneDurations
 
     const [activeStep, setActiveStep] = useState(0);
     const [milestonesArray, setMilestonesArray] = useState<milestone[]>([])
@@ -47,7 +48,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
                         <Box sx={{ width: '100%' }} >
                             <Stepper nonLinear activeStep={activeStep}>
                                 {milestonesArray.map((milestone, index) => (
-                                    <Step key={milestone.name} sx={{
+                                    <Step key={index} sx={{
                                         '& .MuiStepLabel-root .Mui-completed': {
                                             color: 'green', // circle color (ACTIVE)
                                         },
@@ -61,7 +62,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
                             <div>
                                 <Fragment>
                                     <Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
-                                        {milestonesArray[activeStep].description.toString()}
+                                        {`Milestone Duration: ${milestoneDurations![activeStep]}\n${milestonesArray[activeStep].description.toString()}`}
                                     </Typography>
 
                                 </Fragment>

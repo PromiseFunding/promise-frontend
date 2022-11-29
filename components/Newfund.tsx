@@ -10,17 +10,18 @@ import { ref as refStore, getDownloadURL, uploadBytesResumable } from "firebase/
 import { database, storage } from "../firebase-config"
 import { milestone } from "../config/types"
 import styles from "../styles/Home.module.css"
-import TextField from '@mui/material/TextField';
-import FormHelperText from '@mui/material/FormHelperText';
-import FormControl from '@mui/material/FormControl';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
+import TextField from '@mui/material/TextField'
+import FormHelperText from '@mui/material/FormHelperText'
+import FormControl from '@mui/material/FormControl'
+import Box from '@mui/material/Box'
+import InputLabel from '@mui/material/InputLabel'
+import MenuItem from '@mui/material/MenuItem'
+import Select from '@mui/material/Select'
 import Image from "next/image"
-import DeleteIcon from '@material-ui/icons/Delete';
+import DeleteIcon from '@material-ui/icons/Delete'
+import { SliderValueLabel } from "@mui/material"
 
-const categories = ["--", "Tech", "Film", "Product", "Gaming"];
+const categories = ["--", "Tech", "Film", "Product", "Gaming"]
 
 
 //contract is already deployed... trying to look at features of contract
@@ -47,10 +48,9 @@ export default function NewFund() {
 
     const [milestonesArray, setMilestonesArray] = useState<milestone[]>([{
         "name": "",
-        "description": ""
+        "description": "",
+        "duration": "0"
     }])
-
-    const [duration, setDuration] = useState("")
 
     const [file, setFile] = useState<File>()
 
@@ -66,8 +66,7 @@ export default function NewFund() {
         functionName: "createPromiseFund",
         params: {
             assetAddress: assetAddress,
-            numberOfMilestones: milestonesArray.length,
-            milestoneDuration: duration,
+            milestoneDuration: milestonesArray.map(a => a.duration)
         },
     })
 
@@ -82,19 +81,22 @@ export default function NewFund() {
     }
 
     const handleNewFundraiser = async () => {
-        console.log(assetAddress)
-        if (category == "--" || !description || !assetValue || !file || !duration) {
+        if (category == "--" || !description || !assetValue || !file) {
             handleGenericAlert("Please fill in the required fields.")
             return
         }
         let descriptionFull = true
         let nameFull = true
+        let durationFull = true
         milestonesArray.map((milestone) => {
             if (milestone.description == "") {
                 descriptionFull = false
             }
             if (milestone.name == "") {
                 nameFull = false
+            }
+            if (milestone.duration == "" || milestone.duration == "0") {
+                durationFull = false
             }
         })
         if (!descriptionFull) {
@@ -103,6 +105,10 @@ export default function NewFund() {
         }
         if (!nameFull) {
             handleGenericAlert("Please fill all milestone names.")
+            return
+        }
+        if (!durationFull) {
+            handleGenericAlert("Please fill all milestone durations.")
             return
         }
         const createTx: any = await createPromiseFund({
@@ -139,7 +145,6 @@ export default function NewFund() {
                         description: description,
                         category: category,
                         milestones: milestonesArray,
-                        milestoneDuration: duration,
                         asset: assetValue,
                     })
                 })
@@ -185,24 +190,11 @@ export default function NewFund() {
         if (milestonesArray.length < 5) {
             setMilestonesArray(milestonesArray => [...milestonesArray, {
                 "name": "",
-                "description": ""
+                "description": "",
+                "duration": "0"
             }])
         } else {
             handleGenericAlert("The maximum number of milestones is 5")
-        }
-    }
-
-    const handleChangeDuration = (event: { target: { value: SetStateAction<string> } }) => {
-        //max for now is 120 days
-        const max = 10368000
-        if ((event.target.value as unknown as number) > 0) {
-            const value = Math.max(
-                0,
-                Math.min(max as number, Number(Number(event.target.value).toFixed(0)))
-            )
-            setDuration(value.toString())
-        } else {
-            setDuration("")
         }
     }
 
@@ -223,18 +215,36 @@ export default function NewFund() {
     }
 
     function handleChangeMilestoneName(event: { target: { value: SetStateAction<string> } }, index: number) {
-        let items = [...milestonesArray];
-        let item = { ...items[index] };
-        item.name = event.target.value as string;
-        items[index] = item;
+        let items = [...milestonesArray]
+        let item = { ...items[index] }
+        item.name = event.target.value as string
+        items[index] = item
         setMilestonesArray(items)
     }
 
     function handleChangeMilestoneDescription(event: { target: { value: SetStateAction<string> } }, index: number) {
-        let items = [...milestonesArray];
-        let item = { ...items[index] };
-        item.description = event.target.value as string;
-        items[index] = item;
+        let items = [...milestonesArray]
+        let item = { ...items[index] }
+        item.description = event.target.value as string
+        items[index] = item
+        setMilestonesArray(items)
+    }
+
+    const handleChangeDuration = (event: { target: { value: SetStateAction<string> } }, index: number) => {
+        //max for now is 120 days
+        const max = 10368000
+        let items = [...milestonesArray]
+        let item = { ...items[index] }
+        if ((event.target.value as unknown as number) > 0) {
+            const value = Math.max(
+                0,
+                Math.min(max as number, Number(Number(event.target.value).toFixed(0)))
+            )
+            item.duration = value.toString()
+        } else {
+            item.duration = ""
+        }
+        items[index] = item
         setMilestonesArray(items)
     }
 
@@ -316,20 +326,6 @@ export default function NewFund() {
                                 variant="filled"
                             />
 
-                            <TextField
-                                type="number"
-                                name="duration"
-                                label="Milestones Duration"
-                                variant="filled"
-                                value={duration}
-                                onChange={handleChangeDuration}
-                                style={{ width: "300px" }}
-                                helperText="Duration of Milestones (seconds)"
-                            />
-
-
-
-
                             <div style={{ display: "flex", flexDirection: "column", alignItems: "center", alignContent: "center", gap: "50px" }}>
                                 <div style={{ display: "flex", gap: "20px", paddingTop: "20px" }}>
                                     <h1 style={{ fontSize: "26px", paddingLeft: "80px" }}>Select an image:</h1>
@@ -380,7 +376,19 @@ export default function NewFund() {
                                                             value={milestonesArray[index].name}
                                                             helperText="Input a title for the milestone"
                                                             variant="filled"
-                                                            style={{ width: "75%" }}
+                                                            style={{ width: "50%" }}
+                                                        />
+                                                        <TextField
+                                                            type="number"
+                                                            name="duration"
+                                                            label="Milestone Duration"
+                                                            variant="filled"
+                                                            value={milestonesArray[index].duration}
+                                                            onChange={(e) => {
+                                                                handleChangeDuration(e, index)
+                                                            }}
+                                                            style={{ width: "50%", paddingLeft: "10px" }}
+                                                            helperText="Duration of Milestones (seconds)"
                                                         />
                                                         {milestonesArray.length > 1 ? (
                                                             <div style={{ paddingLeft: "30px", paddingTop: "15px" }}>
