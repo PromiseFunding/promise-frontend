@@ -24,13 +24,13 @@ export default function Header(props: { onChangeQuery?(arg0: string): void, main
                     <CategorySelector></CategorySelector>
 
                     <Link legacyBehavior href="/">
-                        <a className="block mt-4 lg:inline-block lg:mt-0 text-slate-200 mr-4 rounded px-5 py-2 ">
+                        <a className={styles.headerItem}>
                             Discover
                         </a>
                     </Link>
 
                     <Link legacyBehavior href="/info">
-                        <a className="block mt-4 lg:inline-block lg:mt-0 text-slate-200 mr-4 rounded px-5 py-2 ">
+                        <a className={styles.headerItem}>
                             How It Works
                         </a>
                     </Link>
@@ -47,6 +47,6 @@ export default function Header(props: { onChangeQuery?(arg0: string): void, main
             <div className="ml-auto py-2 px-2">
                 <ConnectButton moralisAuth={true} />
             </div>
-        </nav>
+        </nav >
     )
 }

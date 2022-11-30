@@ -57,8 +57,43 @@
     background-color: #1a202f;
 }
 
+.headerItem {
+    font-size: 20px;
+    color: rgb(226 232 240);
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.newFundButton {
+    padding: 10px;
+    font-size: 20px;
+    color: rgb(226 232 240);
+    background: linear-gradient(125.78deg, #e5509acc 17.93%, #b02588cc 42.06%, #694dcbcc 73.89%);
+    border-radius: 10px;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 30px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.newFundButton:hover {
+    color: "white";
+}
+
+.headerItem:hover {
+    color: white;
+}
+
 .searchbar {
     width: 25%;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .heading {
@@ -180,14 +215,6 @@
     left: 0px;
     bottom: 0px;
     background-color: rgba(0, 0, 0, 0.15);
-}
-
-.newFundButton {
-    padding: 10px;
-    color: white;
-
-    background: linear-gradient(125.78deg, #e5509acc 17.93%, #b02588cc 42.06%, #694dcbcc 73.89%);
-    border-radius: 10px;
 }
 
 .footer a {

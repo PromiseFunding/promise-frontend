@@ -2,6 +2,7 @@ import { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import Link from "next/link"
+import styles from "../styles/Home.module.css"
 
 function classNames(...classes: any[]) {
     return classes.filter(Boolean).join(' ')
@@ -9,9 +10,9 @@ function classNames(...classes: any[]) {
 
 export default function CategorySelector() {
     return (
-        <Menu as="div" className="relative inline-block text-left">
+        <Menu as="div" className={styles.headerItem}>
             <div>
-                <Menu.Button className="inline-flex justify-center rounded px-5 py-2 text-slate-200 hover:text-white">
+                <Menu.Button className="inline-flex justify-center rounded py-2 text-slate-200 hover:text-white">
                     Categories
                     <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
                 </Menu.Button>
