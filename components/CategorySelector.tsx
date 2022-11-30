@@ -10,7 +10,7 @@ function classNames(...classes: any[]) {
 
 export default function CategorySelector() {
     return (
-        <Menu as="div" className={styles.headerItem}>
+        <Menu as="div" className={styles.category}>
             <div>
                 <Menu.Button className="inline-flex justify-center rounded py-2 text-slate-200 hover:text-white">
                     Categories
