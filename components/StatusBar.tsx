@@ -40,7 +40,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
                 milestonesArray.length > 0 && milestoneDurations ? (
                     <div>
                         <div className="pb-20">
-                            <h1 className="text-5xl font-bold text-center text-slate-900">Milestone Overview:</h1>
+                            <h1 className="text-5xl font-bold text-center text-slate-900">Milestones Overview:</h1>
                             <p className="text-center text-slate-900 pt-2"> Select a milestone to see the promises made for that period.</p>
                         </div>
 
@@ -63,11 +63,13 @@ export default function HorizontalNonLinearStepper(props: propType) {
                                     <Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
                                         {`Milestone Duration: ${milestoneDurations![activeStep]}\n${milestonesArray[activeStep].description.toString()}`}
                                     </Typography>
+                                    <Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
+                                        {`Milestone Duration: ${milestoneDurations![activeStep]}\nMilestone Description:${milestonesArray[activeStep].description.toString()}`}
+                                    </Typography>
 
                                 </Fragment>
-
-                            </div>
-                        </Box>
+                            </div>           
+                        </Box>                
                     </div>) : (<></>)
             }
         </div>

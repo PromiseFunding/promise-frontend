@@ -50,11 +50,10 @@ export const networkConfig: networkConfigInfo = {
 }
 
 export const states = [
-    "PENDING",
-    "VOTING",
-    "OWNER_WITHDRAW",
-    "FUNDER_WITHDRAW",
-    "REVOTE"
+    "Accepting Donations",
+    "Voting In Progress",
+    "Project Owner Can Withdraw",
+    "Funders of the Current Milestone and Beyond Can Withdraw Donations",
 ]
 
 export const developmentChains = ["hardhat", "localhost"]
