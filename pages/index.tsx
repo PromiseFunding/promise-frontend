@@ -40,13 +40,11 @@ const Discover: NextPage = () => {
                     <div className={styles.launchPageHeaderItem}>Examples</div>
                     <div className={styles.launchPageHeaderItem}>Contact</div>
                 </div>
-
-
             </div>
 
-
-
-            <div style={{ height: "500px" }} ></div>
+            <div className={styles.landingPageSummary}>
+                <h2 style={{ fontSize: "30px" }}>A novel way to fund projects trustlessly.</h2>
+            </div>
         </div >
     )
 }
