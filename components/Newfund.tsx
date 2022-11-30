@@ -270,7 +270,6 @@ export default function NewFund() {
                             display: "flex",
                             flexDirection: "column",
                             width: "50%"
-
                         }}>
                             <div className={styles.formSection}>
                                 <TextField

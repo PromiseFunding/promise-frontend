@@ -153,6 +153,67 @@
     background-image: url("../public/background-images/new-fund-banner.jpeg");
 }
 
+.landingPageBackground {
+    position: relative;
+    color: white;
+    width: 100%;
+    height: 550px;
+    background-size: 100% 100%;
+    background-image: url("../public/background-images/landing-page-background-2.jpeg");
+    display: flex;
+    flex-direction: column;
+}
+
+.launchAppOuter {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    height: 70vh;
+    position: relative;
+    font-weight: 700;
+}
+
+.launchAppInner {
+    padding: 30px;
+    background: linear-gradient(125.78deg, #e5509a 17.93%, #b02588 42.06%, #694dcb 73.89%);
+    width: 25vw;
+    border-radius: 10px;
+    font-size: 30px;
+    text-align: center;
+    display: inline-block;
+    margin-top: 265px;
+}
+
+.launchAppInner:hover {
+    background: linear-gradient(125.78deg, #694dcb 17.93%, #b02588 42.06%, #e5509a 73.89%);
+    color: lightgrey;
+    cursor: pointer;
+}
+
+.launchPageHeader {
+    position: absolute;
+    text-align: center;
+    justify-content: center;
+    gap: 50px;
+    width: 100%;
+    height: 50px;
+    line-height: 50px;
+    vertical-align: middle;
+    display: flex;
+    flex-direction: row;
+}
+
+.launchPageHeaderItem {
+    font-size: 15px;
+    color: white;
+}
+
+.launchPageHeaderItem:hover {
+    color: lightgrey;
+    cursor: pointer;
+}
+
 .truncateLineClamp {
     display: -webkit-box;
     -webkit-line-clamp: 4;
@@ -161,6 +222,13 @@
     margin-left: 200px;
     margin-right: 200px;
     overflow: hidden;
+}
+
+.landingPageTitleBox {
+    margin-left: 7vw;
+    margin-top: 2vh;
+    display: flex;
+    flex-direction: column;
 }
 
 .howItWorks {
