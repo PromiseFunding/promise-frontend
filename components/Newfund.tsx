@@ -341,7 +341,7 @@ export default function NewFund() {
                                     </div>
                                 ) : (<div>
                                     <Image
-                                        src={"/../public/icons/image-preview.png"}
+                                        src={"/icons/image-preview.png"}
                                         alt="Fund Picture"
                                         width={500}
                                         height={500}
