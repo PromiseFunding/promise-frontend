@@ -68,6 +68,19 @@
     text-overflow: ellipsis;
 }
 
+.category {
+    position: relative;
+    display: inline-block;
+    text-align: left;
+    font-size: 20px;
+    color: rgb(226 232 240);
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 30px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
 .newFundButton {
     padding: 10px;
     font-size: 20px;
