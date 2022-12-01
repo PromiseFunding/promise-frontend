@@ -360,6 +360,7 @@ const Details: NextPage = () => {
                             ownerFund={owner}
                             decimals={decimals!}
                             userAddress={userAddress}
+                            currState={state}
                             coinName={coinName}
                         ></StatusBar>
 

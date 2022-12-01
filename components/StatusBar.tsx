@@ -22,6 +22,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
     const decimals = props.decimals
     const coinName = props.coinName
     const userAddress = props.userAddress
+    const currState = props.currState
     const owner = props.ownerFund
 
     const [activeStep, setActiveStep] = useState(0);
@@ -118,11 +119,16 @@ export default function HorizontalNonLinearStepper(props: propType) {
                                     )}
                                 </Fragment>
                             </div>
+                            <br></br>
                             <div>
-                                <NewMilestone
-                                    fundAddress={fundAddress}
-                                />
-                            </div>         
+                                {milestoneDurations.length < 5 && userAddress == owner && currState != 3  && currState != 1 ? (<div>
+                                    <NewMilestone
+                                        fundAddress={fundAddress}
+                                    />
+                                </div> ) : (
+                                    <></>
+                                )}    
+                            </div>   
                         </Box>                
                     </div>) : (<></>)
             }

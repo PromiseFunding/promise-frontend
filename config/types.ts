@@ -20,6 +20,7 @@ export interface propType {
     decimals?: number
     coinName?: string
     userAddress?: string
+    currState?: number
 }
 
 

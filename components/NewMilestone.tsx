@@ -5,19 +5,14 @@ import { SetStateAction, useEffect, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { tokenConfig } from "../config/token-config"
 import { set, get, ref as refDb } from "firebase/database"
-import { ref as refStore, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { database, storage } from "../firebase-config"
 import { milestone } from "../config/types"
 import { contractAddressesInterface, propType } from "../config/types"
 import styles from "../styles/Home.module.css"
 import TextField from "@mui/material/TextField"
 import { BigNumber } from "ethers"
-import FormHelperText from "@mui/material/FormHelperText"
-import FormControl from "@mui/material/FormControl"
+
 import Box from "@mui/material/Box"
-import InputLabel from "@mui/material/InputLabel"
-import MenuItem from "@mui/material/MenuItem"
-import Select from "@mui/material/Select"
 
 export default function NewMilestone(props: propType) {
     const fundAddress = props.fundAddress
@@ -105,6 +100,8 @@ export default function NewMilestone(props: propType) {
             description: description,
             duration: milestoneDuration,
         })
+
+        updateMilestoneLength()
     }
 
     const handleNewNotification = function () {
@@ -133,14 +130,6 @@ export default function NewMilestone(props: propType) {
             position: "topR",
         })
     }
-
-    // const newMilestone = () => {
-    //     if (numberofMilestones < 5) {
-            
-    //     } else {
-    //         handleGenericAlert("The maximum number of milestones is 5. Cannot Add Any More")
-    //     }
-    // }
 
     function handleChangeMilestoneName(event: { target: { value: SetStateAction<string> } }) {
         const nameOfMilestone = event.target.value as string
@@ -172,17 +161,11 @@ export default function NewMilestone(props: propType) {
 
     return (
         <div className={styles.newFund}>
-            {/* <button
-                className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded ml-auto"
-                onClick={async function () {
-                    newMilestone()
-                }}
-            >
-            <div>Add Milestone</div>
-            </button> */}
+            <br></br>
+            <h1 className="text-4xl font-bold text-center text-slate-900">Add Another Milestone:</h1>
             {isWeb3Enabled && fundAddress ? (
                 <Box>
-                    <div style={{ width: "50%" }}>
+                    <div style={{ width: "100%", alignContent: "center", alignItems: "center", paddingRight: "250px", paddingLeft: "250px"}}>
                         <div className={styles.formSection}>
                             <div
                                 style={{
