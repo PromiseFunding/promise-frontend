@@ -33,7 +33,7 @@ const Details: NextPage = () => {
     const [data, setData] = useState<databaseFundObject>()
     const [assetAddress, setAssetAddress] = useState("")
     const [userAddress, setAddress] = useState("0")
-    const [owner, setOwner] = useState("0")
+    const [owner, setOwner] = useState("")
     const [amt, setAmt] = useState(0)
     const [state, setState] = useState(0)
     const [tranche, setTranche] = useState(0)
@@ -117,6 +117,7 @@ const Details: NextPage = () => {
     useEffect(() => {
         if (account) {
             setAddress(account.toLowerCase())
+            //updateUI()
         }
     }, [account])
 
@@ -124,7 +125,7 @@ const Details: NextPage = () => {
         const assetAddressFromCall = (await getAssetAddress()) as string
         setAssetAddress(assetAddressFromCall)
         const ownerFromCall = await getOwner()
-        setOwner((ownerFromCall as string).toLowerCase())
+        setOwner((ownerFromCall as String).toLowerCase())
         const stateFromCall = await getState() as number
         setState(stateFromCall)
         const trancheFromCall = await getCurrentTranche() as number
@@ -356,7 +357,9 @@ const Details: NextPage = () => {
                             fundAddress={fundAddress}
                             tranche={tranche}
                             milestoneDurations={milestoneDurations}
+                            ownerFund={owner}
                             decimals={decimals!}
+                            userAddress={userAddress}
                             coinName={coinName}
                         ></StatusBar>
 

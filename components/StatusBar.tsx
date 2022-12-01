@@ -8,6 +8,7 @@ import { propType, milestone } from "../config/types"
 import { ref, get } from "firebase/database"
 import { database } from "../firebase-config"
 import styles from "../styles/Home.module.css"
+import NewMilestone from "./NewMilestone"
 import { contractAddresses, abi, erc20Abi } from "../constants"
 // dont export from moralis when using react
 import { useMoralis, useWeb3Contract } from "react-moralis"
@@ -20,6 +21,8 @@ export default function HorizontalNonLinearStepper(props: propType) {
     const milestoneDurations = props.milestoneDurations
     const decimals = props.decimals
     const coinName = props.coinName
+    const userAddress = props.userAddress
+    const owner = props.ownerFund
 
     const [activeStep, setActiveStep] = useState(0);
     const [milestonesArray, setMilestonesArray] = useState<milestone[]>([])
@@ -60,7 +63,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
         if (isWeb3Enabled && fundAddress) {
             updateUI()
         }
-    }, [activeStep])
+    }, [activeStep, userAddress])
 
     useEffect(() => {
         getMilestones()
@@ -104,13 +107,22 @@ export default function HorizontalNonLinearStepper(props: propType) {
                                         {`Milestone Duration: ${milestoneDurations![activeStep]}\nMilestone Description: ${milestonesArray[activeStep].description.toString()}`}
                                     </Typography>
                                     <br></br>
-                                    <h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1 } Funding Metrics:</h1>
-                                    <Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
-                                        {`Total Funded in Milestone: ${amountRaised} ${coinName}\nAmount You Have Donated in Milestone: ${amountFunded} ${coinName}`}
-                                    </Typography>
-
+                                    {userAddress != owner ? (
+                                        <><h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1} Funding Metrics:</h1><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
+                                            {`Total Funded in Milestone: ${amountRaised} ${coinName}\nAmount You Have Donated in Milestone: ${amountFunded} ${coinName}`}
+                                        </Typography></>
+                                    ):(
+                                        <><h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1} Funding Metrics:</h1><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
+                                            {`Total Funded in Milestone: ${amountRaised} ${coinName}`}
+                                        </Typography></>
+                                    )}
                                 </Fragment>
-                            </div>           
+                            </div>
+                            <div>
+                                <NewMilestone
+                                    fundAddress={fundAddress}
+                                />
+                            </div>         
                         </Box>                
                     </div>) : (<></>)
             }

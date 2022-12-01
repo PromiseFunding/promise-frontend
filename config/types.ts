@@ -19,6 +19,7 @@ export interface propType {
     milestoneDurations?: number[]
     decimals?: number
     coinName?: string
+    userAddress?: string
 }
 
 

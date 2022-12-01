@@ -58,7 +58,7 @@ export default function StraightDonation(props: propType) {
         if (isWeb3Enabled && fundAddress) {
             updateUI()
         }
-    }, [isWeb3Enabled, fundAddress])
+    }, [isWeb3Enabled, fundAddress, account])
 
     const handleSuccess = async function () {
         const fundTx: any = await fund()
