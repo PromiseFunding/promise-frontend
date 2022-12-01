@@ -3,9 +3,16 @@ import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import Image from "next/image"
 import Link from "next/link"
-import Tutorial from "../components/Tutorial"
+import React from "react"
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import Features from "../components/landingPage/Features"
 
 const Discover: NextPage = () => {
+    function handleScroll(section: string) {
+        const element = document.getElementById(section);
+
+        element!.scrollIntoView({ behavior: "smooth", inline: "nearest" });
+    }
 
     return (
         <div >
@@ -19,7 +26,7 @@ const Discover: NextPage = () => {
                     alt="Picture of the author"
                     width={75}
                     height={75}
-                    style={{ marginLeft: "20px", marginTop: "20px" }}
+                    className={styles.promiseLogo}
                 />
                 <div className={styles.landingPageTitleBox}>
                     <h1 style={{ fontSize: "50px", fontWeight: "700" }}>Promise</h1>
@@ -35,16 +42,35 @@ const Discover: NextPage = () => {
                 </div>
 
                 <div className={styles.launchPageHeader}>
-                    <div className={styles.launchPageHeaderItem}>About</div>
-                    <div className={styles.launchPageHeaderItem}>Features</div>
+                    <button type="button" className={styles.launchPageHeaderItem} onClick={(e) => {
+                        handleScroll("about")
+                    }}>About</button>
+                    <button type="button" className={styles.launchPageHeaderItem} onClick={(e) => {
+                        handleScroll("features")
+                    }}>Features</button>
                     <div className={styles.launchPageHeaderItem}>Examples</div>
                     <div className={styles.launchPageHeaderItem}>Contact</div>
+                    <Link className={styles.launchPageHeaderItem} href="https://github.com/PromiseFunding">GitHub
+                    </Link>
                 </div>
+
+
             </div>
 
-            <div className={styles.landingPageSummary}>
-                <h2 style={{ fontSize: "30px" }}>A novel way to fund projects trustlessly.</h2>
+            <div className={styles.landingPageSummary} id="about">
+                <h2 style={{ fontSize: "40px" }}>A novel way to fund projects <b><i>trustlessly</i></b>.</h2>
+                <h3 style={{ fontSize: "20px", marginTop: "20px" }}>Promise removes trust from the process of crowdfunding protocols by allowing the funders of a project to holder
+                    the project&apos;s fundraisers accountable. Donors no longer have to wonder whether fundraisers will follow through on the
+                    claims they make. Instead fundraisers are rewarded for proving they have done what they promised. </h3>
             </div>
+
+            <Features></Features>
+
+
+
+            <div style={{ height: "1000px" }}></div>
+
+
         </div >
     )
 }
