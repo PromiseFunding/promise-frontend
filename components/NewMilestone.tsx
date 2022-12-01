@@ -100,7 +100,7 @@ export default function NewMilestone(props: propType) {
 
         handleNewNotification()
 
-        set(refDb(database, `funds/${fundAddress}/milestones/${numberofMilestones - 1}`), {
+        set(refDb(database, `funds/${fundAddress}/milestones/${numberofMilestones}`), {
             name: name,
             description: description,
             duration: milestoneDuration,
