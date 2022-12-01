@@ -1,5 +1,5 @@
 import type { NextPage } from "next"
-import { abi } from "../constants"
+import { abi, contractAddresses } from "../constants"
 import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import Header from "../components/Header"
@@ -21,21 +21,42 @@ import { databaseFundObject } from "../config/types"
 import { CardMedia } from "@mui/material"
 import { states } from "../config/helper-config"
 import { BigNumber } from "ethers"
+import { contractAddressesInterface, propType } from "../config/types"
+import { tokenConfig } from "../config/token-config"
+import CurrentTrancheDonation from "../components/CurrentTrancheDonation"
 
 const Details: NextPage = () => {
     const router = useRouter()
     const fundAddress = router.query.fund as string
 
     const fundRef = ref(database, "funds/" + fundAddress)
-    const { isWeb3Enabled, account } = useMoralis()
     const [data, setData] = useState<databaseFundObject>()
     const [assetAddress, setAssetAddress] = useState("")
     const [userAddress, setAddress] = useState("0")
-    const [owner, setOwner] = useState("0")
+    const [owner, setOwner] = useState("")
     const [amt, setAmt] = useState(0)
     const [state, setState] = useState(0)
     const [tranche, setTranche] = useState(0)
+    const [timeLeft, setTimeLeft] = useState(100)
+    const [totalFunds, setTotalFunds] = useState(0)
     const [milestoneDurations, setMilestoneDurations] = useState<number[]>()
+
+    const addresses: contractAddressesInterface = contractAddresses
+    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
+    const chainId: string = parseInt(chainIdHex!).toString()
+
+    //TODO: get helper-config working instead!... gets rid of decimal function
+    const chainIdNum = parseInt(chainIdHex!)
+
+    let coinName = "USDT"
+
+    for (const coin in tokenConfig[chainIdNum]) {
+        if (tokenConfig[chainIdNum][coin].assetAddress == assetAddress) {
+            coinName = coin
+        }
+    }
+
+    const decimals = chainId in addresses ? tokenConfig[chainIdNum][coinName].decimals : null
 
 
     const { runContractFunction: getOwner } = useWeb3Contract({
@@ -73,6 +94,20 @@ const Details: NextPage = () => {
         params: {},
     })
 
+    const { runContractFunction: getTimeLeftMilestone } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress,
+        functionName: "getTimeLeftMilestone",
+        params: {},
+    })
+
+    const { runContractFunction: getTotalFunds } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress,
+        functionName: "getTotalFunds",
+        params: {},
+    })
+
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
             setData(snapshot.val())
@@ -82,6 +117,7 @@ const Details: NextPage = () => {
     useEffect(() => {
         if (account) {
             setAddress(account.toLowerCase())
+            //updateUI()
         }
     }, [account])
 
@@ -89,11 +125,15 @@ const Details: NextPage = () => {
         const assetAddressFromCall = (await getAssetAddress()) as string
         setAssetAddress(assetAddressFromCall)
         const ownerFromCall = await getOwner()
-        setOwner((ownerFromCall as string).toLowerCase())
+        setOwner((ownerFromCall as String).toLowerCase())
         const stateFromCall = await getState() as number
         setState(stateFromCall)
         const trancheFromCall = await getCurrentTranche() as number
         setTranche(trancheFromCall)
+        const timeLeftFromCall = await getTimeLeftMilestone() as BigNumber
+        setTimeLeft(timeLeftFromCall.toNumber())
+        const totalFromCall = await getTotalFunds() as BigNumber
+        setTotalFunds(totalFromCall.toNumber() / 10 ** decimals!)
         const durationsFromCall = await getMilestoneDurations()
         setMilestoneDurations((durationsFromCall as BigNumber[]).map(num => num.toNumber()))
     }
@@ -141,6 +181,13 @@ const Details: NextPage = () => {
                                     <div className="font-normal">{data.description}</div>
                                 </div>
                                 <br></br>
+                                <br></br>
+                                <div>
+                                    <h1 className="text-2xl font-bold">Total Amount Raised:</h1>
+                                    <h1 className="text-2xl font-bold">{totalFunds} {coinName}</h1>
+                                </div>
+                                <br></br>
+                                <br></br>
                                 <div className="font-bold">
                                     <div className="font-normal">
                                         {" "}
@@ -156,7 +203,13 @@ const Details: NextPage = () => {
                                 <div className="font-bold">
                                     <div className="font-normal">
                                         {" "}
-                                        <b className="text-2xl">Current Tranche:</b> {tranche}
+                                        <b className="text-2xl">Current Milestone:</b> {tranche + 1}
+                                    </div>
+                                </div>
+                                <div className="font-bold">
+                                    <div className="font-normal">
+                                        {" "}
+                                        <b className="text-2xl">Time Left in Milestone:</b> {timeLeft}
                                     </div>
                                 </div>
                             </div>
@@ -170,11 +223,37 @@ const Details: NextPage = () => {
                                             {owner != userAddress ? (
                                                 <div>
                                                     {state == 0 ? (
-                                                        <StraightDonation
-                                                            fundAddress={fundAddress}
-                                                            assetAddress={assetAddress}
-                                                            ownerFund={owner}
-                                                        ></StraightDonation>
+                                                        <><div>
+                                                            <StraightDonation
+                                                                fundAddress={fundAddress}
+                                                                assetAddress={assetAddress}
+                                                                ownerFund={owner}
+                                                                decimals={decimals!}
+                                                                coinName={coinName}
+                                                            ></StraightDonation>
+                                                            <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                                                            <div className="text-center flex flex-col border-2 border-slate-500">
+                                                                <CurrentTrancheDonation
+                                                                    fundAddress={fundAddress}
+                                                                    assetAddress={assetAddress}
+                                                                    ownerFund={owner}
+                                                                    tranche={tranche}
+                                                                    decimals={decimals!}
+                                                                    coinName={coinName}
+                                                                ></CurrentTrancheDonation>
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            {timeLeft == 0 ? (
+                                                                <StartVote
+                                                                    fundAddress={fundAddress}
+                                                                    assetAddress={assetAddress}
+                                                                    onChangeState={() => {
+                                                                        updateUI()
+                                                                    }}
+                                                                ></StartVote>
+                                                            ): (<></>)}
+                                                        </div></>
                                                     ) : (<></>)}
                                                     {state == 1 ? (
                                                         <div>
@@ -278,6 +357,11 @@ const Details: NextPage = () => {
                             fundAddress={fundAddress}
                             tranche={tranche}
                             milestoneDurations={milestoneDurations}
+                            ownerFund={owner}
+                            decimals={decimals!}
+                            userAddress={userAddress}
+                            currState={state}
+                            coinName={coinName}
                         ></StatusBar>
 
                     </div>

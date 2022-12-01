@@ -8,9 +8,10 @@ import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
 
 //contract is already deployed... trying to look at features of contract
-export default function StraightDonation(props: propType) {
+export default function CurrentTrancheDonation(props: propType) {
     const fundAddress = props.fundAddress
     const tokenAddress = props.assetAddress
+    const tranche = props.tranche
     const decimals = props.decimals
     const coinName = props.coinName
 
@@ -35,22 +36,22 @@ export default function StraightDonation(props: propType) {
         },
     })
 
-    const { runContractFunction: getFundAmount } = useWeb3Contract({
+    const { runContractFunction: getFunderTrancheAmountRaised } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!,
-        functionName: "getFundAmount",
-        params: { funder: account },
+        functionName: "getFunderTrancheAmountRaised",
+        params: { funder: account, level: tranche},
     })
 
-    const { runContractFunction: fund } = useWeb3Contract({
+    const { runContractFunction: fundCurrent } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!,
-        functionName: "fund",
+        functionName: "fundCurrentTrancheOnly",
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
 
     async function updateUI() {
-        const amountFundedFromCall = (await getFundAmount()) as number
+        const amountFundedFromCall = (await getFunderTrancheAmountRaised()) as number
         setAmountFunded(amountFundedFromCall / 10 ** decimals!)
     }
 
@@ -61,7 +62,7 @@ export default function StraightDonation(props: propType) {
     }, [isWeb3Enabled, fundAddress, account])
 
     const handleSuccess = async function () {
-        const fundTx: any = await fund()
+        const fundTx: any = await fundCurrent()
         setVal("0")
         try {
             await fundTx.wait(1)
@@ -112,7 +113,7 @@ export default function StraightDonation(props: propType) {
     return (
         <div className="p-5 bg-slate-800 text-slate-200">
             <div>
-                <h1 className="text-xl font-bold">Donation Split Equally Among Remaining Milestones</h1>
+                <h1 className="text-xl font-bold">Donation to Current Milestone Only</h1>
                 <br></br>
             </div>
 
@@ -150,7 +151,7 @@ export default function StraightDonation(props: propType) {
                         <br></br>
                         Deposit Amount: {val || 0} {coinName}
                     </h2>
-                    Total Funds In Escrow: {amountFunded} {coinName}
+                    Funds Locked In Milestone {tranche! + 1}: {amountFunded} {coinName}
                 </div>
             ) : (
                 <div>No Fund Address Detected</div>

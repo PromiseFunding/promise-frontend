@@ -17,6 +17,10 @@ export interface propType {
     updateAmount?: number
     tranche?: number
     milestoneDurations?: number[]
+    decimals?: number
+    coinName?: string
+    userAddress?: string
+    currState?: number
 }
 
 
