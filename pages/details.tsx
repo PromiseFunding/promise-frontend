@@ -180,9 +180,12 @@ const Details: NextPage = () => {
                                     <div className="font-normal">{data.description}</div>
                                 </div>
                                 <br></br>
-                                <div className="font-bold">
-                                    <h1 className="text-2xl">Total Amount Raised:</h1> {totalFunds} {coinName}
+                                <br></br>
+                                <div>
+                                    <h1 className="text-2xl font-bold">Total Amount Raised:</h1>
+                                    <h1 className="text-2xl font-bold">{totalFunds} {coinName}</h1>
                                 </div>
+                                <br></br>
                                 <br></br>
                                 <div className="font-bold">
                                     <div className="font-normal">
@@ -353,6 +356,8 @@ const Details: NextPage = () => {
                             fundAddress={fundAddress}
                             tranche={tranche}
                             milestoneDurations={milestoneDurations}
+                            decimals={decimals!}
+                            coinName={coinName}
                         ></StatusBar>
 
                     </div>

@@ -53,7 +53,7 @@ export const states = [
     "Accepting Donations",
     "Voting In Progress",
     "Project Owner Can Withdraw",
-    "Funders of the Current Milestone and Beyond Can Withdraw Donations",
+    "Funders Can Withdraw Remaining Donations",
 ]
 
 export const developmentChains = ["hardhat", "localhost"]

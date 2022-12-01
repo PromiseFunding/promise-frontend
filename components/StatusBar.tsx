@@ -8,6 +8,9 @@ import { propType, milestone } from "../config/types"
 import { ref, get } from "firebase/database"
 import { database } from "../firebase-config"
 import styles from "../styles/Home.module.css"
+import { contractAddresses, abi, erc20Abi } from "../constants"
+// dont export from moralis when using react
+import { useMoralis, useWeb3Contract } from "react-moralis"
 
 const steps = ['Milestone 1', 'Milestone 2', 'Milestone 3', 'Milestone 4', 'Milestone 5'];
 
@@ -15,9 +18,15 @@ export default function HorizontalNonLinearStepper(props: propType) {
     const fundAddress = props.fundAddress
     const tranche = props.tranche
     const milestoneDurations = props.milestoneDurations
+    const decimals = props.decimals
+    const coinName = props.coinName
 
     const [activeStep, setActiveStep] = useState(0);
     const [milestonesArray, setMilestonesArray] = useState<milestone[]>([])
+    const { isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
+    const [amountFunded, setAmountFunded] = useState(0)
+    const [amountRaised, setAmountRaised] = useState(0)
+
 
     const getMilestones = async () => {
         const milestonesRef = ref(database, "funds/" + fundAddress + "/milestones")
@@ -26,8 +35,36 @@ export default function HorizontalNonLinearStepper(props: propType) {
         console.log(snapshot.val())
     }
 
+    const { runContractFunction: getFunderTrancheAmountRaised } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getFunderTrancheAmountRaised",
+        params: { funder: account, level: activeStep},
+    })
+
+    const { runContractFunction: getTrancheAmountRaised } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getTrancheAmountRaised",
+        params: { level: activeStep },
+    })
+
+    async function updateUI() {
+        const amountFundedFromCall = (await getFunderTrancheAmountRaised()) as number
+        setAmountFunded(amountFundedFromCall / 10 ** decimals!)
+        const amountRaisedFromCall = (await getTrancheAmountRaised()) as number
+        setAmountRaised(amountRaisedFromCall / 10 ** decimals!)
+    }
+
+    useEffect(() => {
+        if (isWeb3Enabled && fundAddress) {
+            updateUI()
+        }
+    }, [activeStep])
+
     useEffect(() => {
         getMilestones()
+        updateUI()
     }, [fundAddress])
 
     const handleStep = (step: number) => () => {
@@ -58,13 +95,18 @@ export default function HorizontalNonLinearStepper(props: propType) {
                                     </Step>
                                 ))}
                             </Stepper>
+                            <br></br>
+                            <br></br>
                             <div>
                                 <Fragment>
+                                    <h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1 } General Information:</h1>
                                     <Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
-                                        {`Milestone Duration: ${milestoneDurations![activeStep]}\n${milestonesArray[activeStep].description.toString()}`}
+                                        {`Milestone Duration: ${milestoneDurations![activeStep]}\nMilestone Description: ${milestonesArray[activeStep].description.toString()}`}
                                     </Typography>
+                                    <br></br>
+                                    <h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1 } Funding Metrics:</h1>
                                     <Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
-                                        {`Milestone Duration: ${milestoneDurations![activeStep]}\nMilestone Description:${milestonesArray[activeStep].description.toString()}`}
+                                        {`Total Funded in Milestone: ${amountRaised} ${coinName}\nAmount You Have Donated in Milestone: ${amountFunded} ${coinName}`}
                                     </Typography>
 
                                 </Fragment>
