@@ -243,17 +243,17 @@ const Details: NextPage = () => {
                                                                 ></CurrentTrancheDonation>
                                                             </div>
                                                         </div>
-                                                        <div>
-                                                            {timeLeft == 0 ? (
-                                                                <StartVote
-                                                                    fundAddress={fundAddress}
-                                                                    assetAddress={assetAddress}
-                                                                    onChangeState={() => {
-                                                                        updateUI()
-                                                                    }}
-                                                                ></StartVote>
-                                                            ): (<></>)}
-                                                        </div></>
+                                                            <div>
+                                                                {timeLeft == 0 ? (
+                                                                    <StartVote
+                                                                        fundAddress={fundAddress}
+                                                                        assetAddress={assetAddress}
+                                                                        onChangeState={() => {
+                                                                            updateUI()
+                                                                        }}
+                                                                    ></StartVote>
+                                                                ) : (<></>)}
+                                                            </div></>
                                                     ) : (<></>)}
                                                     {state == 1 ? (
                                                         <div>
