@@ -230,6 +230,11 @@ const Details: NextPage = () => {
                                                                 ownerFund={owner}
                                                                 decimals={decimals!}
                                                                 coinName={coinName}
+                                                                onChangeAmountFunded={() => {
+                                                                    updateUI()
+                                                                }}
+                                                                totalRaised={totalFunds}
+                                                                tranche={tranche}
                                                             ></StraightDonation>
                                                             <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
                                                             <div className="text-center flex flex-col border-2 border-slate-500">
@@ -240,6 +245,10 @@ const Details: NextPage = () => {
                                                                     tranche={tranche}
                                                                     decimals={decimals!}
                                                                     coinName={coinName}
+                                                                    onChangeAmountFunded={() => {
+                                                                        updateUI()
+                                                                    }}
+                                                                    totalRaised={totalFunds}
                                                                 ></CurrentTrancheDonation>
                                                             </div>
                                                         </div>
@@ -361,6 +370,7 @@ const Details: NextPage = () => {
                             decimals={decimals!}
                             userAddress={userAddress}
                             currState={state}
+                            totalRaised={totalFunds}
                             coinName={coinName}
                         ></StatusBar>
 
