@@ -165,7 +165,7 @@ export default function NewMilestone(props: propType) {
             <h1 className="text-4xl font-bold text-center text-slate-900">Add Another Milestone:</h1>
             {isWeb3Enabled && fundAddress ? (
                 <Box>
-                    <div style={{ width: "100%", alignContent: "center", alignItems: "center", paddingRight: "250px", paddingLeft: "250px"}}>
+                    <div style={{ width: "100%", alignContent: "center", alignItems: "center", paddingRight: "250px", paddingLeft: "250px" }}>
                         <div className={styles.formSection}>
                             <div
                                 style={{
@@ -176,60 +176,60 @@ export default function NewMilestone(props: propType) {
                                 }}
                             >
                                 <ul>
-                                            <div
-                                                style={{
-                                                    display: "flex",
-                                                    flexDirection: "column",
-                                                    gap: "14px",
-                                                    paddingBottom: "20px",
+                                    <div
+                                        style={{
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            gap: "14px",
+                                            paddingBottom: "20px",
+                                        }}
+                                    >
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                            }}
+                                        >
+                                            <TextField
+                                                id="outlined-basic"
+                                                label={`Milestone ${numberofMilestones + 1}`}
+                                                onChange={(e) => {
+                                                    handleChangeMilestoneName(e)
                                                 }}
-                                            >
-                                                <div
-                                                    style={{
-                                                        display: "flex",
-                                                        flexDirection: "row",
-                                                    }}
-                                                >
-                                                    <TextField
-                                                        id="outlined-basic"
-                                                        label={`Milestone ${numberofMilestones + 1}`}
-                                                        onChange={(e) => {
-                                                            handleChangeMilestoneName(e)
-                                                        }}
-                                                        value={name}
-                                                        helperText="Input a title for the milestone"
-                                                        variant="filled"
-                                                        style={{ width: "50%" }}
-                                                    />
-                                                    <TextField
-                                                        type="number"
-                                                        name="duration"
-                                                        label="Milestone Duration"
-                                                        variant="filled"
-                                                        value={milestoneDuration}
-                                                        onChange={(e) => {
-                                                            handleChangeDuration(e)
-                                                        }}
-                                                        style={{
-                                                            width: "50%",
-                                                            paddingLeft: "10px",
-                                                        }}
-                                                        helperText="Duration of Milestones (seconds)"
-                                                    />
-                                                </div>
+                                                value={name}
+                                                helperText="Input a title for the milestone"
+                                                variant="filled"
+                                                style={{ width: "50%" }}
+                                            />
+                                            <TextField
+                                                type="number"
+                                                name="duration"
+                                                label="Milestone Duration"
+                                                variant="filled"
+                                                value={milestoneDuration}
+                                                onChange={(e) => {
+                                                    handleChangeDuration(e)
+                                                }}
+                                                style={{
+                                                    width: "50%",
+                                                    paddingLeft: "10px",
+                                                }}
+                                                helperText="Duration of Milestones (seconds)"
+                                            />
+                                        </div>
 
-                                                <TextField
-                                                    id="outlined-multiline-flexible"
-                                                    label="Description"
-                                                    multiline
-                                                    rows={10}
-                                                    onChange={(e) => {
-                                                        handleChangeMilestoneDescription(e)
-                                                    }}
-                                                    variant="filled"
-                                                />
-                                            </div>
-                                     
+                                        <TextField
+                                            id="outlined-multiline-flexible"
+                                            label="Description"
+                                            multiline
+                                            rows={10}
+                                            onChange={(e) => {
+                                                handleChangeMilestoneDescription(e)
+                                            }}
+                                            variant="filled"
+                                        />
+                                    </div>
+
                                 </ul>
                                 <button
                                     className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded ml-auto"
@@ -239,8 +239,8 @@ export default function NewMilestone(props: propType) {
                                 >
                                     <div>Add Milestone</div>
                                 </button>
-                                <div style={{fontStyle: "italic"}}><p>Disclaimer: Adding a milestone is a permanent change to the underlying contract. 
-                                    If planning on adding a milestone, it is recommended to do so prior to withdrawing your funds or you will have to 'withdraw' twice to begin accepting donations again. More info in FAQ/help page.</p></div>
+                                <div style={{ fontStyle: "italic" }}><p>Disclaimer: Adding a milestone is a permanent change to the underlying contract.
+                                    If planning on adding a milestone, it is recommended to do so prior to withdrawing your funds or you will have to &apos;withdraw&apos; twice to begin accepting donations again. More info in FAQ/help page.</p></div>
                             </div>
                         </div>
                     </div>
