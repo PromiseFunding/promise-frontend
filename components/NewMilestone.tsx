@@ -239,6 +239,8 @@ export default function NewMilestone(props: propType) {
                                 >
                                     <div>Add Milestone</div>
                                 </button>
+                                <div style={{fontStyle: "italic"}}><p>Disclaimer: Adding a milestone is a permanent change to the underlying contract. 
+                                    If planning on adding a milestone, it is recommended to do so prior to withdrawing your funds or you will have to 'withdraw' twice to begin accepting donations again. More info in FAQ/help page.</p></div>
                             </div>
                         </div>
                     </div>

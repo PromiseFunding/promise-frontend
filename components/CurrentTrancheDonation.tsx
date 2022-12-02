@@ -6,6 +6,8 @@ import { useNotification } from "web3uikit" //wrapped components in this as well
 import { BigNumber } from "ethers"
 import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
+import styles from "../styles/Home.module.css"
+
 
 //contract is already deployed... trying to look at features of contract
 export default function CurrentTrancheDonation(props: propType) {
@@ -113,8 +115,9 @@ export default function CurrentTrancheDonation(props: propType) {
 
     return (
         <div className="p-5 bg-slate-800 text-slate-200">
-            <div>
+           <div className={styles.tooltip}>
                 <h1 className="text-xl font-bold">Donation to Current Milestone Only</h1>
+                <span className={styles.tooltiptext}>You will be donating x amount in milestone ___</span>
                 <br></br>
             </div>
 
