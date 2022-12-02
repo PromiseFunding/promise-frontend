@@ -21,6 +21,7 @@ export interface propType {
     coinName?: string
     userAddress?: string
     currState?: number
+    totalRaised?: number
 }
 
 

@@ -13,6 +13,7 @@ export default function StraightDonation(props: propType) {
     const tokenAddress = props.assetAddress
     const decimals = props.decimals
     const coinName = props.coinName
+    const totalRaised = props.totalRaised
 
     // const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
@@ -58,14 +59,14 @@ export default function StraightDonation(props: propType) {
         if (isWeb3Enabled && fundAddress) {
             updateUI()
         }
-    }, [isWeb3Enabled, fundAddress, account])
+    }, [isWeb3Enabled, fundAddress, account, totalRaised])
 
     const handleSuccess = async function () {
         const fundTx: any = await fund()
         setVal("0")
         try {
             await fundTx.wait(1)
-            // props.onChangeAmountFunded!()
+            props.onChangeAmountFunded!()
             handleNewNotification()
             updateUI()
         } catch (error) {

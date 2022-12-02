@@ -14,6 +14,7 @@ export default function CurrentTrancheDonation(props: propType) {
     const tranche = props.tranche
     const decimals = props.decimals
     const coinName = props.coinName
+    const totalRaised = props.totalRaised
 
     // const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
@@ -59,14 +60,14 @@ export default function CurrentTrancheDonation(props: propType) {
         if (isWeb3Enabled && fundAddress) {
             updateUI()
         }
-    }, [isWeb3Enabled, fundAddress, account])
+    }, [isWeb3Enabled, fundAddress, account, totalRaised])
 
     const handleSuccess = async function () {
         const fundTx: any = await fundCurrent()
         setVal("0")
         try {
             await fundTx.wait(1)
-            // props.onChangeAmountFunded!()
+            props.onChangeAmountFunded!()
             handleNewNotification()
             updateUI()
         } catch (error) {

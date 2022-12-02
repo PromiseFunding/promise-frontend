@@ -23,6 +23,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
     const coinName = props.coinName
     const userAddress = props.userAddress
     const currState = props.currState
+    const totalRaised = props.totalRaised
     const owner = props.ownerFund
 
     const [activeStep, setActiveStep] = useState(0);
@@ -64,7 +65,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
         if (isWeb3Enabled && fundAddress) {
             updateUI()
         }
-    }, [activeStep, userAddress])
+    }, [activeStep, userAddress, totalRaised])
 
     useEffect(() => {
         getMilestones()
