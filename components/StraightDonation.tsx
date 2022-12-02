@@ -15,6 +15,9 @@ export default function StraightDonation(props: propType) {
     const decimals = props.decimals
     const coinName = props.coinName
     const totalRaised = props.totalRaised
+    const tranche = props.tranche
+
+    const milestone = tranche! + 1
 
     // const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
@@ -63,6 +66,7 @@ export default function StraightDonation(props: propType) {
     }, [isWeb3Enabled, fundAddress, account, totalRaised])
 
     const handleSuccess = async function () {
+        alert("Friendly Reminder: By confirming the next MetaMask transaction you will be funding " + JSON.stringify(val + " " + coinName) + " split evenly among the remaining Milestones. We are currently in Milestone " + JSON.stringify(milestone) + ".")
         const fundTx: any = await fund()
         setVal("0")
         try {
@@ -115,8 +119,8 @@ export default function StraightDonation(props: propType) {
         <div className="p-5 bg-slate-800 text-slate-200">
             <div className={styles.tooltip}>
                 <h1 className="text-xl font-bold">Donation Split Equally Among Remaining Milestones</h1>
-                <span className={styles.tooltiptext}>You will be donating x amount in each remaining milestone</span>
-                <br></br>
+                {/* <span className={styles.tooltiptext}>You will be donating x amount in each remaining milestone</span>
+                <br></br> */}
             </div>
 
             {isWeb3Enabled && fundAddress ? (

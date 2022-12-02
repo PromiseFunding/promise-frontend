@@ -234,6 +234,7 @@ const Details: NextPage = () => {
                                                                     updateUI()
                                                                 }}
                                                                 totalRaised={totalFunds}
+                                                                tranche={tranche}
                                                             ></StraightDonation>
                                                             <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
                                                             <div className="text-center flex flex-col border-2 border-slate-500">

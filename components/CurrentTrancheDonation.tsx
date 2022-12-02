@@ -18,6 +18,7 @@ export default function CurrentTrancheDonation(props: propType) {
     const coinName = props.coinName
     const totalRaised = props.totalRaised
 
+    const milestone = tranche! + 1
     // const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const [amountFunded, setAmountFunded] = useState(0)
@@ -65,6 +66,7 @@ export default function CurrentTrancheDonation(props: propType) {
     }, [isWeb3Enabled, fundAddress, account, totalRaised])
 
     const handleSuccess = async function () {
+        alert("Friendly Reminder: By confirming the next MetaMask transaction you will be funding " + JSON.stringify(val + " " + coinName) + " to Milestone " + JSON.stringify(milestone))
         const fundTx: any = await fundCurrent()
         setVal("0")
         try {
@@ -117,8 +119,8 @@ export default function CurrentTrancheDonation(props: propType) {
         <div className="p-5 bg-slate-800 text-slate-200">
            <div className={styles.tooltip}>
                 <h1 className="text-xl font-bold">Donation to Current Milestone Only</h1>
-                <span className={styles.tooltiptext}>You will be donating x amount in milestone ___</span>
-                <br></br>
+                {/* <span className={styles.tooltiptext}>You will be donating x amount in milestone ___</span>
+                <br></br> */}
             </div>
 
             {isWeb3Enabled && fundAddress ? (
