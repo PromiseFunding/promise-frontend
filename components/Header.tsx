@@ -23,7 +23,7 @@ export default function Header(props: { onChangeQuery?(arg0: string): void, main
 
                     <CategorySelector></CategorySelector>
 
-                    <Link legacyBehavior href="/">
+                    <Link legacyBehavior href="/discover">
                         <a className={styles.headerItem}>
                             Discover
                         </a>

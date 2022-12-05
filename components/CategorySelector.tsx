@@ -31,7 +31,7 @@ export default function CategorySelector() {
                     <div className="py-1">
                         <Menu.Item>
                             {({ active }) => (
-                                <Link legacyBehavior href="/?category=tech">
+                                <Link legacyBehavior href="/discover/?category=tech">
                                     <a
 
                                         className={classNames(
@@ -46,7 +46,7 @@ export default function CategorySelector() {
                         </Menu.Item>
                         <Menu.Item>
                             {({ active }) => (
-                                <Link legacyBehavior href="/?category=film">
+                                <Link legacyBehavior href="/discover/?category=film">
                                     <a
 
                                         className={classNames(
@@ -61,7 +61,7 @@ export default function CategorySelector() {
                         </Menu.Item>
                         <Menu.Item>
                             {({ active }) => (
-                                <Link legacyBehavior href="/?category=product">
+                                <Link legacyBehavior href="/discover/?category=product">
                                     <a
                                         className={classNames(
                                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
@@ -75,7 +75,7 @@ export default function CategorySelector() {
                         </Menu.Item>
                         <Menu.Item>
                             {({ active }) => (
-                                <Link legacyBehavior href="/?category=gaming">
+                                <Link legacyBehavior href="/discover/?category=gaming">
                                     <a
                                         className={classNames(
                                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
