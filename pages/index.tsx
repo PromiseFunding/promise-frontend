@@ -6,6 +6,8 @@ import Link from "next/link"
 import React from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Features from "../components/landingPage/Features"
+import HowItWorks from "../components/landingPage/HowItWorks"
+import Footer from "../components/landingPage/Footer"
 
 const Discover: NextPage = () => {
     function handleScroll(section: string) {
@@ -48,7 +50,9 @@ const Discover: NextPage = () => {
                     <button type="button" className={styles.launchPageHeaderItem} onClick={(e) => {
                         handleScroll("features")
                     }}>Features</button>
-                    <div className={styles.launchPageHeaderItem}>Examples</div>
+                    <button type="button" className={styles.launchPageHeaderItem} onClick={(e) => {
+                        handleScroll("how-it-works")
+                    }}>How It Works</button>
                     <div className={styles.launchPageHeaderItem}>Contact</div>
                     <Link className={styles.launchPageHeaderItem} href="https://github.com/PromiseFunding">GitHub
                     </Link>
@@ -64,13 +68,10 @@ const Discover: NextPage = () => {
                     claims they make. Instead fundraisers are rewarded for proving they have done what they promised. </h3>
             </div>
 
+
+            <HowItWorks></HowItWorks>
             <Features></Features>
-
-
-
-            <div style={{ height: "1000px" }}></div>
-
-
+            <Footer></Footer>
         </div >
     )
 }

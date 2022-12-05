@@ -191,8 +191,27 @@
     border-radius: 10px;
 }
 
+.landingFooter {
+    height: 25vh;
+    background-color: #141a27;
+    display: flex;
+    flex-direction: row;
+    vertical-align: middle;
+    gap: 50px;
+}
+
+.landingFooterNav {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    padding-right: 10vw;
+    align-items: center;
+    width: 90%;
+    gap: 50px;
+}
+
 .promiseLogo {
-    margin-left: 20px;
+    margin-left: 7vw;
     margin-top: 20px;
 }
 
@@ -227,6 +246,11 @@
     border: 1rem solid;
     color: #1a202f;
     border: black 2px;
+}
+
+.howItWorksIcon {
+    position: relative;
+    color: white;
 }
 
 .featureText {
@@ -271,6 +295,9 @@
 .launchPageHeaderItem {
     font-size: 15px;
     color: white;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .launchPageHeaderItem:hover {
@@ -297,12 +324,13 @@
 }
 
 .landingPageSummary {
+    position: relative;
     display: flex;
     flex-direction: column;
     color: white;
     margin-top: 100px;
     text-align: center;
-    height: 400px;
+    margin-bottom: 50px;
 }
 
 .howItWorks {
@@ -317,6 +345,45 @@
     font-size: 60px;
     background-size: 100% 100%;
     background-image: url("../public/background-images/how-it-works-banner.jpg");
+}
+
+.howItWorksLanding {
+    position: relative;
+    color: white;
+    text-align: center;
+    vertical-align: center;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 700px;
+    font-size: 60px;
+    background-size: 100% 100%;
+    background-image: url("../public/background-images/landing-page-how-it-works.jpeg");
+}
+
+.howItWorksLandingOuter {
+    display: flex;
+    flex-direction: row;
+    height: 80%;
+    width: 100%;
+}
+
+.howItWorksLandingInner {
+    margin-top: 60px;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+.howItWorksPanel {
+    width: 50%;
+    justify-content: center;
+    align-items: center;
+    font-size: 40px;
+    height: 100%;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 .tutorialPanel {
@@ -493,8 +560,37 @@
     .featuresBlock {
         flex-direction: column;
     }
+    .howItWorksLandingOuter {
+        flex-direction: column;
+    }
     .featuresBlockInner {
         width: 100%;
+        height: 50%;
+    }
+    .howItWorksLandingInner {
+        width: 100%;
+    }
+    .howItWorksLanding {
+        height: 1100px;
+    }
+}
+
+@media (max-width: 800px) {
+    .howItWorksLanding {
+        height: 1250px;
+    }
+    .landingFooterNav {
+        width: 100%;
+        gap: 20px;
+    }
+}
+
+@media (max-width: 1000px) {
+    .promiseLogo {
+        margin-top: 50px;
+    }
+    .launchAppInner {
+        margin-top: 235px;
     }
 }
 
@@ -504,11 +600,23 @@
         align-items: center;
         justify-content: center;
     }
+    .howItWorksLandingInner {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0px;
+    }
+    .howItWorksPanel {
+        margin-top: 60px;
+    }
+    .howItWorksLanding {
+        height: 2500px;
+    }
     .featuresBlock {
         width: 100%;
     }
-    .promiseLogo {
-        margin-top: "500px";
+    .launchPageHeader {
+        gap: 25px;
     }
 }
 
