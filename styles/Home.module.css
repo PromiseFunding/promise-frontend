@@ -251,6 +251,7 @@
 .howItWorksIcon {
     position: relative;
     color: white;
+    font-size: 20vw;
 }
 
 .featureText {
@@ -571,13 +572,13 @@
         width: 100%;
     }
     .howItWorksLanding {
-        height: 1100px;
+        height: 1200px;
     }
 }
 
 @media (max-width: 800px) {
     .howItWorksLanding {
-        height: 1250px;
+        height: 1400px;
     }
     .landingFooterNav {
         width: 100%;
@@ -610,13 +611,35 @@
         margin-top: 60px;
     }
     .howItWorksLanding {
-        height: 2500px;
+        height: 2350px;
     }
     .featuresBlock {
         width: 100%;
     }
     .launchPageHeader {
         gap: 25px;
+    }
+    .launchAppInner {
+        width: 75vw;
+    }
+    .landingFooterNav {
+        flex-direction: column;
+        gap: 3px;
+    }
+    .launchPageHeader {
+        display: none;
+    }
+}
+
+@media (max-width: 432px) {
+    .launchAppInner {
+        margin-top: 195px;
+    }
+}
+
+@media (max-width: 345px) {
+    .howItWorksLanding {
+        height: 2550px;
     }
 }
 

@@ -4,7 +4,6 @@ import styles from "../styles/Home.module.css"
 import Image from "next/image"
 import Link from "next/link"
 import React from "react"
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import Features from "../components/landingPage/Features"
 import HowItWorks from "../components/landingPage/HowItWorks"
 import Footer from "../components/landingPage/Footer"
@@ -12,7 +11,7 @@ import Footer from "../components/landingPage/Footer"
 const Discover: NextPage = () => {
     function handleScroll(section: string) {
         const element = document.getElementById(section);
-
+        console.log(section)
         element!.scrollIntoView({ behavior: "smooth", inline: "nearest" });
     }
 
@@ -22,6 +21,8 @@ const Discover: NextPage = () => {
                 <title>Promise</title>
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
             </Head>
+
+
             <div className={styles.landingPageBackground}>
                 <Image
                     src="https://firebasestorage.googleapis.com/v0/b/yieldme-39169.appspot.com/o/app%2Fimages%2Fpromise-logo.png?alt=media&token=8a440e85-05db-4da0-acb1-88d61d56c4f6"

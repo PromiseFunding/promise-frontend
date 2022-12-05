@@ -13,7 +13,7 @@ export default function Features() {
 
     return (
         <div className={styles.landingFooter}>
-            <div style={{marginTop: "auto", marginBottom: "auto", marginLeft: "20px" }}>
+            <div style={{ marginTop: "auto", marginBottom: "auto", marginLeft: "20px" }}>
                 <Image
                     src="https://firebasestorage.googleapis.com/v0/b/yieldme-39169.appspot.com/o/app%2Fimages%2Fpromise-logo.png?alt=media&token=8a440e85-05db-4da0-acb1-88d61d56c4f6"
                     alt="Picture of the author"
