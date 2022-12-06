@@ -64,7 +64,7 @@ const Discover: NextPage = () => {
 
             <div className={styles.landingPageSummary} id="about">
                 <h2 style={{ fontSize: "40px" }}>A novel way to fund projects <b><i>trustlessly</i></b>.</h2>
-                <h3 style={{ fontSize: "20px", marginTop: "20px" }}>Promise removes trust from the process of crowdfunding protocols by allowing the funders of a project to holder
+                <h3 style={{ fontSize: "20px", marginTop: "20px" }}>Promise removes trust from the process of crowdfunding protocols by allowing the funders of a project to hold
                     the project&apos;s fundraisers accountable. Donors no longer have to wonder whether fundraisers will follow through on the
                     claims they make. Instead fundraisers are rewarded for proving they have done what they promised. </h3>
             </div>

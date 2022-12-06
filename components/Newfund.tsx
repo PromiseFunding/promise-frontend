@@ -9,6 +9,7 @@ import { set, ref as refDb } from "firebase/database"
 import { ref as refStore, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { database, storage } from "../firebase-config"
 import { milestone } from "../config/types"
+import { BigNumber } from "ethers"
 import styles from "../styles/Home.module.css"
 import TextField from '@mui/material/TextField'
 import FormHelperText from '@mui/material/FormHelperText'
@@ -41,6 +42,8 @@ export default function NewFund() {
 
     const [description, setDescription] = useState("")
 
+    const [preFundDuration, setPreFundDuration] = useState("")
+
     const [category, setCategory] = useState("--")
 
     const [assetAddress, setAssetAddress] = useState(chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].assetAddress : null)
@@ -65,7 +68,8 @@ export default function NewFund() {
         functionName: "createPromiseFund",
         params: {
             assetAddress: assetAddress,
-            milestoneDuration: milestonesArray.map(a => a.duration)
+            milestoneDuration: milestonesArray.map(a => a.duration),
+            preFundingDuration: BigNumber.from(preFundDuration)
         },
     })
 
@@ -80,7 +84,7 @@ export default function NewFund() {
     }
 
     const handleNewFundraiser = async () => {
-        if (category == "--" || !description || !assetValue || !file) {
+        if (category == "--" || !description || !preFundDuration ||!assetValue || !file) {
             handleGenericAlert("Please fill in the required fields.")
             return
         }
@@ -107,6 +111,10 @@ export default function NewFund() {
             return
         }
         if (!durationFull) {
+            handleGenericAlert("Please fill all milestone durations.")
+            return
+        }
+        if (preFundDuration == "" || preFundDuration == "0") {
             handleGenericAlert("Please fill all milestone durations.")
             return
         }
@@ -247,6 +255,22 @@ export default function NewFund() {
         setMilestonesArray(items)
     }
 
+    const handleChangePreFundDuration = (event: { target: { value: SetStateAction<string> } }) => {
+        //max for now is 60 days
+        const max = 5184000
+        let durationOfPreRound = ""
+        if ((event.target.value as unknown as number) > 0) {
+            const value = Math.max(
+                0,
+                Math.min(max as number, Number(Number(event.target.value).toFixed(0)))
+            )
+            durationOfPreRound = value.toString()
+        } else {
+            durationOfPreRound = ""
+        }
+        setPreFundDuration(durationOfPreRound)
+    }
+
     function handleDeleteMilestone(index: number) {
         console.log(`Delete index ${index}`)
         let items = [...milestonesArray]
@@ -296,7 +320,7 @@ export default function NewFund() {
                                         <MenuItem value={"Product"}>Product</MenuItem>
                                         <MenuItem value={"Gaming"}>Gaming</MenuItem>
                                     </Select>
-                                    <FormHelperText>Select a Category</FormHelperText>
+                                    <FormHelperText>Select Category</FormHelperText>
                                 </FormControl>
                                 <FormControl variant="filled">
                                     <InputLabel>Asset</InputLabel>
@@ -310,13 +334,25 @@ export default function NewFund() {
                                         <MenuItem value={"DAI"}>DAI</MenuItem>
                                         <MenuItem value={"WETH"}>WETH</MenuItem>
                                     </Select>
-                                    <FormHelperText>The fund&apos;s accepted asset</FormHelperText>
+                                    <FormHelperText>Fund&apos;s accepted asset</FormHelperText>
                                 </FormControl>
+                                <TextField
+                                    type="number"
+                                    name="duration"
+                                    label="Pre Round Duration (seconds)"
+                                    variant="filled"
+                                    value={preFundDuration}
+                                    onChange={(e) => {
+                                        handleChangePreFundDuration(e)
+                                    }}
+                                    style={{ width: "30%" }}
+                                    helperText="Duration of Seed Round"
+                                />
                             </div>
 
                             <TextField
                                 id="outlined-multiline-flexible"
-                                label="Description"
+                                label="Project Description"
                                 multiline
                                 rows={10}
                                 onChange={handleChangeDescription}
@@ -402,7 +438,7 @@ export default function NewFund() {
 
                                                     <TextField
                                                         id="outlined-multiline-flexible"
-                                                        label="Description"
+                                                        label="Milestone Description"
                                                         multiline
                                                         rows={10}
                                                         onChange={(e) => {

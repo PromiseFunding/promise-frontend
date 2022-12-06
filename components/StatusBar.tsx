@@ -128,9 +128,9 @@ export default function HorizontalNonLinearStepper(props: propType) {
                                     />
                                 </div> ) : (
                                     <></>
-                                )}    
-                            </div>   
-                        </Box>                
+                                )}
+                            </div>
+                        </Box>
                     </div>) : (<></>)
             }
         </div>
