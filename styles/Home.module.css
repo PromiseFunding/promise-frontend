@@ -127,11 +127,10 @@
     position: relative;
     color: white;
     text-align: center;
-    vertical-align: middle;
+    display: table;
     margin: auto;
     width: 100%;
-    padding: 125px;
-    height: 350px;
+    height: 40vh;
     font-size: 60px;
     background-size: 100% 100%;
     background-image: url("../public/background-images/funds-we-love-banner.jpeg");
@@ -551,6 +550,11 @@
 .logo {
     height: 1em;
     margin-left: 0.5rem;
+}
+
+.stateStatus {
+    width: 100%;
+    padding: 10px;
 }
 
 @media (max-width: 1200px) {

@@ -1,4 +1,5 @@
 import React from 'react';
+import { BigNumber } from 'ethers';
 
 type Dictionary = {
     [x: string]: string[]
@@ -40,6 +41,8 @@ export interface milestone {
     name: string,
     description: string,
     duration: string
+    startTime?: BigNumber
+    milestoneDuration?: BigNumber
 }
 
 export interface databaseFundObject {

@@ -63,7 +63,7 @@ const Discover: NextPage = () => {
                 setQuery(queryString)
             }} main={true}></Header>
             <div className={styles.fundsWeLove}>
-                <h1 style={{ position: "relative", fontWeight: "700" }}>Funds We Love...</h1>
+                <h1 style={{ position: "relative", fontWeight: "700", display: "table-cell", verticalAlign: "middle" }}>Fundraisers We Love...</h1>
             </div>
             {
                 isWeb3Enabled && fundFactoryAddress ? (
