@@ -65,6 +65,7 @@ export default function WithdrawProceeds(props: propType) {
 
     const initData = async function () {
         if (isWeb3Enabled && fundAddress) {
+            //add if statement here for state for pre funding round
             let withdrawableProceedsFromCall = (await getTrancheAmountRaised()) as number
             if (withdrawableProceedsFromCall > 0) {
                 setWithdrawableProceeds(withdrawableProceedsFromCall / 10 ** decimals!)
