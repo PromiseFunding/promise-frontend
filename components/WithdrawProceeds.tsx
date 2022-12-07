@@ -11,6 +11,7 @@ export default function WithdrawProceeds(props: propType) {
     const tokenAddress = props.assetAddress
     const owner = props.ownerFund
     const tranche = props.tranche
+    const state = props.currState
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
@@ -52,6 +53,14 @@ export default function WithdrawProceeds(props: propType) {
         params: { level: tranche },
     })
 
+    //gets current amount raised... used for prefunding round
+    const { runContractFunction: getPreMilestoneFunds } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getPreMilestoneTotalFunds",
+        params: {},
+    })
+
     const handleSuccess = async function (tx: ContractTransaction) {
         try {
             await tx.wait(1)
@@ -66,9 +75,17 @@ export default function WithdrawProceeds(props: propType) {
     const initData = async function () {
         if (isWeb3Enabled && fundAddress) {
             //add if statement here for state for pre funding round
-            let withdrawableProceedsFromCall = (await getTrancheAmountRaised()) as number
-            if (withdrawableProceedsFromCall > 0) {
-                setWithdrawableProceeds(withdrawableProceedsFromCall / 10 ** decimals!)
+            if(state == 4){
+                let withdrawableProceedsFromCall = (await getPreMilestoneFunds() as number)
+                if (withdrawableProceedsFromCall > 0) {
+                    setWithdrawableProceeds(withdrawableProceedsFromCall / 10 ** decimals!)
+                }
+            }
+            else{
+                let withdrawableProceedsFromCall = (await getTrancheAmountRaised()) as number
+                if (withdrawableProceedsFromCall > 0) {
+                    setWithdrawableProceeds(withdrawableProceedsFromCall / 10 ** decimals!)
+                }
             }
         }
     }

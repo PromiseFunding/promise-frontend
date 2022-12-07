@@ -97,7 +97,7 @@ export default function StartVote(props: propType) {
                         )}
                     </button>
                     <br></br>
-                    If you believe you have met your goals for this milestone, start a vote of minimum length 14 days.
+                    If you believe you have met your goals for this milestone, start a vote of minimum length 7 days and maximum 14 days.
                 </div>
             ) : (
                 <p></p>

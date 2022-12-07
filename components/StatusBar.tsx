@@ -30,7 +30,8 @@ export default function HorizontalNonLinearStepper(props: propType) {
     const [milestonesArray, setMilestonesArray] = useState<milestone[]>([])
     const { isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const [amountFunded, setAmountFunded] = useState(0)
-    const [amountRaised, setAmountRaised] = useState(0)
+    const [amountActiveRaised, setAmountRaised] = useState(0)
+    const [amountTotalRaised, setAmountTotalRaised] = useState(0)
 
 
     const getMilestones = async () => {
@@ -47,18 +48,27 @@ export default function HorizontalNonLinearStepper(props: propType) {
         params: { funder: account, level: activeStep },
     })
 
-    const { runContractFunction: getTrancheAmountRaised } = useWeb3Contract({
+    const { runContractFunction: getTrancheAmountActiveRaised } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!,
         functionName: "getTrancheAmountRaised",
         params: { level: activeStep },
     })
 
+    const { runContractFunction: getTrancheAmountTotalRaised } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getTrancheAmountTotalRaised",
+        params: { level: activeStep },
+    })
+
     async function updateUI() {
         const amountFundedFromCall = (await getFunderTrancheAmountRaised()) as number
         setAmountFunded(amountFundedFromCall / 10 ** decimals!)
-        const amountRaisedFromCall = (await getTrancheAmountRaised()) as number
+        const amountRaisedFromCall = (await getTrancheAmountActiveRaised()) as number
         setAmountRaised(amountRaisedFromCall / 10 ** decimals!)
+        const amountTotalRaisedFromCall = (await getTrancheAmountTotalRaised()) as number
+        setAmountRaised(amountTotalRaisedFromCall / 10 ** decimals!)
     }
 
     useEffect(() => {
@@ -111,11 +121,13 @@ export default function HorizontalNonLinearStepper(props: propType) {
                                     <br></br>
                                     {userAddress != owner ? (
                                         <><h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1} Funding Metrics:</h1><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
-                                            {`Total Funded in Milestone: ${amountRaised} ${coinName}\nAmount You Have Donated in Milestone: ${amountFunded} ${coinName}`}
+                                            {`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\nTotal Actively in Escrow in Milestone From All Users: ${amountActiveRaised} ${coinName}\nTotal Amount You Have Donated in Milestone: ${amountFunded} ${coinName}`}
+                                            {/* add 'Amount in Escrow/Withdrawable if Milestone Failed' for user. If withdrewFunds boolean is true, then it is 0 no matter the tranche. Else, Its 'amountFunded' if tranche < activeStep. Its 0 if tranche is > activeStep 'Milestone Succeeded. Owner received Funds.' If tranche = activeStep and state = 2 (owner withdraw), it's 0, if state = 3 (funder withdraw) its amount funded and amountActiveRaised by all users should. */}
                                         </Typography></>
                                     ) : (
                                         <><h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1} Funding Metrics:</h1><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
-                                            {`Total Funded in Milestone: ${amountRaised} ${coinName}`}
+                                            {`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\nTotal Actively in Escrow in Milestone: ${amountActiveRaised} ${coinName}`}
+                                            {/* Need to update 'Total Actively in Escrow in Milestone' for both. If state goes into funderWithdraw show total raised in milestone, but make note if tranche >= activeStep : 'Can't withdraw Any Funds. Funders voted against continuing fundraiser.', else show amountActiveRaised.*/}
                                         </Typography></>
                                     )}
                                 </Fragment>

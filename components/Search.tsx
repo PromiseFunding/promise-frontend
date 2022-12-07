@@ -16,7 +16,6 @@ export default function Search(props: propTypeFunds) {
     const router = useRouter()
     const category = router.query.category as string || ""
 
-    // inputHandler("")
     useWindowSize()
 
     function useWindowSize() {

@@ -104,7 +104,7 @@ const Details: NextPage = () => {
     const { runContractFunction: getTotalFunds } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress,
-        functionName: "getTotalFunds",
+        functionName: "getLifeTimeAmountFunded",
         params: {},
     })
 
@@ -365,6 +365,7 @@ const Details: NextPage = () => {
                                                             onChangeState={() => {
                                                                 updateUI()
                                                             }}
+                                                            currState={state}
                                                         ></WithdrawProceeds>
                                                     ) : (<></>)}
 
@@ -374,18 +375,19 @@ const Details: NextPage = () => {
                                                     ) : (<></>)}
 
                                                     {state == 4 && timeLeft <= 0 ? (
-                                                        <WithdrawProceeds
-                                                            fundAddress={fundAddress}
-                                                            assetAddress={assetAddress}
-                                                            ownerFund={owner}
-                                                            tranche={tranche}
-                                                            onChangeState={() => {
-                                                                updateUI()
-                                                            }}
-                                                        ></WithdrawProceeds>
-                                                    ) : (<h1 className="p-5 text-2xl font-bold bg-slate-800">
-                                                    You are currently in the Seed Funding Phase of your project. All donations will go to you and the ability
-                                                    to withdraw will become available after the Seed Funding Phase ends.</h1>)}
+                                                        <><WithdrawProceeds
+                                                                fundAddress={fundAddress}
+                                                                assetAddress={assetAddress}
+                                                                ownerFund={owner}
+                                                                tranche={tranche}
+                                                                onChangeState={() => {
+                                                                    updateUI()
+                                                                } }
+                                                                currState={state}
+                                                            ></WithdrawProceeds><h1 className="p-5 text-2xl font-bold bg-slate-800">
+                                                                    You are currently in the Seed Funding Phase of your project. All donations will go to you and the ability
+                                                                    to withdraw will become available after the Seed Funding Phase ends.</h1></>
+                                                    ) : (<></>)}
                                                 </div>
                                             )}
 

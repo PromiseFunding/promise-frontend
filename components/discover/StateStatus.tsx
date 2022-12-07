@@ -18,7 +18,10 @@ export default function StateStatus(props: propType) {
 
     const [percent, setPercent] = useState(0)
     const [tranche, setTranche] = useState(0)
-    const [amountRaised, setAmountRaised] = useState(0)
+    const [state, setState] = useState(0)
+    const [amountRaisedMilestone, setAmountRaised] = useState(0)
+    const [amountRaisedTotal, setAmountRaisedTotal] = useState(0)
+    const [amountRaisedPre, setAmountRaisedPre] = useState(0)
     const [asset, setAsset] = useState("")
     const [milestoneName, setMilestoneName] = useState("")
 
@@ -56,6 +59,33 @@ export default function StateStatus(props: propType) {
     })
 
     const {
+        runContractFunction: getState,
+    } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getState",
+        params: {},
+    })
+
+    const {
+        runContractFunction: getLifeTimeAmountFunded,
+    } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getLifeTimeAmountFunded",
+        params: {},
+    })
+
+    const {
+        runContractFunction: getPreMilestoneTotalFunds,
+    } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getPreMilestoneTotalFunds",
+        params: {},
+    })
+
+    const {
         runContractFunction: getTrancheAmountRaised,
     } = useWeb3Contract({
         abi: abi,
@@ -77,15 +107,21 @@ export default function StateStatus(props: propType) {
         const tranchesFromCall = await getTranches() as milestone[]
         const currentTrancheFromCall = await getCurrentTranche() as number
         setTranche(currentTrancheFromCall)
+        const currentStateFromCall = await getState() as number
+        setState(currentStateFromCall)
         await getMilestoneName()
         const timeLeftFromCall = await getTimeLeftMilestone() as BigNumber
         const milestoneDuration = tranchesFromCall[currentTrancheFromCall].milestoneDuration
         const percent = (milestoneDuration!.toNumber() - timeLeftFromCall.toNumber()) / milestoneDuration!.toNumber() * 100
         const amountRaisedFromCall = await getTrancheAmountRaised() as BigNumber
+        const amountRaisedTotalFromCall = await getLifeTimeAmountFunded() as BigNumber
+        const amountRaisedPreFromCall = await getPreMilestoneTotalFunds() as BigNumber
         const assetAddressFromCall = await getAssetAddress() as string
         const coinName = getAssetName(assetAddressFromCall)
         setAsset(coinName)
         setAmountRaised(+(amountRaisedFromCall.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
+        setAmountRaisedTotal(+(amountRaisedTotalFromCall.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
+        setAmountRaisedPre(+(amountRaisedPreFromCall.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
         setPercent(percent)
     }
 
@@ -118,9 +154,16 @@ export default function StateStatus(props: propType) {
 
     return (
         <div className={styles.stateStatus}>
-            Milestone {tranche + 1}: <b>{milestoneName}</b>
+            {state == 4 ? (
+            <>Pre-Milestone Seed Funding Round
             <BorderLinearProgress variant="determinate" value={percent} />
-            {amountRaised} {asset} raised
+            {amountRaisedPre} {asset} Raised</>)
+            :
+            (<>Milestone {tranche + 1}: <b>{milestoneName}</b>
+            <BorderLinearProgress variant="determinate" value={percent} />
+            {amountRaisedTotal} {asset} Total Raised
+            {amountRaisedMilestone} {asset} Raised in Milestone</>
+            )}
         </div>
     )
 }
