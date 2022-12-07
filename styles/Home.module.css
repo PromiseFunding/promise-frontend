@@ -2,6 +2,10 @@
     padding: 0 1rem;
 }
 
+.howItWorksContainer {
+    padding: 0 5rem;
+}
+
 .details {
     --gap: 50px;
     --num-cols: 2;
@@ -421,16 +425,18 @@
 }
 
 .tutorialPanel {
-    height: 650px;
+    height: 500px;
     width: 100%;
     display: flex;
     flex-direction: row;
+    /* background: blue;
+    outline: 2px dashed red; */
 }
 
 .tutorialText {
     vertical-align: middle;
     text-align: center;
-    /* padding-top: 200px; */
+    display: table;
     margin-top: auto;
     margin-bottom: auto;
     width: 50%;
