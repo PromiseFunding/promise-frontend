@@ -9,6 +9,19 @@ export interface contractAddressesInterface {
     [key: string]: Dictionary
 }
 
+export interface update {
+    [key: string]: {
+        description: string
+        subject: string
+        imageUrl: string
+        timestamp: number
+    }
+}
+
+export interface updates {
+
+}
+
 export interface propType {
     fundAddress: string
     assetAddress?: string

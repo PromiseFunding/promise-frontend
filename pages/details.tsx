@@ -24,6 +24,7 @@ import { BigNumber } from "ethers"
 import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
 import CurrentTrancheDonation from "../components/CurrentTrancheDonation"
+import Updates from "../components/details/Updates"
 
 const Details: NextPage = () => {
     const router = useRouter()
@@ -413,7 +414,10 @@ const Details: NextPage = () => {
                             totalRaised={totalFunds}
                             coinName={coinName}
                         ></StatusBar>
-
+                        <Updates
+                            fundAddress={fundAddress}
+                            ownerFund={owner}
+                        ></Updates>
                     </div>
                 ) : (
                     <div></div>

@@ -97,7 +97,6 @@ export default function Search(props: propTypeFunds) {
 
     const calculatePaddingToggle = (width: number): boolean => {
         const maxWidth = (filteredData.length * 250 + (filteredData.length - 1) * 35) + 20
-        console.log(width, maxWidth)
 
         if (width < maxWidth) {
             return true;
