@@ -58,21 +58,30 @@
 }
 
 .headerItem {
-    font-size: 20px;
+    font-size: 15px;
     color: rgb(226 232 240);
-    margin-top: auto;
-    margin-bottom: auto;
     margin-left: 30px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
+.drawerItem {
+    font-size: 20px;
+    color: rgb(226 232 240);
+    margin-top: auto;
+    margin-bottom: auto;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 15px;
+}
+
 .category {
     position: relative;
     display: inline-block;
     text-align: left;
-    font-size: 20px;
+    font-size: 15px;
     color: rgb(226 232 240);
     margin-top: auto;
     margin-bottom: auto;
@@ -83,7 +92,7 @@
 
 .newFundButton {
     padding: 10px;
-    font-size: 20px;
+    font-size: 15px;
     color: rgb(226 232 240);
     background: linear-gradient(125.78deg, #e5509acc 17.93%, #b02588cc 42.06%, #694dcbcc 73.89%);
     border-radius: 10px;
@@ -99,14 +108,37 @@
     color: "white";
 }
 
+.header {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    padding: 6;
+    margin-left: 1.25rem; /* 20px */
+    height: 100px;
+}
+
+.drawerList {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+}
+
 .headerItem:hover {
     color: white;
+}
+
+.drawerItem:hover {
+    color: white;
+    background-color: #1a202f;
 }
 
 .searchbar {
     width: 25%;
     margin-top: auto;
     margin-bottom: auto;
+    font-size: 10px;
 }
 
 .heading {
@@ -119,19 +151,21 @@
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    width: 95%;
-    margin: auto;
+    align-items: center;
+    justify-content: center;
+    margin-left: auto;
+    margin-right: auto;
+    gap: 35px;
 }
 
 .fundsWeLove {
     position: relative;
     color: white;
     text-align: center;
-    vertical-align: middle;
+    display: table;
     margin: auto;
     width: 100%;
-    padding: 125px;
-    height: 350px;
+    height: 40vh;
     font-size: 60px;
     background-size: 100% 100%;
     background-image: url("../public/background-images/funds-we-love-banner.jpeg");
@@ -456,6 +490,13 @@
     width: 100%;
 }
 
+.headerMain {
+    width: 100%;
+    flex-grow: 1;
+    align-items: center;
+    vertical-align: middle;
+}
+
 .fundsWeLove::before {
     content: "";
     position: absolute;
@@ -553,6 +594,21 @@
     margin-left: 0.5rem;
 }
 
+.stateStatus {
+    width: 100%;
+    padding: 10px;
+}
+
+.menuBar {
+    color: white;
+    font-size: 20px;
+}
+
+.drawer {
+    position: absolute;
+    display: none;
+}
+
 @media (max-width: 1200px) {
     .grid {
         width: 100%;
@@ -573,6 +629,17 @@
     }
     .howItWorksLanding {
         height: 1200px;
+    }
+    .drawer {
+        position: relative;
+        display: grid;
+    }
+    .headerInner {
+        display: none;
+        position: static;
+    }
+    .searchbar {
+        width: 20vw;
     }
 }
 

@@ -44,7 +44,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
         abi: abi,
         contractAddress: fundAddress!,
         functionName: "getFunderTrancheAmountRaised",
-        params: { funder: account, level: activeStep},
+        params: { funder: account, level: activeStep },
     })
 
     const { runContractFunction: getTrancheAmountRaised } = useWeb3Contract({
@@ -104,7 +104,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
                             <br></br>
                             <div>
                                 <Fragment>
-                                    <h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1 } General Information:</h1>
+                                    <h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1} General Information:</h1>
                                     <Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
                                         {`Milestone Duration: ${milestoneDurations![activeStep]}\nMilestone Description: ${milestonesArray[activeStep].description.toString()}`}
                                     </Typography>
@@ -113,7 +113,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
                                         <><h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1} Funding Metrics:</h1><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
                                             {`Total Funded in Milestone: ${amountRaised} ${coinName}\nAmount You Have Donated in Milestone: ${amountFunded} ${coinName}`}
                                         </Typography></>
-                                    ):(
+                                    ) : (
                                         <><h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1} Funding Metrics:</h1><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
                                             {`Total Funded in Milestone: ${amountRaised} ${coinName}`}
                                         </Typography></>
@@ -122,15 +122,15 @@ export default function HorizontalNonLinearStepper(props: propType) {
                             </div>
                             <br></br>
                             <div>
-                                {milestoneDurations.length < 5 && userAddress == owner && currState != 3  && currState != 1 ? (<div>
+                                {milestoneDurations.length < 5 && userAddress == owner && currState != 3 && currState != 1 ? (<div>
                                     <NewMilestone
                                         fundAddress={fundAddress}
                                     />
-                                </div> ) : (
+                                </div>) : (
                                     <></>
-                                )}    
-                            </div>   
-                        </Box>                
+                                )}
+                            </div>
+                        </Box>
                     </div>) : (<></>)
             }
         </div>
