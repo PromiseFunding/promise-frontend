@@ -2,11 +2,6 @@
     padding: 0 1rem;
 }
 
-.howItWorksContainer {
-    padding: 0 5rem;
-    margin-top: 7vh;
-}
-
 .details {
     --gap: 50px;
     --num-cols: 2;
@@ -160,7 +155,7 @@
     justify-content: center;
     margin-left: auto;
     margin-right: auto;
-    gap: var(--funds-gap);
+    gap: 35px;
 }
 
 .fundsWeLove {
@@ -347,7 +342,7 @@
 .truncateLineClamp {
     display: -webkit-box;
     -webkit-line-clamp: 4;
-    font-size: 20px;
+    font-size: 22px;
     -webkit-box-orient: vertical;
     margin-left: 200px;
     margin-right: 200px;
@@ -377,18 +372,12 @@
     color: white;
     text-align: center;
     vertical-align: middle;
-    display: table;
     margin: auto;
     width: 100%;
     height: 40vh;
     font-size: 50px;
     background-size: 100% 100%;
     background-image: url("../public/background-images/how-it-works-banner.jpg");
-}
-
-.howItWorksPanelTitle {
-    font-size: 50px;
-    font-weight: 700;
 }
 
 .howItWorksLanding {
@@ -431,8 +420,7 @@
 }
 
 .tutorialPanel {
-    height: 500px;
-    vertical-align: middle;
+    height: 650px;
     width: 100%;
     display: flex;
     flex-direction: row;
