@@ -9,7 +9,7 @@ const Form: NextPage = () => {
         <div className={styles.container}>
             <Head>
                 <title>Promise</title>
-                <meta name="description" content="Version one of the FundMe Smart Contract" />
+                <meta name="description" content="Crowdfunding Reimagined" />
             </Head>
             <Header main={false}></Header>
             <div className="p-5 flex flex-col">

@@ -10,8 +10,9 @@ import { databaseFundObject } from "../config/types"
 import styles from "../styles/Home.module.css"
 import StateStatus from "./discover/StateStatus"
 
-export default function FundCard(props: { fund: string }) {
+export default function FundCard(props: { fund: string, fundWidth: number }) {
     const fund = props.fund
+    const fundWidth = props.fundWidth
     const fundRef = ref(database, "funds/" + fund)
 
     const [data, setData] = useState<databaseFundObject>()
@@ -26,7 +27,7 @@ export default function FundCard(props: { fund: string }) {
             {data ? (
                 <div className="main text-center">
                     <Card
-                        sx={{ maxWidth: 345, height: 350, backgroundColor: "Gainsboro", width: 250, position: "relative" }}
+                        sx={{ maxWidth: 345, height: 350, backgroundColor: "Gainsboro", width: fundWidth, position: "relative" }}
                         color="gray"
                     >
                         <CardActionArea href={`/details/?fund=${fund}`} sx={{ display: "flex", flexDirection: "column" }}>
@@ -37,7 +38,7 @@ export default function FundCard(props: { fund: string }) {
                                 image={data.imageURL}
                                 alt="fundraiser"
                                 sx={{
-                                    width: 250,
+                                    width: fundWidth,
                                     height: 175,
                                 }}
                             />

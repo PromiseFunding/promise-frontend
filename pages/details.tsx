@@ -149,7 +149,7 @@ const Details: NextPage = () => {
         <div className={styles.container}>
             <Head>
                 <title>Promise</title>
-                <meta name="description" content="Version one of the FundMe Smart Contract" />
+                <meta name="description" content="Crowdfunding Reimagined" />
             </Head>
             <Header main={false}></Header>
             <br></br>
