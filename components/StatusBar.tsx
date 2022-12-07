@@ -32,6 +32,8 @@ export default function HorizontalNonLinearStepper(props: propType) {
     const [amountFunded, setAmountFunded] = useState(0)
     const [amountActiveRaised, setAmountRaised] = useState(0)
     const [amountTotalRaised, setAmountTotalRaised] = useState(0)
+    const [amountWithdrawableUser, setAmountWithdrawableUser] = useState(0)
+    const [withdrewFunds, setFunderWithdraw] = useState(false)
 
 
     const getMilestones = async () => {
@@ -40,6 +42,13 @@ export default function HorizontalNonLinearStepper(props: propType) {
         setMilestonesArray(snapshot.val())
         console.log(snapshot.val())
     }
+
+    const { runContractFunction: didFunderWithdraw } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "didFunderWithdrawFunds",
+        params: { funder: account },
+    })
 
     const { runContractFunction: getFunderTrancheAmountRaised } = useWeb3Contract({
         abi: abi,
@@ -68,7 +77,29 @@ export default function HorizontalNonLinearStepper(props: propType) {
         const amountRaisedFromCall = (await getTrancheAmountActiveRaised()) as number
         setAmountRaised(amountRaisedFromCall / 10 ** decimals!)
         const amountTotalRaisedFromCall = (await getTrancheAmountTotalRaised()) as number
-        setAmountRaised(amountTotalRaisedFromCall / 10 ** decimals!)
+        setAmountTotalRaised(amountTotalRaisedFromCall / 10 ** decimals!)
+        const didFunderWithdrawFromCall = await didFunderWithdraw() as boolean
+        setFunderWithdraw(didFunderWithdrawFromCall)
+        //for user
+        if (withdrewFunds){
+            setAmountWithdrawableUser(0)
+        }
+        else{
+            if (tranche! < activeStep){
+                setAmountWithdrawableUser(amountFunded)
+            }
+            if(tranche! > activeStep){
+                setAmountWithdrawableUser(0)
+            }
+            if(tranche == activeStep){
+                if(currState == 2){
+                    setAmountWithdrawableUser(0)
+                }
+                else{
+                    setAmountWithdrawableUser(amountFunded)
+                }
+            }
+        }
     }
 
     useEffect(() => {
@@ -119,17 +150,15 @@ export default function HorizontalNonLinearStepper(props: propType) {
                                         {`Milestone Duration: ${milestoneDurations![activeStep]}\nMilestone Description: ${milestonesArray[activeStep].description.toString()}`}
                                     </Typography>
                                     <br></br>
-                                    {userAddress != owner ? (
+                                    {userAddress != owner ? ( (currState != 3) ? (
                                         <><h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1} Funding Metrics:</h1><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
-                                            {`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\nTotal Actively in Escrow in Milestone From All Users: ${amountActiveRaised} ${coinName}\nTotal Amount You Have Donated in Milestone: ${amountFunded} ${coinName}`}
-                                            {/* add 'Amount in Escrow/Withdrawable if Milestone Failed' for user. If withdrewFunds boolean is true, then it is 0 no matter the tranche. Else, Its 'amountFunded' if tranche < activeStep. Its 0 if tranche is > activeStep 'Milestone Succeeded. Owner received Funds.' If tranche = activeStep and state = 2 (owner withdraw), it's 0, if state = 3 (funder withdraw) its amount funded and amountActiveRaised by all users should. */}
-                                        </Typography></>
-                                    ) : (
+                                            {`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\nTotal Actively in Escrow in Milestone From All Users: ${amountActiveRaised} ${coinName}\nTotal Amount You Have Donated in Milestone: ${amountFunded} ${coinName}\nAmount in Escrow/Withdrawable in Milestone if Fundraiser Failed: ${amountWithdrawableUser} ${coinName}`}
+                                        </Typography></>) :(<><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>{`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\nTotal Amount You Had Donated in Milestone: ${amountFunded} ${coinName}\nAmount Eligible to Withdraw From Milestone (Fundraiser Failed): ${amountWithdrawableUser} ${coinName}`}</Typography></>)
+                                    ) : ( (currState != 3) ? (
                                         <><h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1} Funding Metrics:</h1><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
                                             {`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\nTotal Actively in Escrow in Milestone: ${amountActiveRaised} ${coinName}`}
-                                            {/* Need to update 'Total Actively in Escrow in Milestone' for both. If state goes into funderWithdraw show total raised in milestone, but make note if tranche >= activeStep : 'Can't withdraw Any Funds. Funders voted against continuing fundraiser.', else show amountActiveRaised.*/}
                                         </Typography></>
-                                    )}
+                                    ):(<><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>{`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\n Not Eligible to Withdraw Any More Funds. Funders Voted Against Continuing Fundraiser.`}</Typography></>))}
                                 </Fragment>
                             </div>
                             <br></br>
