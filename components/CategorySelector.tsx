@@ -8,11 +8,11 @@ function classNames(...classes: any[]) {
     return classes.filter(Boolean).join(' ')
 }
 
-export default function CategorySelector() {
+export default function CategorySelector(props: { onChangeCategory?(arg0: void): void }) {
     return (
-        <Menu as="div" className={styles.category}>
+        <Menu as="div" className={props.onChangeCategory ? styles.drawerItem : styles.category}>
             <div>
-                <Menu.Button className="inline-flex justify-center rounded py-2 text-slate-200 hover:text-white">
+                <Menu.Button className={props.onChangeCategory ?"inline-flex justify-center rounded text-slate-200 hover:text-white"  : "inline-flex justify-center rounded py-2 text-slate-200 hover:text-white"}>
                     Categories
                     <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
                 </Menu.Button>
@@ -37,7 +37,7 @@ export default function CategorySelector() {
                                         className={classNames(
                                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                             'block px-4 py-2 text-lg'
-                                        )}
+                                        )} onClick={(e) => { if (props.onChangeCategory) { props.onChangeCategory() } }}
                                     >
                                         Tech
                                     </a>
@@ -52,7 +52,7 @@ export default function CategorySelector() {
                                         className={classNames(
                                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                             'block px-4 py-2 text-lg'
-                                        )}
+                                        )} onClick={(e) => { if (props.onChangeCategory) { props.onChangeCategory() } }}
                                     >
                                         Film
                                     </a>
@@ -66,7 +66,7 @@ export default function CategorySelector() {
                                         className={classNames(
                                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                             'block px-4 py-2 text-lg'
-                                        )}
+                                        )} onClick={(e) => { if (props.onChangeCategory) { props.onChangeCategory() } }}
                                     >
                                         Product
                                     </a>
@@ -80,7 +80,7 @@ export default function CategorySelector() {
                                         className={classNames(
                                             active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
                                             'block px-4 py-2 text-lg'
-                                        )}
+                                        )} onClick={(e) => { if (props.onChangeCategory) { props.onChangeCategory() } }}
                                     >
                                         Gaming
                                     </a>

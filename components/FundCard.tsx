@@ -22,7 +22,7 @@ export default function FundCard(props: { fund: string }) {
     }, [])
 
     return (
-        <div className={styles.container}>
+        <div>
             {data ? (
                 <div className="main text-center">
                     <Card

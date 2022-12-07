@@ -10,13 +10,31 @@ import styles from "../styles/Home.module.css"
 export default function Search(props: propTypeFunds) {
     const [filteredData, setFilteredData] = useState<string[]>(props.fundAddressArray)
     const [maxEntries, setMaxEntries] = useState(12)
+    const [windowWidth, setWindowWidth] = useState(0)
+    const [invisPadding, setInvisPadding] = useState(false)
 
     const router = useRouter()
     const category = router.query.category as string || ""
 
+    // inputHandler("")
+    useWindowSize()
 
-    let inputHandler = (query: string) => {
-        //convert input text to lower case
+    function useWindowSize() {
+        useEffect(() => {
+            function handleResize() {
+                setWindowWidth(window.innerWidth)
+            }
+
+            window.addEventListener("resize", handleResize);
+
+            handleResize();
+
+            return () => window.removeEventListener("resize", handleResize);
+        }, []);
+    }
+
+
+    function inputHandler(query: string) {
         let lowerCase = query.toLowerCase()
 
         const newFilter = props.fundAddressArray.filter((fund) => {
@@ -48,8 +66,8 @@ export default function Search(props: propTypeFunds) {
                 return holder.toLowerCase().includes(lowerCase) && categoryMatch
             }
         })
-        setFilteredData(newFilter)
 
+        setFilteredData(newFilter)
     }
 
     const filterCategories = async (funds: string[]) => {
@@ -69,12 +87,23 @@ export default function Search(props: propTypeFunds) {
         }
 
         return newFilter
+
     }
 
     const updateCategories = async () => {
         filterCategories(props.fundAddressArray).then((value) => {
             setFilteredData(value)
         })
+    }
+
+    const calculatePaddingToggle = (width: number): boolean => {
+        const maxWidth = (filteredData.length * 250 + (filteredData.length - 1) * 35) + 20
+        console.log(width, maxWidth)
+
+        if (width < maxWidth) {
+            return true;
+        }
+        return false;
     }
 
     useEffect(() => {
@@ -91,13 +120,17 @@ export default function Search(props: propTypeFunds) {
 
     return (
         <>
-            <div className="py-5 px-5">
-                <ul className={styles.funds}>
+            <div style={{ justifyContent: "center", alignItems: "center", width: "100%", height: "100%", padding: "10px" }}>
+                <ul className={styles.funds} id="funds">
                     {filteredData.slice(0, maxEntries).map((fund) => (
-                        <li key={fund} className="px-5 py-5">
+                        <li key={fund} style={{ paddingTop: "25px", paddingBottom: "25px" }}>
                             <FundCard fund={fund}></FundCard>
                         </li>
                     ))}
+                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
+                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
+                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
+                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
                 </ul>
             </div>
             <div>
