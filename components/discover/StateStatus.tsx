@@ -50,11 +50,11 @@ export default function StateStatus(props: propType) {
     })
 
     const {
-        runContractFunction: getTimeLeftMilestone,
+        runContractFunction: getTimeLeftRound,
     } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!,
-        functionName: "getTimeLeftMilestone",
+        functionName: "getTimeLeftRound",
         params: {},
     })
 
@@ -110,7 +110,7 @@ export default function StateStatus(props: propType) {
         const currentStateFromCall = await getState() as number
         setState(currentStateFromCall)
         await getMilestoneName()
-        const timeLeftFromCall = await getTimeLeftMilestone() as BigNumber
+        const timeLeftFromCall = await getTimeLeftRound() as BigNumber
         const milestoneDuration = tranchesFromCall[currentTrancheFromCall].milestoneDuration
         const percent = (milestoneDuration!.toNumber() - timeLeftFromCall.toNumber()) / milestoneDuration!.toNumber() * 100
         const amountRaisedFromCall = await getTrancheAmountRaised() as BigNumber
@@ -155,14 +155,15 @@ export default function StateStatus(props: propType) {
     return (
         <div className={styles.stateStatus}>
             {state == 4 ? (
-            <>Pre-Milestone Seed Funding Round
+            <>Seed Funding Round
             <BorderLinearProgress variant="determinate" value={percent} />
             {amountRaisedPre} {asset} Raised</>)
             :
             (<>Milestone {tranche + 1}: <b>{milestoneName}</b>
             <BorderLinearProgress variant="determinate" value={percent} />
-            {amountRaisedTotal} {asset} Total Raised
-            {amountRaisedMilestone} {asset} Raised in Milestone</>
+            Total Raised: {amountRaisedTotal} {asset}
+            <br></br>
+            Raised in Milestone: {amountRaisedMilestone} {asset}</>
             )}
         </div>
     )

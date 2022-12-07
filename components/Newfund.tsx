@@ -42,7 +42,7 @@ export default function NewFund() {
 
     const [description, setDescription] = useState("")
 
-    const [preFundDuration, setPreFundDuration] = useState("")
+    const [preFundDuration, setPreFundDuration] = useState("0")
 
     const [category, setCategory] = useState("--")
 

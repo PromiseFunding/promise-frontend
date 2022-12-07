@@ -86,17 +86,17 @@ export default function HorizontalNonLinearStepper(props: propType) {
         }
         else{
             if (tranche! < activeStep){
-                setAmountWithdrawableUser(amountFunded)
+                setAmountWithdrawableUser(amountFundedFromCall / 10 ** decimals!)
             }
             if(tranche! > activeStep){
                 setAmountWithdrawableUser(0)
             }
-            if(tranche == activeStep){
+            else{
                 if(currState == 2){
                     setAmountWithdrawableUser(0)
                 }
                 else{
-                    setAmountWithdrawableUser(amountFunded)
+                    setAmountWithdrawableUser(amountFundedFromCall / 10 ** decimals!)
                 }
             }
         }
@@ -123,8 +123,8 @@ export default function HorizontalNonLinearStepper(props: propType) {
                 milestonesArray.length > 0 && milestoneDurations ? (
                     <div>
                         <div className="pb-20">
-                            <h1 className="text-5xl font-bold text-center text-slate-900">Milestones Overview:</h1>
-                            <p className="text-center text-slate-900 pt-2"> Select a milestone to see the promises made for that period.</p>
+                            <h1 className="text-5xl font-bold text-center text-slate-900">Fundraiser Overview</h1>
+                            <p className="text-center text-slate-900 pt-2"> Select a round or milestone to see the promises and metrics for that period.</p>
                         </div>
 
                         <Box sx={{ width: '100%' }} >

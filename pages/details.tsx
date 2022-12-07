@@ -97,7 +97,7 @@ const Details: NextPage = () => {
     const { runContractFunction: getTimeLeftMilestone } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress,
-        functionName: "getTimeLeftMilestone",
+        functionName: "getTimeLeftRound",
         params: {},
     })
 
@@ -374,7 +374,7 @@ const Details: NextPage = () => {
                                                         They will now be able to withdraw their funds.</h1>
                                                     ) : (<></>)}
 
-                                                    {state == 4 && timeLeft <= 0 ? (
+                                                    {state == 4 ? ((timeLeft <= 0 ) ? (
                                                         <><WithdrawProceeds
                                                                 fundAddress={fundAddress}
                                                                 assetAddress={assetAddress}
@@ -385,9 +385,10 @@ const Details: NextPage = () => {
                                                                 } }
                                                                 currState={state}
                                                             ></WithdrawProceeds><h1 className="p-5 text-2xl font-bold bg-slate-800">
-                                                                    You are currently in the Seed Funding Phase of your project. All donations will go to you and the ability
-                                                                    to withdraw will become available after the Seed Funding Phase ends.</h1></>
-                                                    ) : (<></>)}
+                                                            You can now withdraw your seed round funding. This will immediately start your first milestone and the milestone funding process.</h1></>
+                                                    ) : (<><h1 className="p-5 text-2xl font-bold bg-slate-800">
+                                                    You are currently in the Seed Funding Phase of your project. All donations will go to you and the ability
+                                                    to withdraw will become available after the Seed Funding Phase ends.</h1></>)): (<></>)}
                                                 </div>
                                             )}
 
