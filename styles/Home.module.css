@@ -371,6 +371,7 @@
     position: relative;
     color: white;
     text-align: center;
+    display: table;
     vertical-align: middle;
     margin: auto;
     width: 100%;
