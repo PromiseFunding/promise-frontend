@@ -181,11 +181,10 @@
     color: white;
     text-align: center;
     vertical-align: middle;
-    margin: auto;
     width: 100%;
-    padding: 125px;
-    height: 350px;
-    font-size: 60px;
+    display: table;
+    height: 40vh;
+    font-size: 50px;
     background-size: 100% 100%;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -381,7 +380,6 @@
     display: table;
     margin: auto;
     width: 100%;
-    padding: 80px;
     height: 40vh;
     font-size: 50px;
     background-size: 100% 100%;

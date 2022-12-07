@@ -6,9 +6,12 @@ export default function Tutorial() {
     return (
         <div style={{ display: "flex", flexDirection: "column" }}>
             <div className={styles.howItWorks}>
-                <h1 style={{ position: "relative", fontWeight: "700" }}>How it works</h1>
-                <h2 className={styles.truncateLineClamp}>Promise enables milestone based funding. In other words, it ensures via secure Smart Contracts that fundraisers
-                    follow through on their promises and are only given the money raised when they&apos;ve proven their goals have been met.</h2>
+                <div style={{ verticalAlign: "middle", display: "table-cell" }}>
+                    <h1 style={{ position: "relative", fontWeight: "700" }}>How it works</h1>
+                    <h2 className={styles.truncateLineClamp}>Promise enables milestone based funding. In other words, it ensures via secure Smart Contracts that fundraisers
+                        follow through on their promises and are only given the money raised when they&apos;ve proven their goals have been met.</h2>
+                </div>
+
             </div>
             <div className={styles.howItWorksContainer}>
                 <div className={styles.tutorialPanel}>
@@ -95,7 +98,7 @@ export default function Tutorial() {
                         <Image src="/info-images/approved/approved.png" height="500" width="500" alt="image" style={{ marginLeft: "auto", marginRight: "auto" }}></Image>
                     </div>
                 </div>
-                <a href="http://www.freepik.com" style={{ color: "white", textAlign: "center" }}>Images designed by vectorjuice / Freepik</a>
+                <a href="http://www.freepik.com" style={{ color: "white", textAlign: "center", backgroundColor: "blue", width: "100%" }}>Images designed by vectorjuice / Freepik</a>
             </div>
         </div >
     )

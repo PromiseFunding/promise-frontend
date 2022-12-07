@@ -257,7 +257,7 @@ export default function NewFund() {
     return (
         <div className={styles.newFund}>
             <div className={styles.createNewFund}>
-                <h1 style={{ position: "relative", fontWeight: "700" }}>Create A New Fund</h1>
+                <h1 style={{ position: "relative", display: "table-cell", verticalAlign: "middle", fontWeight: "700" }}>Create A New Fund</h1>
             </div>
             {isWeb3Enabled && yieldAddress ? (
                 <Box
