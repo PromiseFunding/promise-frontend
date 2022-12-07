@@ -11,10 +11,12 @@ export default function Search(props: propTypeFunds) {
     const [filteredData, setFilteredData] = useState<string[]>(props.fundAddressArray)
     const [maxEntries, setMaxEntries] = useState(12)
     const [windowWidth, setWindowWidth] = useState(0)
-    const [invisPadding, setInvisPadding] = useState(false)
 
     const router = useRouter()
     const category = router.query.category as string || ""
+
+    const FUND_WIDTH = 250
+    const FUND_GAP = 35
 
     // inputHandler("")
     useWindowSize()
@@ -97,7 +99,7 @@ export default function Search(props: propTypeFunds) {
     }
 
     const calculatePaddingToggle = (width: number): boolean => {
-        const maxWidth = (filteredData.length * 250 + (filteredData.length - 1) * 35) + 20
+        const maxWidth = (filteredData.length * FUND_WIDTH + (filteredData.length - 1) * FUND_GAP) + 20
         console.log(width, maxWidth)
 
         if (width < maxWidth) {
@@ -121,16 +123,16 @@ export default function Search(props: propTypeFunds) {
     return (
         <>
             <div style={{ justifyContent: "center", alignItems: "center", width: "100%", height: "100%", padding: "10px" }}>
-                <ul className={styles.funds} id="funds">
+                <ul style={{ ['--funds-gap' as any]: (FUND_GAP + "px") }} className={styles.funds} id="funds" >
                     {filteredData.slice(0, maxEntries).map((fund) => (
                         <li key={fund} style={{ paddingTop: "25px", paddingBottom: "25px" }}>
-                            <FundCard fund={fund}></FundCard>
+                            <FundCard fund={fund} fundWidth={FUND_WIDTH}></FundCard>
                         </li>
                     ))}
-                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
-                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
-                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
-                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
+                    <div style={{ width: FUND_WIDTH, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
+                    <div style={{ width: FUND_WIDTH, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
+                    <div style={{ width: FUND_WIDTH, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
+                    <div style={{ width: FUND_WIDTH, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
                 </ul>
             </div>
             <div>

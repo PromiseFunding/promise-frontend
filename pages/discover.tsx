@@ -57,7 +57,7 @@ const Discover: NextPage = () => {
         <div >
             <Head>
                 <title>Promise</title>
-                <meta name="description" content="Version one of the FundMe Smart Contract" />
+                <meta name="description" content="Crowdfunding Reimagined" />
             </Head>
             <Header onChangeQuery={(queryString) => {
                 setQuery(queryString)
