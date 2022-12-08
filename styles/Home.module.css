@@ -440,9 +440,15 @@
 }
 
 .updatesList {
+    width: 100%;
+    background-color: rgb(203 213 225);
+    color: black;
+    padding: 30px;
+    padding-bottom: 50px;
 }
 
 .newUpdate {
+    margin-top: 20px;
 }
 
 .modalMain {

@@ -6,6 +6,7 @@ import { propType, update } from '../../config/types'
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
+import Image from 'next/image'
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import styles from "../../styles/Home.module.css"
@@ -66,12 +67,11 @@ export default function Updates(props: propType) {
         setDescription("")
     }
 
-
     const handleSave = () => {
         setUploading(true)
 
         if (file) {
-            const iconRef = refStore(storage, `/files/${fundAddress}/${file!.name}`)
+            const iconRef = refStore(storage, `/files/${fundAddress}/${crypto.randomUUID()}${file!.name}`)
             const uploadTask = uploadBytesResumable(iconRef, file as Blob)
 
             uploadTask.on(
@@ -142,55 +142,12 @@ export default function Updates(props: propType) {
 
     return (
         <div className={styles.updates}>
-            {account == owner ? (
-                <div className={styles.newUpdate}>
-                    <Button className={styles.buttonStyle} onClick={handleOpen}>Add a new update</Button>
-                    <Modal
-                        open={open}
-                        onClose={handleClose}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <Box sx={modalStyle}>
-                            <div className={styles.modalMain}>
-                                <h1 style={{ fontWeight: "700", fontSize: "50px" }}>Create a new update</h1>
-                                <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
-                                    <TextField required
-                                        label="Subject"
-                                        variant="filled"
-                                        onChange={handleChangeSubject}
-                                        value={subject}
-                                        helperText="Input a subject for your update. Be sure to include what milestone it applies to."
-                                        style={{ width: "25%" }}
-                                    />
-                                    <h1 style={{ paddingTop: "12px", fontSize: "15px" }}>Add An Image: </h1>
-                                    <input type="file" accept="image/*" onChange={handleChangeImage} style={{ paddingTop: "12px" }} />
-                                </div>
-                                <TextField required
-                                    label="Description"
-                                    multiline
-                                    rows={10}
-                                    onChange={handleChangeDescription}
-                                    helperText="Add a description for the update. Be specific with what exactly you have done."
-                                    style={{ paddingBottom: "20px", marginTop: "10px" }}
-                                    variant="filled"
-                                />
-                                <div style={{ display: "flex", flexDirection: "row", width: "20vw", marginLeft: "auto" }}>
-                                    <Button className={styles.buttonStyle} onClick={handleClose} style={{ ['--override-color' as any]: "red" }}>Cancel</Button>
-                                    <Button className={styles.buttonStyle} disabled={!(subject && description) || uploading} onClick={handleSave} style={{ ['--override-color' as any]: (subject && description ? "blue" : "grey") }}>Save Update</Button>
-                                </div>
-
-
-                            </div>
-
-                        </Box>
-                    </Modal>
-                </div >) : (<></>)
-            }
-
-            <h1 style={{ fontWeight: "700", fontSize: "50px" }}>Updates from the Owner</h1>
             <div className={styles.updatesList}>
-                {updates ? (<div>
+                <h1 style={{ fontWeight: "700", fontSize: "50px" }}>Updates from the Owner</h1>
+
+                {updates && updates.length > 0 ? (<div>
+                    <h1 style={{ fontSize: "20px", marginBottom: "10px" }}>Periodically, the owner of the fund will update their funders on the progress of their fundraiser. They can share exciting developments, news, and updated timelines here!</h1>
+
                     {updates!.map((updateVal: update, index: number) => (
                         // <div key={index}>{update.description}</div>
                         <Accordion key={index} expanded={expanded === index.toString()} onChange={handleChange(index.toString())}>
@@ -198,6 +155,7 @@ export default function Updates(props: propType) {
                                 expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel1bh-content"
                                 id="panel1bh-header"
+                                sx={{ backgroundColor: "white" }}
                             >
                                 <Typography sx={{ width: '33%', flexShrink: 0 }}>
                                     {updateVal.subject.toString()}
@@ -208,15 +166,65 @@ export default function Updates(props: propType) {
                                 <Typography>
                                     {updateVal.description.toString()}
                                 </Typography>
+                                <div style={{ width: '100%', height: "500px", position: 'relative' }}>
+                                    <Image
+                                        alt='Update image'
+                                        src={updateVal.imageUrl as unknown as string}
+                                        layout='fill'
+                                        objectFit='contain'
+                                    />
+                                </div>
                             </AccordionDetails>
                         </Accordion>
                     ))}
 
-                </div>) : (<></>)}
+                </div>) : (<div>The Owner has not made any updates yet.</div>)}
 
-                <div>
+                {account == owner ? (
+                    <div className={styles.newUpdate}>
+                        <Button className={styles.buttonStyle} onClick={handleOpen}>Add a new update</Button>
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={modalStyle}>
+                                <div className={styles.modalMain}>
+                                    <h1 style={{ fontWeight: "700", fontSize: "50px" }}>Create a new update</h1>
+                                    <div style={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+                                        <TextField required
+                                            label="Subject"
+                                            variant="filled"
+                                            onChange={handleChangeSubject}
+                                            value={subject}
+                                            helperText="Input a subject for your update. Be sure to include what milestone it applies to."
+                                            style={{ width: "25%" }}
+                                        />
+                                        <h1 style={{ paddingTop: "12px", fontSize: "15px" }}>Add An Image: </h1>
+                                        <input type="file" accept="image/*" onChange={handleChangeImage} style={{ paddingTop: "12px" }} />
+                                    </div>
+                                    <TextField required
+                                        label="Description"
+                                        multiline
+                                        rows={10}
+                                        onChange={handleChangeDescription}
+                                        helperText="Add a description for the update. Be specific with what exactly you have done."
+                                        style={{ paddingBottom: "20px", marginTop: "10px" }}
+                                        variant="filled"
+                                    />
+                                    <div style={{ display: "flex", flexDirection: "row", width: "20vw", marginLeft: "auto" }}>
+                                        <Button className={styles.buttonStyle} onClick={handleClose} style={{ ['--override-color' as any]: "red" }}>Cancel</Button>
+                                        <Button className={styles.buttonStyle} disabled={!(subject && description) || uploading} onClick={handleSave} style={{ ['--override-color' as any]: (subject && description ? "blue" : "grey") }}>Save Update</Button>
+                                    </div>
 
-                </div>
+
+                                </div>
+
+                            </Box>
+                        </Modal>
+                    </div >) : (<></>)
+                }
 
 
 
