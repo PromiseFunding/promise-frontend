@@ -84,7 +84,7 @@ export default function NewFund() {
     }
 
     const handleNewFundraiser = async () => {
-        if (category == "--" || !description || !preFundDuration ||!assetValue || !file) {
+        if (category == "--" || !description || !preFundDuration || !assetValue || !file) {
             handleGenericAlert("Please fill in the required fields.")
             return
         }
@@ -137,7 +137,7 @@ export default function NewFund() {
 
         const fundAddress = txReceipt.events[2].args.fundAddress
 
-        const iconRef = refStore(storage, `/files/${fundAddress}/${file!.name}`)
+        const iconRef = refStore(storage, `/files/${fundAddress}/${crypto.randomUUID()}${file!.name}`)
         const uploadTask = uploadBytesResumable(iconRef, file as Blob)
 
         uploadTask.on(
@@ -339,7 +339,7 @@ export default function NewFund() {
                                 <TextField
                                     type="number"
                                     name="duration"
-                                    label="Pre Round Duration (seconds)"
+                                    label="Seed Round Duration (seconds)"
                                     variant="filled"
                                     value={preFundDuration}
                                     onChange={(e) => {

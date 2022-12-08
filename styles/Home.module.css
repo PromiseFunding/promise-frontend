@@ -433,6 +433,44 @@
     outline: 2px dashed red; */
 }
 
+.updates {
+    margin-top: 50px;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.updatesList {
+    width: 100%;
+    background-color: rgb(203 213 225);
+    color: black;
+    padding: 30px;
+    padding-bottom: 50px;
+}
+
+.newUpdate {
+    margin-top: 20px;
+}
+
+.modalMain {
+    display: flex;
+    flex-direction: column;
+}
+
+.buttonStyle {
+    --override-color: rgb(100 116 139);
+
+    background: var(--override-color);
+    color: white;
+    font-weight: 700;
+    padding: 10px;
+    border-radius: 0.25rem;
+    margin-left: auto;
+}
+
+.buttonStyle:hover {
+    background-color: rgb(51 65 85);
+}
+
 .tutorialText {
     vertical-align: middle;
     text-align: center;
