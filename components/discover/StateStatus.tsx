@@ -103,6 +103,15 @@ export default function StateStatus(props: propType) {
         params: {},
     })
 
+    const {
+        runContractFunction: getPreDuration,
+    } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getPreDuration",
+        params: {},
+    })
+
     async function updateUI() {
         const tranchesFromCall = await getTranches() as milestone[]
         const currentTrancheFromCall = await getCurrentTranche() as number
@@ -111,8 +120,15 @@ export default function StateStatus(props: propType) {
         setState(currentStateFromCall)
         await getMilestoneName()
         const timeLeftFromCall = await getTimeLeftRound() as BigNumber
-        const milestoneDuration = tranchesFromCall[currentTrancheFromCall].milestoneDuration
-        const percent = (milestoneDuration!.toNumber() - timeLeftFromCall.toNumber()) / milestoneDuration!.toNumber() * 100
+        if (currentStateFromCall == 4){
+            const roundDuration = await getPreDuration() as BigNumber
+            const percent = (roundDuration!.toNumber() - timeLeftFromCall.toNumber()) / roundDuration!.toNumber() * 100
+            setPercent(percent)
+        }else{
+            const roundDuration = tranchesFromCall[currentTrancheFromCall].milestoneDuration
+            const percent = (roundDuration!.toNumber() - timeLeftFromCall.toNumber()) / roundDuration!.toNumber() * 100
+            setPercent(percent)
+        }
         const amountRaisedFromCall = await getTrancheAmountRaised() as BigNumber
         const amountRaisedTotalFromCall = await getLifeTimeAmountFunded() as BigNumber
         const amountRaisedPreFromCall = await getPreMilestoneTotalFunds() as BigNumber
@@ -122,7 +138,6 @@ export default function StateStatus(props: propType) {
         setAmountRaised(+(amountRaisedFromCall.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
         setAmountRaisedTotal(+(amountRaisedTotalFromCall.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
         setAmountRaisedPre(+(amountRaisedPreFromCall.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
-        setPercent(percent)
     }
 
     const getAssetName = (address: string) => {

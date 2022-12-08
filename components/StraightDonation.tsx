@@ -67,13 +67,22 @@ export default function StraightDonation(props: propType) {
         }
     }, [isWeb3Enabled, fundAddress, account, totalRaised])
 
+    let alertMessage = ""
     const handleSuccess = async function () {
+        if (state == 4){
+            alertMessage = "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
+            JSON.stringify(val + " " + coinName) +
+            " to the seed round and it will go straight to the fundraiser."
+        }
+        else{
+            alertMessage = "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
+            JSON.stringify(val + " " + coinName) +
+            " split evenly among the remaining Milestones. We are currently in Milestone " +
+            JSON.stringify(milestone) +
+            "."
+        }
         alert(
-            "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
-                JSON.stringify(val + " " + coinName) +
-                " split evenly among the remaining Milestones. We are currently in Milestone " +
-                JSON.stringify(milestone) +
-                "."
+            alertMessage
         )
         const fundTx: any = await fund()
         setVal("0")
@@ -126,12 +135,12 @@ export default function StraightDonation(props: propType) {
     return (
         <div className="p-5 bg-slate-800 text-slate-200">
             <div className={styles.tooltip}>
-                {state == 0 ? (
+                {state == 4 ? (
                     <h1 className="text-xl font-bold">
-                    Donation Split Equally Among Remaining Milestones
+                    Pre Milestone Round Donation
                     </h1>
                 ) : (<h1 className="text-xl font-bold">
-                Pre Milestone Round Donation
+                Donation Split Equally Among Remaining Milestones
                 </h1>)}
                 {/* <span className={styles.tooltiptext}>You will be donating x amount in each remaining milestone</span>
                 <br></br> */}
@@ -172,7 +181,12 @@ export default function StraightDonation(props: propType) {
                             <br></br>
                             Deposit Amount: {val || 0} {coinName}
                         </h2>
-                        Total Funds In Escrow: {amountFunded} {coinName}
+                        {state == 0 ? (
+                            <h1 className="text-xl font-bold">
+                            Total Funds In Escrow: {amountFunded} {coinName}</h1>
+                            ) : (<></>)
+                        }
+                        {/* Total Funds In Escrow: {amountFunded} {coinName} */}
                     </div>
             ) : (
                 <div>No Fund Address Detected</div>
