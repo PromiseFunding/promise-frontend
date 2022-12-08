@@ -50,10 +50,11 @@ export const networkConfig: networkConfigInfo = {
 }
 
 export const states = [
-    "Accepting Donations",
+    "Accepting Milestone Donations",
     "Voting In Progress",
     "Project Owner Can Withdraw",
     "Funders Can Withdraw Remaining Donations",
+    "Accepting Seed Round Donations"
 ]
 
 export const developmentChains = ["hardhat", "localhost"]

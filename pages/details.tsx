@@ -97,14 +97,14 @@ const Details: NextPage = () => {
     const { runContractFunction: getTimeLeftMilestone } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress,
-        functionName: "getTimeLeftMilestone",
+        functionName: "getTimeLeftRound",
         params: {},
     })
 
     const { runContractFunction: getTotalFunds } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress,
-        functionName: "getTotalFunds",
+        functionName: "getLifeTimeAmountFunded",
         params: {},
     })
 
@@ -202,14 +202,20 @@ const Details: NextPage = () => {
                                 </div>
                                 <div className="font-bold">
                                     <div className="font-normal">
-                                        {" "}
-                                        <b className="text-2xl">Current Milestone:</b> {tranche + 1}
+                                        {state == 4 ? (
+                                            <><b className="text-2xl">Current Stage:</b> Seed Funding</>
+                                        ): (
+                                            <><b className="text-2xl">Current Stage:</b> Milestone {tranche + 1}</>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="font-bold">
                                     <div className="font-normal">
-                                        {" "}
-                                        <b className="text-2xl">Time Left in Milestone:</b> {timeLeft}
+                                        {state == 4 ? (
+                                            <><b className="text-2xl">Time Left in Pre Funding Round:</b> {timeLeft}</>
+                                        ): (
+                                            <><b className="text-2xl">Time Left in Milestone Round:</b> {timeLeft}</>
+                                        )}
                                     </div>
                                 </div>
                             </div>
@@ -235,6 +241,7 @@ const Details: NextPage = () => {
                                                                 }}
                                                                 totalRaised={totalFunds}
                                                                 tranche={tranche}
+                                                                currState={state}
                                                             ></StraightDonation>
                                                             <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
                                                             <div className="text-center flex flex-col border-2 border-slate-500">
@@ -299,6 +306,22 @@ const Details: NextPage = () => {
                                                             updateAmount={amt}
                                                         ></Withdraw>
                                                     ) : (<></>)}
+
+                                                    {state == 4 ? (
+                                                        <StraightDonation
+                                                        fundAddress={fundAddress}
+                                                        assetAddress={assetAddress}
+                                                        ownerFund={owner}
+                                                        decimals={decimals!}
+                                                        coinName={coinName}
+                                                        onChangeAmountFunded={() => {
+                                                            updateUI()
+                                                        }}
+                                                        totalRaised={totalFunds}
+                                                        tranche={tranche}
+                                                        currState={state}
+                                                    ></StraightDonation>
+                                                    ) : (<></>)}
                                                 </div>
                                             ) : (
                                                 <div>
@@ -342,6 +365,7 @@ const Details: NextPage = () => {
                                                             onChangeState={() => {
                                                                 updateUI()
                                                             }}
+                                                            currState={state}
                                                         ></WithdrawProceeds>
                                                     ) : (<></>)}
 
@@ -349,6 +373,22 @@ const Details: NextPage = () => {
                                                         The funders of this project have decided to close down this fundraiser.
                                                         They will now be able to withdraw their funds.</h1>
                                                     ) : (<></>)}
+
+                                                    {state == 4 ? ((timeLeft <= 0 ) ? (
+                                                        <><WithdrawProceeds
+                                                                fundAddress={fundAddress}
+                                                                assetAddress={assetAddress}
+                                                                ownerFund={owner}
+                                                                tranche={tranche}
+                                                                onChangeState={() => {
+                                                                    updateUI()
+                                                                } }
+                                                                currState={state}
+                                                            ></WithdrawProceeds><h1 className="p-5 text-2xl font-bold bg-slate-800">
+                                                            You can now withdraw your seed round funding. This will immediately start your first milestone and the milestone funding process.</h1></>
+                                                    ) : (<><h1 className="p-5 text-2xl font-bold bg-slate-800">
+                                                    You are currently in the Seed Funding Phase of your project. All donations will go to you and the ability
+                                                    to withdraw will become available after the Seed Funding Phase ends.</h1></>)): (<></>)}
                                                 </div>
                                             )}
 

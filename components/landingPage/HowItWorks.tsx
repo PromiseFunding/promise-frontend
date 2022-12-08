@@ -33,7 +33,7 @@ export default function HowItWorks() {
                         <div className={styles.howItWorksPanel}>
                             <h1>Finish</h1>
                             <FontAwesomeIcon className={styles.howItWorksIcon} icon={["fas", "flag-checkered"]} size="6x" transform="shrink-4" />
-                            <h2 style={{ fontSize: "20px", marginTop: "30px", fontWeight: "400" }}>After a successful promise fundraiser, both fundraiser and funder are rewarded by their symbiotic relationship. The fundraiser is set up perfectly </h2>
+                            <h2 style={{ fontSize: "20px", marginTop: "30px", fontWeight: "400" }}>After a successful promise fundraiser, both fundraiser and funder are rewarded by their symbiotic relationship. The fundraiser is set up perfectly. </h2>
                         </div>
                     </div>
                 </div>

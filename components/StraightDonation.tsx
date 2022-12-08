@@ -16,13 +16,14 @@ export default function StraightDonation(props: propType) {
     const coinName = props.coinName
     const totalRaised = props.totalRaised
     const tranche = props.tranche
-
+    const state = props.currState
     const milestone = tranche! + 1
 
     // const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const [amountFunded, setAmountFunded] = useState(0)
     const [val, setVal] = useState("")
+    const [currState, setCurrState] = useState(0)
 
     const dispatch = useNotification()
 
@@ -57,6 +58,7 @@ export default function StraightDonation(props: propType) {
     async function updateUI() {
         const amountFundedFromCall = (await getFundAmount()) as number
         setAmountFunded(amountFundedFromCall / 10 ** decimals!)
+        setCurrState(state as number)
     }
 
     useEffect(() => {
@@ -65,8 +67,23 @@ export default function StraightDonation(props: propType) {
         }
     }, [isWeb3Enabled, fundAddress, account, totalRaised])
 
+    let alertMessage = ""
     const handleSuccess = async function () {
-        alert("Friendly Reminder: By confirming the next MetaMask transaction you will be funding " + JSON.stringify(val + " " + coinName) + " split evenly among the remaining Milestones. We are currently in Milestone " + JSON.stringify(milestone) + ".")
+        if (state == 4){
+            alertMessage = "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
+            JSON.stringify(val + " " + coinName) +
+            " to the seed round and it will go straight to the fundraiser."
+        }
+        else{
+            alertMessage = "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
+            JSON.stringify(val + " " + coinName) +
+            " split evenly among the remaining Milestones. We are currently in Milestone " +
+            JSON.stringify(milestone) +
+            "."
+        }
+        alert(
+            alertMessage
+        )
         const fundTx: any = await fund()
         setVal("0")
         try {
@@ -118,47 +135,59 @@ export default function StraightDonation(props: propType) {
     return (
         <div className="p-5 bg-slate-800 text-slate-200">
             <div className={styles.tooltip}>
-                <h1 className="text-xl font-bold">Donation Split Equally Among Remaining Milestones</h1>
+                {state == 4 ? (
+                    <h1 className="text-xl font-bold">
+                    Pre Milestone Round Donation
+                    </h1>
+                ) : (<h1 className="text-xl font-bold">
+                Donation Split Equally Among Remaining Milestones
+                </h1>)}
                 {/* <span className={styles.tooltiptext}>You will be donating x amount in each remaining milestone</span>
                 <br></br> */}
+                <br></br>
             </div>
 
             {isWeb3Enabled && fundAddress ? (
-                <div className="">
-                    <input
-                        maxLength={21 - (decimals || 6)}
-                        type="number"
-                        min="0"
-                        placeholder="0.00"
-                        id="message"
-                        name="message"
-                        onChange={handleChange}
-                        value={val}
-                        autoComplete="off"
-                        className="text-slate-900"
-                    />
-                    <button
-                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
-                        onClick={async function () {
-                            await approve({
-                                onSuccess: (tx) => handleSuccess(),
-                                onError: (error) => console.log(error),
-                            })
-                        }}
-                        disabled={isLoading || isFetching}
-                    >
-                        {isLoading || isFetching ? (
-                            <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
-                        ) : (
-                            <div>Donate</div>
-                        )}
-                    </button>
-                    <h2>
-                        <br></br>
-                        Deposit Amount: {val || 0} {coinName}
-                    </h2>
-                    Total Funds In Escrow: {amountFunded} {coinName}
-                </div>
+                    <div className="">
+                        <input
+                            maxLength={21 - (decimals || 6)}
+                            type="number"
+                            min="0"
+                            placeholder="0.00"
+                            id="message"
+                            name="message"
+                            onChange={handleChange}
+                            value={val}
+                            autoComplete="off"
+                            className="text-slate-900"
+                        />
+                        <button
+                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
+                            onClick={async function () {
+                                await approve({
+                                    onSuccess: (tx) => handleSuccess(),
+                                    onError: (error) => console.log(error),
+                                })
+                            }}
+                            disabled={isLoading || isFetching}
+                        >
+                            {isLoading || isFetching ? (
+                                <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
+                            ) : (
+                                <div>Donate</div>
+                            )}
+                        </button>
+                        <h2>
+                            <br></br>
+                            Deposit Amount: {val || 0} {coinName}
+                        </h2>
+                        {state == 0 ? (
+                            <h1>
+                            Total Funds Donated: {amountFunded} {coinName}</h1>
+                            ) : (<></>)
+                        }
+                        {/* Total Funds In Escrow: {amountFunded} {coinName} */}
+                    </div>
             ) : (
                 <div>No Fund Address Detected</div>
             )}
