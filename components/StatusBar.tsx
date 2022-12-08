@@ -34,6 +34,8 @@ export default function HorizontalNonLinearStepper(props: propType) {
     const [amountTotalRaised, setAmountTotalRaised] = useState(0)
     const [amountWithdrawableUser, setAmountWithdrawableUser] = useState(0)
     const [withdrewFunds, setFunderWithdraw] = useState(false)
+    const [amountPreRaised, setAmountPreRaised] = useState(0)
+    const [durationPreRound, setDurationPre] = useState(0)
 
 
     const getMilestones = async () => {
@@ -54,21 +56,35 @@ export default function HorizontalNonLinearStepper(props: propType) {
         abi: abi,
         contractAddress: fundAddress!,
         functionName: "getFunderTrancheAmountRaised",
-        params: { funder: account, level: activeStep },
+        params: { funder: account, level: activeStep - 1 },
     })
 
     const { runContractFunction: getTrancheAmountActiveRaised } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!,
         functionName: "getTrancheAmountRaised",
-        params: { level: activeStep },
+        params: { level: activeStep - 1 },
     })
 
     const { runContractFunction: getTrancheAmountTotalRaised } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!,
         functionName: "getTrancheAmountTotalRaised",
-        params: { level: activeStep },
+        params: { level: activeStep - 1 },
+    })
+
+    const { runContractFunction: getPreRoundTotalRaised } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getPreMilestoneTotalFunds",
+        params: {},
+    })
+
+    const { runContractFunction: getPreRoundDuration } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getPreDuration",
+        params: {},
     })
 
     async function updateUI() {
@@ -78,6 +94,10 @@ export default function HorizontalNonLinearStepper(props: propType) {
         setAmountRaised(amountRaisedFromCall / 10 ** decimals!)
         const amountTotalRaisedFromCall = (await getTrancheAmountTotalRaised()) as number
         setAmountTotalRaised(amountTotalRaisedFromCall / 10 ** decimals!)
+        const amountTotalPreRaisedFromCall = (await getPreRoundTotalRaised()) as number
+        setAmountPreRaised(amountTotalPreRaisedFromCall / 10 ** decimals!)
+        const getDurationPreRound = await getPreRoundDuration() as number
+        setDurationPre(getDurationPreRound)
         const didFunderWithdrawFromCall = await didFunderWithdraw() as boolean
         setFunderWithdraw(didFunderWithdrawFromCall)
         //for user
@@ -129,13 +149,22 @@ export default function HorizontalNonLinearStepper(props: propType) {
 
                         <Box sx={{ width: '100%' }} >
                             <Stepper nonLinear activeStep={activeStep}>
+                                <Step key={0} sx={{
+                                        '& .MuiStepLabel-root .Mui-completed': {
+                                            color: 'green', // circle color (ACTIVE)
+                                        },
+                                    }} completed={currState != 4}>
+                                        <StepButton color="inherit" onClick={handleStep(0)}>
+                                            {"Seed Funding Round"}
+                                        </StepButton>
+                                   </Step>
                                 {milestonesArray.map((milestone, index) => (
                                     <Step key={index} sx={{
                                         '& .MuiStepLabel-root .Mui-completed': {
                                             color: 'green', // circle color (ACTIVE)
                                         },
                                     }} completed={index < tranche!}>
-                                        <StepButton color="inherit" onClick={handleStep(index)}>
+                                        <StepButton color="inherit" onClick={handleStep(index+1)}>
                                             {milestone.name}
                                         </StepButton>
                                     </Step>
@@ -144,32 +173,40 @@ export default function HorizontalNonLinearStepper(props: propType) {
                             <br></br>
                             <br></br>
                             <div>
-                                <Fragment>
-                                    <h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1} General Information:</h1>
-                                    <Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
-                                        {`Milestone Duration: ${milestoneDurations![activeStep]}\nMilestone Description: ${milestonesArray[activeStep].description.toString()}`}
-                                    </Typography>
-                                    <br></br>
-                                    {userAddress != owner ? ( (currState != 3) ? (
-                                        <><h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1} Funding Metrics:</h1><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
-                                            {`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\nTotal Actively in Escrow in Milestone From All Users: ${amountActiveRaised} ${coinName}\nTotal Amount You Have Donated in Milestone: ${amountFunded} ${coinName}\nAmount in Escrow/Withdrawable in Milestone if Fundraiser Failed: ${amountWithdrawableUser} ${coinName}`}
-                                        </Typography></>) :(<><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>{`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\nTotal Amount You Had Donated in Milestone: ${amountFunded} ${coinName}\nAmount Eligible to Withdraw From Milestone (Fundraiser Failed): ${amountWithdrawableUser} ${coinName}`}</Typography></>)
-                                    ) : ( (currState != 3) ? (
-                                        <><h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep! + 1} Funding Metrics:</h1><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
-                                            {`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\nTotal Actively in Escrow in Milestone: ${amountActiveRaised} ${coinName}`}
-                                        </Typography></>
-                                    ):(<><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>{`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\n Not Eligible to Withdraw Any More Funds. Funders Voted Against Continuing Fundraiser.`}</Typography></>))}
-                                </Fragment>
-                            </div>
-                            <br></br>
-                            <div>
-                                {milestoneDurations.length < 5 && userAddress == owner && currState != 3 && currState != 1 ? (<div>
-                                    <NewMilestone
-                                        fundAddress={fundAddress}
-                                    />
-                                </div>) : (
-                                    <></>
-                                )}
+                                {activeStep > 0 ? (
+                                <><div>
+                                        <Fragment>
+                                            <h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep!} General Information:</h1>
+                                            <Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
+                                                {`Milestone Duration: ${milestoneDurations![activeStep - 1]} seconds\nMilestone Description: ${milestonesArray[activeStep - 1].description.toString()}`}
+                                            </Typography>
+                                            <br></br>
+                                            {userAddress != owner ? ((currState != 3) ? (
+                                                <><h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep!} Funding Metrics:</h1><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
+                                                    {`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\nTotal Actively in Escrow in Milestone From All Users: ${amountActiveRaised} ${coinName}\nTotal Amount You Have Donated in Milestone: ${amountFunded} ${coinName}\nAmount in Escrow/Withdrawable in Milestone for you if Fundraiser Failed: ${amountWithdrawableUser} ${coinName}`}
+                                                </Typography></>) : (<><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>{`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\nTotal Amount You Had Donated in Milestone: ${amountFunded} ${coinName}\nAmount Eligible to Withdraw From Milestone (Fundraiser Failed): ${amountWithdrawableUser} ${coinName}`}</Typography></>)
+                                            ) : ((currState != 3) ? (
+                                                <><h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep!} Funding Metrics:</h1><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
+                                                    {`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\nTotal Actively in Escrow in Milestone: ${amountActiveRaised} ${coinName}`}
+                                                </Typography></>
+                                            ) : (<><Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>{`Total Raised in Milestone Over Lifetime: ${amountTotalRaised} ${coinName}\n Not Eligible to Withdraw Any More Funds. Funders Voted Against Continuing Fundraiser.`}</Typography></>))}
+                                        </Fragment>
+                                    </div><br></br><div>
+                                            {milestoneDurations.length < 5 && userAddress == owner && currState != 3 && currState != 1 ? (<div>
+                                                <NewMilestone
+                                                    fundAddress={fundAddress} />
+                                            </div>) : (
+                                                <></>
+                                            )}
+                                        </div></>
+                                ):(<><div>
+                                    <Fragment>
+                                        <h1 className="text-3xl font-bold text-left text-slate-900">Seed Round Metrics:</h1>
+                                        <Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
+                                            {`Seed Round Duration: ${durationPreRound} seconds\nTotal Raised in Seed Round: ${amountPreRaised} ${coinName}`}
+                                        </Typography>
+                                    </Fragment>
+                                    </div></>)}
                             </div>
                         </Box>
                     </div>) : (<></>)

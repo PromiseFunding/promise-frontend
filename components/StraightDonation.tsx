@@ -182,8 +182,8 @@ export default function StraightDonation(props: propType) {
                             Deposit Amount: {val || 0} {coinName}
                         </h2>
                         {state == 0 ? (
-                            <h1 className="text-xl font-bold">
-                            Total Funds In Escrow: {amountFunded} {coinName}</h1>
+                            <h1>
+                            Total Funds Donated: {amountFunded} {coinName}</h1>
                             ) : (<></>)
                         }
                         {/* Total Funds In Escrow: {amountFunded} {coinName} */}

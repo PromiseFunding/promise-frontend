@@ -9,6 +9,7 @@ import { BigNumber } from "ethers"
 import { tokenConfig } from "../../config/token-config"
 import { ref, get } from "firebase/database"
 import { database } from "../../firebase-config"
+import { states } from "../../config/helper-config"
 
 export default function StateStatus(props: propType) {
     const fundAddress = props.fundAddress
@@ -172,13 +173,15 @@ export default function StateStatus(props: propType) {
             {state == 4 ? (
             <>Seed Funding Round
             <BorderLinearProgress variant="determinate" value={percent} />
-            {amountRaisedPre} {asset} Raised</>)
+            {amountRaisedPre} {asset} Raised
+            <br></br>{states[state]}</>)
             :
             (<>Milestone {tranche + 1}: <b>{milestoneName}</b>
             <BorderLinearProgress variant="determinate" value={percent} />
             Total Raised: {amountRaisedTotal} {asset}
             <br></br>
-            Raised in Milestone: {amountRaisedMilestone} {asset}</>
+            Raised in Milestone: {amountRaisedMilestone} {asset}
+            <br></br>{states[state]}</>
             )}
         </div>
     )
