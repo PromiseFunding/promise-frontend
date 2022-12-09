@@ -174,15 +174,14 @@ export default function StateStatus(props: propType) {
             <>Seed Funding Round
             <BorderLinearProgress variant="determinate" value={percent} />
             {amountRaisedPre} {asset} Raised
-            <br></br>{states[state]}</>)
+            </>)
             :
             (<>Milestone {tranche + 1}: <b>{milestoneName}</b>
             <BorderLinearProgress variant="determinate" value={percent} />
             Total Raised: {amountRaisedTotal} {asset}
             <br></br>
             Raised in Milestone: {amountRaisedMilestone} {asset}
-            <br></br>{states[state]}</>
-            )}
+            </>)}
         </div>
     )
 }
