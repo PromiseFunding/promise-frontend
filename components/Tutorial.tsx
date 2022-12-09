@@ -15,9 +15,7 @@ export default function Tutorial() {
             </div>
             <div className={styles.howItWorksContainer}>
                 <div className={styles.tutorialPanel}>
-                    <div style={{
-                        textAlign: "center", width: "50%", marginTop: "auto", marginBottom: "auto"
-                    }}>
+                    <div className={styles.tutorialImage}>
                         <Image src="/info-images/idea/idea.png" height="500" width="500" alt="image" style={{ marginLeft: "auto", marginRight: "auto" }}></Image>
                     </div>
                     <div className={styles.tutorialText} >
@@ -40,16 +38,12 @@ export default function Tutorial() {
                             <h2 style={{ fontSize: "20px" }}>Set milestones that will be achieved over the course of the fundraiser. These milestones are the core promises the fundraiser is making to its funders.</h2>
                         </div>
                     </div>
-                    <div style={{
-                        textAlign: "center", width: "50%", marginTop: "auto", marginBottom: "auto"
-                    }}>
+                    <div className={styles.tutorialImage}>
                         <Image src="/info-images/milestones2/milestones.png" height="500" width="500" alt="image" style={{ marginLeft: "auto", marginRight: "auto" }}></Image>
                     </div>
                 </div>
                 <div className={styles.tutorialPanel}>
-                    <div style={{
-                        textAlign: "center", width: "50%", marginTop: "auto", marginBottom: "auto"
-                    }}>
+                    <div className={styles.tutorialImage}>
                         <Image src="/info-images/contract/contract.png" height="500" width="500" alt="image" style={{ marginLeft: "auto", marginRight: "auto" }}></Image>
                     </div>
                     <div className={styles.tutorialText} >
@@ -66,16 +60,12 @@ export default function Tutorial() {
                             <h2 style={{ fontSize: "20px" }}>Over the course of the milestone, the fundraiser should be working hard to achieve their goals by the end of the milestone period.</h2>
                         </div>
                     </div>
-                    <div style={{
-                        textAlign: "center", width: "50%", marginTop: "auto", marginBottom: "auto"
-                    }}>
+                    <div className={styles.tutorialImage}>
                         <Image src="/info-images/working/working.png" height="400" width="800" alt="image" style={{ marginLeft: "auto", marginRight: "auto" }}></Image>
                     </div>
                 </div>
                 <div className={styles.tutorialPanel}>
-                    <div style={{
-                        textAlign: "center", width: "50%", marginTop: "auto", marginBottom: "auto"
-                    }}>
+                    <div className={styles.tutorialImage}>
                         <Image src="/info-images/vote/vote.png" height="500" width="500" alt="image" style={{ marginLeft: "auto", marginRight: "auto" }}></Image>
                     </div>
                     <div className={styles.tutorialText} >
@@ -92,9 +82,7 @@ export default function Tutorial() {
                             <h2 style={{ fontSize: "20px" }}>If a fundraiser follows through on all their promises they will be rewarded with the funds raised each milestone and at the end of the process will have a reliable customer base to start with.</h2>
                         </div>
                     </div>
-                    <div style={{
-                        textAlign: "center", width: "50%", marginTop: "auto", marginBottom: "auto"
-                    }}>
+                    <div className={styles.tutorialImage}>
                         <Image src="/info-images/approved/approved.png" height="500" width="500" alt="image" style={{ marginLeft: "auto", marginRight: "auto" }}></Image>
                     </div>
                 </div>

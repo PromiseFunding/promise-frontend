@@ -429,8 +429,24 @@
     width: 100%;
     display: flex;
     flex-direction: row;
-    /* background: blue;
-    outline: 2px dashed red; */
+}
+
+.tutorialImage {
+    text-align: center;
+    width: 50%;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.tutorialText {
+    vertical-align: middle;
+    text-align: center;
+    display: table;
+    margin-top: auto;
+    margin-bottom: auto;
+    width: 50%;
+    margin-left: auto;
+    color: white;
 }
 
 .updates {
@@ -469,17 +485,6 @@
 
 .buttonStyle:hover {
     background-color: rgb(51 65 85);
-}
-
-.tutorialText {
-    vertical-align: middle;
-    text-align: center;
-    display: table;
-    margin-top: auto;
-    margin-bottom: auto;
-    width: 50%;
-    margin-left: auto;
-    color: white;
 }
 
 .tooltip {
@@ -683,6 +688,20 @@
     }
     .searchbar {
         width: 20vw;
+    }
+    .tutorialPanel {
+        flex-direction: column;
+        height: 1000px;
+    }
+    .tutorialImage {
+        width: 100%;
+    }
+    .tutorialText {
+        width: 100%;
+    }
+    .truncateLineClamp {
+        margin-left: 0px;
+        margin-right: 0px;
     }
 }
 
