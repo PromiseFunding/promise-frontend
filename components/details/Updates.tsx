@@ -166,14 +166,15 @@ export default function Updates(props: propType) {
                                 <Typography>
                                     {updateVal.description.toString()}
                                 </Typography>
-                                <div style={{ width: '100%', height: "500px", position: 'relative' }}>
+                                {updateVal.imageUrl ? (<div style={{ width: '100%', height: "500px", position: 'relative' }}>
                                     <Image
                                         alt='Update image'
                                         src={updateVal.imageUrl as unknown as string}
                                         layout='fill'
                                         objectFit='contain'
                                     />
-                                </div>
+                                </div>) : (<></>)}
+
                             </AccordionDetails>
                         </Accordion>
                     ))}
