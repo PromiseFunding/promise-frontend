@@ -104,22 +104,22 @@ export default function WithdrawProceeds(props: propType) {
         }
     }, [account])
 
-    const handleChange = async (event: { target: { value: SetStateAction<string> } }) => {
-        const max = withdrawableProceeds
-        if (withdrawableProceeds == 0) {
-            setVal("0")
-        } else if ((event.target.value as unknown as number) > 0) {
-            const value = Math.max(
-                1 * 10 ** -decimals!,
-                Math.min(max as number, Number(Number(event.target.value).toFixed(decimals!)))
-            )
-            setVal(value.toString())
-        } else if ((event.target.value as unknown as number) < 0) {
-            setVal("0")
-        } else {
-            setVal(event.target.value)
-        }
-    }
+    // const handleChange = async (event: { target: { value: SetStateAction<string> } }) => {
+    //     const max = withdrawableProceeds
+    //     if (withdrawableProceeds == 0) {
+    //         setVal("0")
+    //     } else if ((event.target.value as unknown as number) > 0) {
+    //         const value = Math.max(
+    //             1 * 10 ** -decimals!,
+    //             Math.min(max as number, Number(Number(event.target.value).toFixed(decimals!)))
+    //         )
+    //         setVal(value.toString())
+    //     } else if ((event.target.value as unknown as number) < 0) {
+    //         setVal("0")
+    //     } else {
+    //         setVal(event.target.value)
+    //     }
+    // }
 
     const handleNewNotification = function () {
         dispatch({
@@ -148,7 +148,7 @@ export default function WithdrawProceeds(props: propType) {
                         <h1 className="text-xl font-bold">Withdraw Proceeds</h1>
                     </div>
                     <br></br>
-                    <input
+                    {/* <input
                         maxLength={21 - (decimals || 6)}
                         type="number"
                         id="message"
@@ -157,7 +157,9 @@ export default function WithdrawProceeds(props: propType) {
                         value={val}
                         autoComplete="off"
                         className="text-slate-900"
-                    />
+                    /> */}
+                        <h1 className="p-5 text-2xl font-normal bg-slate-800">
+                    Withdrawing is all or none. Clicking the button will result in {withdrawableProceeds.toString()} {coinName} being sent to your account.</h1>
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async function () {

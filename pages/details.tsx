@@ -41,6 +41,9 @@ const Details: NextPage = () => {
     const [timeLeft, setTimeLeft] = useState(100)
     const [totalFunds, setTotalFunds] = useState(0)
     const [milestoneDurations, setMilestoneDurations] = useState<number[]>()
+    const [funderCalledVote, setFunderCalledVote] = useState<boolean>(false)
+    const [numVotesTried, setNumVotesTried] = useState(0)
+    const [timeLeftVoting, setTimeLeftVoting] = useState(0)
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
@@ -109,6 +112,30 @@ const Details: NextPage = () => {
         params: {},
     })
 
+    const { runContractFunction: getVotesTried } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress,
+        functionName: "getVotesTried",
+        params: {},
+    })
+
+    const { runContractFunction: getFunderCalledVote } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress,
+        functionName: "getFunderCalledVote",
+        params: {},
+    })
+
+    const {
+        runContractFunction: getTimeLeftVoting,
+    } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getTimeLeftVoting",
+        params: {},
+    })
+
+
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
             setData(snapshot.val())
@@ -118,7 +145,6 @@ const Details: NextPage = () => {
     useEffect(() => {
         if (account) {
             setAddress(account.toLowerCase())
-            //updateUI()
         }
     }, [account])
 
@@ -137,6 +163,12 @@ const Details: NextPage = () => {
         setTotalFunds(totalFromCall.toNumber() / 10 ** decimals!)
         const durationsFromCall = await getMilestoneDurations()
         setMilestoneDurations((durationsFromCall as BigNumber[]).map(num => num.toNumber()))
+        const didFunderVoteFromCall = (await getFunderCalledVote()) as boolean
+        setFunderCalledVote(didFunderVoteFromCall)
+        const votesTriedFromCall = await getVotesTried() as BigNumber
+        setNumVotesTried(votesTriedFromCall.toNumber())
+        const timeLeftVotingFromCall = (await getTimeLeftVoting()) as BigNumber
+        setTimeLeftVoting(timeLeftVotingFromCall.toNumber())
     }
 
     useEffect(() => {
@@ -197,8 +229,11 @@ const Details: NextPage = () => {
                                 </div>
                                 <div className="font-bold">
                                     <div className="font-normal">
-                                        {" "}
-                                        <b className="text-2xl">Fund State:</b> {states[state]}
+                                        {state != 4 ? (timeLeft <= 0 ? (<><b className="text-2xl">Fund State:</b> Milestone period ended. Not accepting more Donations. Waiting for vote to start.</>) :
+                                        (<><b className="text-2xl">Fund State:</b> {states[state]} </>))
+                                         : (timeLeft <= 0 ? (<><b className="text-2xl">Fund State:</b> Not accepting more Seed Round Donations. Waiting on owner to start milestone funding process.</>) :
+                                        (<><b className="text-2xl">Fund State:</b> {states[state]} </>))
+                                        }
                                     </div>
                                 </div>
                                 <div className="font-bold">
@@ -213,9 +248,29 @@ const Details: NextPage = () => {
                                 <div className="font-bold">
                                     <div className="font-normal">
                                         {state == 4 ? (
-                                            <><b className="text-2xl">Time Left in Pre Funding Round:</b> {timeLeft}</>
+                                            <><b className="text-2xl">Time Left in Seed Funding Round:</b> {timeLeft}</>
                                         ): (
                                             <><b className="text-2xl">Time Left in Milestone Round:</b> {timeLeft}</>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="font-bold">
+                                    <div className="font-normal">
+                                        <b className="text-2xl">Votes Tried:</b> {numVotesTried}
+                                        <br></br>
+                                        {funderCalledVote || numVotesTried >= 2? (
+                                            <><b className="text-2xl">Last vote of round. Result of this vote is final.</b></>
+                                        ): (
+                                            <></>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="font-bold">
+                                    <div className="font-normal">
+                                        {state == 1 ? (
+                                            <><b className="text-2xl">Time Left in Voting Period:</b> {timeLeftVoting}</>
+                                        ): (
+                                            <></>
                                         )}
                                     </div>
                                 </div>
@@ -231,52 +286,57 @@ const Details: NextPage = () => {
                                                 <div>
                                                     {state == 0 ? (
                                                         <><div>
-                                                            <StraightDonation
-                                                                fundAddress={fundAddress}
-                                                                assetAddress={assetAddress}
-                                                                ownerFund={owner}
-                                                                decimals={decimals!}
-                                                                coinName={coinName}
-                                                                onChangeAmountFunded={() => {
-                                                                    updateUI()
-                                                                }}
-                                                                totalRaised={totalFunds}
-                                                                tranche={tranche}
-                                                                currState={state}
-                                                            ></StraightDonation>
-                                                            <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                                                            <div className="text-center flex flex-col border-2 border-slate-500">
-                                                                <CurrentTrancheDonation
+                                                            {timeLeft > 0 ? (
+                                                            <><StraightDonation
                                                                     fundAddress={fundAddress}
                                                                     assetAddress={assetAddress}
                                                                     ownerFund={owner}
-                                                                    tranche={tranche}
                                                                     decimals={decimals!}
                                                                     coinName={coinName}
                                                                     onChangeAmountFunded={() => {
                                                                         updateUI()
-                                                                    }}
+                                                                    } }
                                                                     totalRaised={totalFunds}
-                                                                ></CurrentTrancheDonation>
-                                                            </div>
+                                                                    tranche={tranche}
+                                                                    currState={state}
+                                                                ></StraightDonation><hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" /><div className="text-center flex flex-col border-2 border-slate-500">
+                                                                        <CurrentTrancheDonation
+                                                                            fundAddress={fundAddress}
+                                                                            assetAddress={assetAddress}
+                                                                            ownerFund={owner}
+                                                                            tranche={tranche}
+                                                                            decimals={decimals!}
+                                                                            coinName={coinName}
+                                                                            onChangeAmountFunded={() => {
+                                                                                updateUI()
+                                                                            } }
+                                                                            totalRaised={totalFunds}
+                                                                        ></CurrentTrancheDonation>
+                                                                    </div></>
+                                                            ) : (<><h1 className="p-5 text-2xl font-bold bg-slate-800">Milestone Round ended. Not accepting donations.</h1></>)}
                                                         </div>
-                                                            <div>
-                                                                {timeLeft == 0 ? (
-                                                                    <StartVote
-                                                                        fundAddress={fundAddress}
-                                                                        assetAddress={assetAddress}
-                                                                        onChangeState={() => {
-                                                                            updateUI()
-                                                                        }}
-                                                                    ></StartVote>
-                                                                ) : (<></>)}
-                                                            </div></>
+                                                        <div>
+                                                            {timeLeft <= 0 ? (
+                                                                <StartVote
+                                                                    fundAddress={fundAddress}
+                                                                    assetAddress={assetAddress}
+                                                                    onChangeState={() => {
+                                                                        updateUI()
+                                                                    }}
+                                                                    tranche={tranche}
+                                                                    ownerFund={owner}
+                                                                    decimals={decimals!}
+                                                                ></StartVote>
+                                                            ) : (<></>)}
+                                                        </div></>
                                                     ) : (<></>)}
                                                     {state == 1 ? (
                                                         <div>
                                                             <SubmitVote
                                                                 fundAddress={fundAddress}
                                                                 assetAddress={assetAddress}
+                                                                tranche={tranche}
+                                                                decimals={decimals!}
                                                             ></SubmitVote>
                                                             <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
 
@@ -286,6 +346,10 @@ const Details: NextPage = () => {
                                                                 onChangeState={() => {
                                                                     updateUI()
                                                                 }}
+                                                                tranche={tranche}
+                                                                decimals={decimals!}
+                                                                ownerFund={owner}
+                                                                timeLeftVoting={timeLeftVoting}
                                                             ></EndVote>
                                                         </div>
 
@@ -308,7 +372,7 @@ const Details: NextPage = () => {
                                                         ></Withdraw>
                                                     ) : (<></>)}
 
-                                                    {state == 4 ? (
+                                                    {state == 4 ? (timeLeft > 0 ? (
                                                         <StraightDonation
                                                         fundAddress={fundAddress}
                                                         assetAddress={assetAddress}
@@ -321,7 +385,7 @@ const Details: NextPage = () => {
                                                         totalRaised={totalFunds}
                                                         tranche={tranche}
                                                         currState={state}
-                                                    ></StraightDonation>
+                                                    ></StraightDonation>) : (<h1 className="p-5 text-2xl font-bold bg-slate-800">Seed Round ended. Not accepting donations.</h1>)
                                                     ) : (<></>)}
                                                 </div>
                                             ) : (
@@ -334,6 +398,9 @@ const Details: NextPage = () => {
                                                             onChangeState={() => {
                                                                 updateUI()
                                                             }}
+                                                            tranche={tranche}
+                                                            ownerFund={owner}
+                                                            decimals={decimals!}
                                                         ></StartVote>
                                                     ) : (<></>)}
 
@@ -353,6 +420,10 @@ const Details: NextPage = () => {
                                                             onChangeState={() => {
                                                                 updateUI()
                                                             }}
+                                                            tranche={tranche}
+                                                            decimals={decimals!}
+                                                            ownerFund={owner}
+                                                            timeLeftVoting={timeLeftVoting}
                                                         ></EndVote>
                                                     </div>
                                                     ) : (<></>)}
