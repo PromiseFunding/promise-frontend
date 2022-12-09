@@ -41,6 +41,9 @@ const Details: NextPage = () => {
     const [timeLeft, setTimeLeft] = useState(100)
     const [totalFunds, setTotalFunds] = useState(0)
     const [milestoneDurations, setMilestoneDurations] = useState<number[]>()
+    const [funderCalledVote, setFunderCalledVote] = useState<boolean>(false)
+    const [numVotesTried, setNumVotesTried] = useState(0)
+    const [timeLeftVoting, setTimeLeftVoting] = useState(0)
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
@@ -109,6 +112,30 @@ const Details: NextPage = () => {
         params: {},
     })
 
+    const { runContractFunction: getVotesTried } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress,
+        functionName: "getVotesTried",
+        params: {},
+    })
+
+    const { runContractFunction: getFunderCalledVote } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress,
+        functionName: "getFunderCalledVote",
+        params: {},
+    })
+
+    const {
+        runContractFunction: getTimeLeftVoting,
+    } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getTimeLeftVoting",
+        params: {},
+    })
+
+
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
             setData(snapshot.val())
@@ -136,6 +163,12 @@ const Details: NextPage = () => {
         setTotalFunds(totalFromCall.toNumber() / 10 ** decimals!)
         const durationsFromCall = await getMilestoneDurations()
         setMilestoneDurations((durationsFromCall as BigNumber[]).map(num => num.toNumber()))
+        const didFunderVoteFromCall = (await getFunderCalledVote()) as boolean
+        setFunderCalledVote(didFunderVoteFromCall)
+        const votesTriedFromCall = await getVotesTried() as BigNumber
+        setNumVotesTried(votesTriedFromCall.toNumber())
+        const timeLeftVotingFromCall = (await getTimeLeftVoting()) as BigNumber
+        setTimeLeftVoting(timeLeftVotingFromCall.toNumber())
     }
 
     useEffect(() => {
@@ -221,6 +254,26 @@ const Details: NextPage = () => {
                                         )}
                                     </div>
                                 </div>
+                                <div className="font-bold">
+                                    <div className="font-normal">
+                                        <b className="text-2xl">Votes Tried:</b> {numVotesTried}
+                                        <br></br>
+                                        {funderCalledVote || numVotesTried >= 2? (
+                                            <><b className="text-2xl">Last vote of round. Result of this vote is final.</b></>
+                                        ): (
+                                            <></>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="font-bold">
+                                    <div className="font-normal">
+                                        {state == 1 ? (
+                                            <><b className="text-2xl">Time Left in Voting Period:</b> {timeLeftVoting}</>
+                                        ): (
+                                            <></>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                             <div className={styles.sticky}>
                                 <div className="text-center flex flex-col border-2 border-slate-500">
@@ -296,6 +349,7 @@ const Details: NextPage = () => {
                                                                 tranche={tranche}
                                                                 decimals={decimals!}
                                                                 ownerFund={owner}
+                                                                timeLeftVoting={timeLeftVoting}
                                                             ></EndVote>
                                                         </div>
 
@@ -369,6 +423,7 @@ const Details: NextPage = () => {
                                                             tranche={tranche}
                                                             decimals={decimals!}
                                                             ownerFund={owner}
+                                                            timeLeftVoting={timeLeftVoting}
                                                         ></EndVote>
                                                     </div>
                                                     ) : (<></>)}

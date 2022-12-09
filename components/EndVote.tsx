@@ -3,7 +3,7 @@ import { abi } from "../constants"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { useEffect, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-import { ContractTransaction } from "ethers"
+import { ContractTransaction, BigNumber } from "ethers"
 import { propType } from "../config/types"
 
 export default function EndVote(props: propType) {
@@ -11,10 +11,9 @@ export default function EndVote(props: propType) {
     const tranche = props.tranche
     const owner = props.ownerFund
     const decimals = props.decimals
+    const timeLeftVoting = props.timeLeftVoting
 
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
-
-    const [timeLeftVoting, setTimeLeftVoting] = useState(0)
 
     const [amountFundedInTranche, setAmountFundedInTranche] = useState(0)
 
@@ -31,15 +30,6 @@ export default function EndVote(props: propType) {
         abi: abi,
         contractAddress: fundAddress!,
         functionName: "endVote",
-        params: {},
-    })
-
-    const {
-        runContractFunction: getTimeLeftVoting,
-    } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getTimeLeftVoting",
         params: {},
     })
 
@@ -62,8 +52,6 @@ export default function EndVote(props: propType) {
     }
 
     async function updateUI() {
-        const timeLeftFromCall = (await getTimeLeftVoting()) as number
-        setTimeLeftVoting(timeLeftFromCall)
         const amountFundedFromCall = (await getFunderTrancheAmountRaised()) as number
         setAmountFundedInTranche(amountFundedFromCall / 10 ** decimals!)
     }

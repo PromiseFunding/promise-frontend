@@ -135,7 +135,7 @@ export default function SubmitVote(props: propType) {
                         You have successfully submitted your vote for this milestone. Thank you!</h1>
                 ))
             : (<><h1 className="p-5 text-2xl font-bold bg-slate-800">
-            The fundraiser is currently in a voting period. You have not donated to this milestone and can't vote.</h1></>)}
+            The fundraiser is currently in a voting period. You have not donated to this milestone and cannot vote.</h1></>)}
         </div>
     )
 }

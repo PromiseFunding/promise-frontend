@@ -36,6 +36,7 @@ export interface propType {
     userAddress?: string
     currState?: number
     totalRaised?: number
+    timeLeftVoting?: number
 }
 
 
