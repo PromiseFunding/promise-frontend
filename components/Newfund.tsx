@@ -295,7 +295,7 @@ export default function NewFund() {
     const handleChangePreFundDuration = (event: { target: { value: SetStateAction<string> } }) => {
         //max for now is 60 days
         const max = 5184000
-        let durationOfPreRound = ""
+        let durationOfPreRound = "0"
         if ((event.target.value as unknown as number) > 0) {
             const value = Math.max(
                 0,
@@ -303,7 +303,7 @@ export default function NewFund() {
             )
             durationOfPreRound = value.toString()
         } else {
-            durationOfPreRound = ""
+            durationOfPreRound = "0"
         }
         setPreFundDuration(durationOfPreRound)
     }
