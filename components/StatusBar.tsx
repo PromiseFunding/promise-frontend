@@ -178,7 +178,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
                                         <Fragment>
                                             <h1 className="text-3xl font-bold text-left text-slate-900">Milestone {activeStep!} General Information:</h1>
                                             <Typography className={styles.textarea} sx={{ mt: 2, mb: 1, py: 1, fontSize: 25 }}>
-                                                {`Milestone Duration: ${milestoneDurations![activeStep - 1]} seconds\nMilestone Description: ${milestonesArray[activeStep - 1].description.toString()}`}
+                                                {`Milestone Duration: ${milestoneDurations![activeStep - 1]} seconds\nMilestone Description: ${milestonesArray[activeStep - 1].description!.toString()}`}
                                             </Typography>
                                             <br></br>
                                             {userAddress != owner ? ((currState != 3) ? (
