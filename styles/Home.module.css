@@ -519,6 +519,71 @@
     border-radius: 10px;
 }
 
+.backDrop {
+    background: "rgba(255,255,255,0.2)";
+}
+
+.newFundForm {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding-right: 50px;
+    padding-left: 50px;
+    flex-wrap: wrap;
+}
+
+.formSectionOuter {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    padding: 10px;
+}
+
+.loadingModal {
+    height: 80%;
+    width: 80%;
+    background-color: white;
+    vertical-align: center;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 2px solid #000;
+    box-shadow: 24;
+    padding: 3;
+}
+
+.wrapper {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.animatedCheck {
+    height: 13em;
+    width: 13em;
+}
+
+.animatedCheck path {
+    fill: none;
+    stroke: #7ac142;
+    stroke-width: 3;
+    stroke-dasharray: 23;
+    stroke-dashoffset: 23;
+    animation: draw 0.25s linear forwards;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+@keyframes draw {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
 .deleteIcon {
     background-color: rgb(232, 241, 250);
     transform: scale(2.3);
@@ -702,6 +767,12 @@
     .truncateLineClamp {
         margin-left: 0px;
         margin-right: 0px;
+    }
+    .newFundForm {
+        flex-direction: column;
+    }
+    .formSectionOuter {
+        width: 100%;
     }
 }
 
