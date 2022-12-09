@@ -52,11 +52,22 @@ export interface propTypeFunds {
 }
 
 export interface milestone {
-    name: string,
-    description: string,
-    duration: string
+    name?: string
+    description?: string
+    duration?: string
     startTime?: BigNumber
     milestoneDuration?: BigNumber
+    totalRaised?: BigNumber
+}
+
+export interface milestoneSummary {
+    milestones: milestone[]
+    currentTranche: number
+    assetAddress?: string
+    state?: number
+    preTotalFunds?: BigNumber
+    preDuration?: BigNumber
+    lifeTimeRaised?: BigNumber
 }
 
 export interface databaseFundObject {
