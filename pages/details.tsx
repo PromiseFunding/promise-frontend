@@ -118,7 +118,6 @@ const Details: NextPage = () => {
     useEffect(() => {
         if (account) {
             setAddress(account.toLowerCase())
-            //updateUI()
         }
     }, [account])
 
@@ -271,6 +270,9 @@ const Details: NextPage = () => {
                                                                     onChangeState={() => {
                                                                         updateUI()
                                                                     }}
+                                                                    tranche={tranche}
+                                                                    ownerFund={owner}
+                                                                    decimals={decimals!}
                                                                 ></StartVote>
                                                             ) : (<></>)}
                                                         </div></>
@@ -291,6 +293,9 @@ const Details: NextPage = () => {
                                                                 onChangeState={() => {
                                                                     updateUI()
                                                                 }}
+                                                                tranche={tranche}
+                                                                decimals={decimals!}
+                                                                ownerFund={owner}
                                                             ></EndVote>
                                                         </div>
 
@@ -339,6 +344,9 @@ const Details: NextPage = () => {
                                                             onChangeState={() => {
                                                                 updateUI()
                                                             }}
+                                                            tranche={tranche}
+                                                            ownerFund={owner}
+                                                            decimals={decimals!}
                                                         ></StartVote>
                                                     ) : (<></>)}
 
@@ -358,6 +366,9 @@ const Details: NextPage = () => {
                                                             onChangeState={() => {
                                                                 updateUI()
                                                             }}
+                                                            tranche={tranche}
+                                                            decimals={decimals!}
+                                                            ownerFund={owner}
                                                         ></EndVote>
                                                     </div>
                                                     ) : (<></>)}
