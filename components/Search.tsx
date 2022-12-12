@@ -10,13 +10,13 @@ import styles from "../styles/Home.module.css"
 
 export default function Search(props: propTypeFunds) {
     const [filteredData, setFilteredData] = useState<string[]>(props.fundAddressArray)
-    const [maxEntries, setMaxEntries] = useState(12)
+    //const [maxEntries, setMaxEntries] = useState(12)
     const [windowWidth, setWindowWidth] = useState(0)
     const [invisPadding, setInvisPadding] = useState(false)
     const [page, setPage] = useState(1)
 
     const router = useRouter()
-    const category = router.query.category as string || ""
+    const category = (router.query.category as string) || ""
 
     useWindowSize()
 
@@ -26,14 +26,13 @@ export default function Search(props: propTypeFunds) {
                 setWindowWidth(window.innerWidth)
             }
 
-            window.addEventListener("resize", handleResize);
+            window.addEventListener("resize", handleResize)
 
-            handleResize();
+            handleResize()
 
-            return () => window.removeEventListener("resize", handleResize);
-        }, []);
+            return () => window.removeEventListener("resize", handleResize)
+        }, [])
     }
-
 
     function inputHandler(query: string) {
         let lowerCase = query.toLowerCase()
@@ -47,7 +46,8 @@ export default function Search(props: propTypeFunds) {
                 categoryVal += snapshot.val()
             })
 
-            const categoryMatch = category == "" ? true : categoryVal.toLowerCase() == category.toLowerCase()
+            const categoryMatch =
+                category == "" ? true : categoryVal.toLowerCase() == category.toLowerCase()
 
             if (lowerCase.slice(0, 2) == "0x") {
                 return fund.toLowerCase().includes(lowerCase) && categoryMatch
@@ -88,7 +88,6 @@ export default function Search(props: propTypeFunds) {
         }
 
         return newFilter
-
     }
 
     const updateCategories = async () => {
@@ -98,19 +97,19 @@ export default function Search(props: propTypeFunds) {
     }
 
     const calculatePaddingToggle = (width: number): boolean => {
-        const maxWidth = (filteredData.length * 250 + (filteredData.length - 1) * 35) + 20
+        const maxWidth = filteredData.length * 250 + (filteredData.length - 1) * 35 + 20
 
         if (width < maxWidth) {
-            return true;
+            return true
         }
-        return false;
+        return false
     }
 
     // truncate decimal before... minimum of 12 funds per page for now, but eventually use max(10, 3 rows * # of funds)
     // this gives number of cards on each row so just multiply by three
     // for width use windowWitdth value
     const cardsInRow = (width: number): number => {
-        return ((width - 20) / (250 + 35))
+        return (width - 20) / (250 + 35)
     }
 
     useEffect(() => {
@@ -121,24 +120,70 @@ export default function Search(props: propTypeFunds) {
         updateCategories()
     }, [props.fundAddressArray, category])
 
-    useEffect(() => {
-        setMaxEntries(12)
-    }, [category])
+    // useEffect(() => {
+    //     setMaxEntries(12)
+    // }, [category])
 
     return (
         <>
-            <div style={{ justifyContent: "center", alignItems: "center", width: "100%", height: "100%", padding: "10px" }}>
+            <div
+                style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%",
+                    padding: "10px",
+                }}
+            >
                 <ul className={styles.funds} id="funds">
-                    {filteredData.slice(0 + (page - 1) * 12, page * 12).map((fund) => (
+                    {filteredData.slice(0 + (page - 1) * 8, page * 8).map((fund) => (
                         <li key={fund} style={{ paddingTop: "25px", paddingBottom: "25px" }}>
                             <FundCard fund={fund}></FundCard>
                         </li>
                     ))}
-                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
-                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
-                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
-                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
+                    <div
+                        style={{
+                            width: 250,
+                            height: 0,
+                            position: calculatePaddingToggle(windowWidth)
+                                ? "relative"
+                                : "absolute",
+                        }}
+                    ></div>
+                    <div
+                        style={{
+                            width: 250,
+                            height: 0,
+                            position: calculatePaddingToggle(windowWidth)
+                                ? "relative"
+                                : "absolute",
+                        }}
+                    ></div>
+                    <div
+                        style={{
+                            width: 250,
+                            height: 0,
+                            position: calculatePaddingToggle(windowWidth)
+                                ? "relative"
+                                : "absolute",
+                        }}
+                    ></div>
+                    <div
+                        style={{
+                            width: 250,
+                            height: 0,
+                            position: calculatePaddingToggle(windowWidth)
+                                ? "relative"
+                                : "absolute",
+                        }}
+                    ></div>
                 </ul>
+                <Pages
+                    amount={filteredData.length}
+                    onChangePage={(newAmount: SetStateAction<Number>) =>
+                        setPage(Number(newAmount))
+                    }
+                />
             </div>
             {/* <div>
                 <br></br>
@@ -152,12 +197,6 @@ export default function Search(props: propTypeFunds) {
                     />) : (<div></div>
                 )}
             </div> */}
-            <div>
-                <Pages onChangePage={(newAmount: SetStateAction<Number>) =>
-                    setPage(Number(newAmount))
-                }/>
-            </div>
-
         </>
     )
 }
