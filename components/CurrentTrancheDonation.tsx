@@ -7,7 +7,7 @@ import { BigNumber } from "ethers"
 import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
 import styles from "../styles/Home.module.css"
-
+import { ContractTransaction } from "ethers"
 
 //contract is already deployed... trying to look at features of contract
 export default function CurrentTrancheDonation(props: propType) {
@@ -65,8 +65,14 @@ export default function CurrentTrancheDonation(props: propType) {
         }
     }, [isWeb3Enabled, fundAddress, account, totalRaised])
 
-    const handleSuccess = async function () {
-        alert("Friendly Reminder: By confirming the next MetaMask transaction you will be funding " + JSON.stringify(val + " " + coinName) + " to Milestone " + JSON.stringify(milestone))
+    const handleSuccess = async function (tx: ContractTransaction) {
+        //alert("Friendly Reminder: By confirming the next MetaMask transaction you will be funding " + JSON.stringify(val + " " + coinName) + " to Milestone " + JSON.stringify(milestone))
+        try {
+            await tx.wait(1)
+        } catch (error) {
+            console.log(error)
+            handleNewNotificationError()
+        }
         const fundTx: any = await fundCurrent()
         setVal("0")
         try {
@@ -90,10 +96,8 @@ export default function CurrentTrancheDonation(props: propType) {
                 Math.min(max as number, Number(Number(event.target.value).toFixed(decimals!)))
             )
             setVal(value.toString())
-        } else if ((event.target.value as unknown as number) < 0) {
-            setVal("0")
         } else {
-            setVal(event.target.value)
+            setVal("0")
         }
     }
 
@@ -141,7 +145,7 @@ export default function CurrentTrancheDonation(props: propType) {
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async function () {
                             await approve({
-                                onSuccess: (tx) => handleSuccess(),
+                                onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
                                 onError: (error) => console.log(error),
                             })
                         }}

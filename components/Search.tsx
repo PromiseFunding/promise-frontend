@@ -3,6 +3,7 @@ import { SetStateAction, useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { propTypeFunds } from "../config/types"
 import ShowMoreLess from "./ShowMoreLess"
+import Pages from "./Pagination"
 import { ref, onValue, get } from "firebase/database"
 import { database } from "../firebase-config"
 import styles from "../styles/Home.module.css"
@@ -12,6 +13,7 @@ export default function Search(props: propTypeFunds) {
     const [maxEntries, setMaxEntries] = useState(12)
     const [windowWidth, setWindowWidth] = useState(0)
     const [invisPadding, setInvisPadding] = useState(false)
+    const [page, setPage] = useState(1)
 
     const router = useRouter()
     const category = router.query.category as string || ""
@@ -104,13 +106,20 @@ export default function Search(props: propTypeFunds) {
         return false;
     }
 
+    // truncate decimal before... minimum of 12 funds per page for now, but eventually use max(10, 3 rows * # of funds)
+    // this gives number of cards on each row so just multiply by three
+    // for width use windowWitdth value
+    const cardsInRow = (width: number): number => {
+        return ((width - 20) / (250 + 35))
+    }
+
     useEffect(() => {
         inputHandler(props.query!)
     }, [props.query])
 
     useEffect(() => {
         updateCategories()
-    }, [props.fundAddressArray, maxEntries, category])
+    }, [props.fundAddressArray, category])
 
     useEffect(() => {
         setMaxEntries(12)
@@ -120,7 +129,7 @@ export default function Search(props: propTypeFunds) {
         <>
             <div style={{ justifyContent: "center", alignItems: "center", width: "100%", height: "100%", padding: "10px" }}>
                 <ul className={styles.funds} id="funds">
-                    {filteredData.slice(0, maxEntries).map((fund) => (
+                    {filteredData.slice(0 + (page - 1) * 12, page * 12).map((fund) => (
                         <li key={fund} style={{ paddingTop: "25px", paddingBottom: "25px" }}>
                             <FundCard fund={fund}></FundCard>
                         </li>
@@ -131,7 +140,7 @@ export default function Search(props: propTypeFunds) {
                     <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
                 </ul>
             </div>
-            <div>
+            {/* <div>
                 <br></br>
                 {filteredData.length > maxEntries ? (
 
@@ -142,7 +151,13 @@ export default function Search(props: propTypeFunds) {
                         }
                     />) : (<div></div>
                 )}
+            </div> */}
+            <div>
+                <Pages onChangePage={(newAmount: SetStateAction<Number>) =>
+                    setPage(Number(newAmount))
+                }/>
             </div>
+
         </>
     )
 }

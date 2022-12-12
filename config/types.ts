@@ -44,8 +44,8 @@ export interface propType {
 
 
 export interface propTypeEntryNumber {
-    onChangeAmount(arg0: Number): void
-    amount: Number
+    onChangePage?(arg0: number): void
+    page?: number
 }
 
 export interface propTypeFunds {

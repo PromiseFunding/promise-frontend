@@ -5,6 +5,7 @@ import { SetStateAction, useState, useEffect } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { BigNumber } from "ethers"
 import { propType } from "../config/types"
+import { ContractTransaction } from "ethers"
 import styles from "../styles/Home.module.css"
 
 //contract is already deployed... trying to look at features of contract
@@ -102,10 +103,8 @@ export default function StraightDonation(props: propType) {
                 Math.min(max as number, Number(Number(event.target.value).toFixed(decimals!)))
             )
             setVal(value.toString())
-        } else if ((event.target.value as unknown as number) < 0) {
-            setVal("0")
         } else {
-            setVal(event.target.value)
+            setVal("0")
         }
     }
 
@@ -131,6 +130,8 @@ export default function StraightDonation(props: propType) {
         <div className="p-5 bg-slate-800 text-slate-200">
             <div className={styles.tooltip}>
                 {state == 4 ? (
+                    <h1 className="text-xl font-bold">Pre Milestone Round Donation</h1>
+                ) : (
                     <h1 className="text-xl font-bold">
                         Pre Milestone Round Donation
                     </h1>
@@ -160,7 +161,7 @@ export default function StraightDonation(props: propType) {
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async function () {
                             await approve({
-                                onSuccess: (tx) => handleSuccess(),
+                                onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
                                 onError: (error) => console.log(error),
                             })
                         }}
@@ -178,9 +179,11 @@ export default function StraightDonation(props: propType) {
                     </h2>
                     {state == 0 ? (
                         <h1>
-                            Total Funds Donated: {amountFunded} {coinName}</h1>
-                    ) : (<></>)
-                    }
+                            Total Funds Donated: {amountFunded} {coinName}
+                        </h1>
+                    ) : (
+                        <></>
+                    )}
                     {/* Total Funds In Escrow: {amountFunded} {coinName} */}
                 </div>
             ) : (
