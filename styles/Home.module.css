@@ -709,7 +709,11 @@
 
 .stateStatus {
     width: 100%;
-    padding: 10px;
+    margin-top: auto;
+    position: relative;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 2px;
 }
 
 .menuBar {
