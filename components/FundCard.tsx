@@ -26,10 +26,12 @@ export default function FundCard(props: { fund: string }) {
             {data ? (
                 <div className="main text-center">
                     <Card
-                        sx={{ maxWidth: 345, height: 400, backgroundColor: "Gainsboro", width: 250, position: "relative" }}
+                        sx={{ maxWidth: 345, height: 370, backgroundColor: "Gainsboro", width: 250, position: "relative" }}
                         color="gray"
                     >
-                        <CardActionArea href={`/details/?fund=${fund}`} sx={{ display: "flex", flexDirection: "column" }}>
+                        <CardActionArea href={`/details/?fund=${fund}`} sx={{
+                            display: "flex", flexDirection: "column", height: "100%"
+                        }}>
                             <CardMedia
                                 component="img"
                                 height="100"
@@ -38,11 +40,16 @@ export default function FundCard(props: { fund: string }) {
                                 alt="fundraiser"
                                 sx={{
                                     width: 250,
-                                    height: 175,
+                                    height: 185,
                                 }}
                             />
                             <div style={{ height: "90px" }}>
-                                <div style={{ fontSize: "20px", fontWeight: "700", margin: "5px" }}>{data.fundTitle}</div>
+                                <div style={{
+                                    fontSize: "20px", fontWeight: "700", margin: "5px", display: "-webkit-box",
+                                    overflow: "hidden",
+                                    WebkitBoxOrient: "vertical",
+                                    WebkitLineClamp: 2,
+                                }}>{data.fundTitle}</div>
                                 <div style={{
                                     display: "-webkit-box",
                                     overflow: "hidden",

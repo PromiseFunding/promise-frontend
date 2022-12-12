@@ -31,15 +31,7 @@ export default function StateStatus(props: propType) {
         const snapshot = await get(milestonesRef)
         setMilestoneName(snapshot.val())
     }
-    //info from contract:
-    // milestoneArray: milestone[]
-    // tranche: number
-    // assetAddress?: string
-    // state?: number
-    // preMilestoneAmount?: BigNumber
-    // preMilestoneDuration?: BigNumber
-    // startTime?: BigNumber
-    // lifeTimeRaised?: BigNumber
+
     const {
         runContractFunction: getMilestoneSummary,
     } = useWeb3Contract({
@@ -67,11 +59,11 @@ export default function StateStatus(props: propType) {
         setState(currentStateFromCall!)
         await getMilestoneName()
         const timeLeftFromCall = await getTimeLeftRound() as BigNumber
-        if (currentStateFromCall == 4){
+        if (currentStateFromCall == 4) {
             const roundDuration = milestoneInfo.preDuration
             const percent = (roundDuration!.toNumber() - timeLeftFromCall.toNumber()) / roundDuration!.toNumber() * 100
             setPercent(percent)
-        }else{
+        } else {
             const roundDuration = tranchesFromCall[currentTrancheFromCall].milestoneDuration
             const percent = (roundDuration!.toNumber() - timeLeftFromCall.toNumber()) / roundDuration!.toNumber() * 100
             setPercent(percent)
@@ -117,17 +109,16 @@ export default function StateStatus(props: propType) {
     return (
         <div className={styles.stateStatus}>
             {state == 4 ? (
-            <>Seed Funding Round
-            <BorderLinearProgress variant="determinate" value={percent} />
-            {amountRaisedPre} {asset} Raised
-            </>)
-            :
-            (<>Milestone {tranche + 1}: <b>{milestoneName}</b>
-            <BorderLinearProgress variant="determinate" value={percent} />
-            Total Raised: {amountRaisedTotal} {asset}
-            <br></br>
-            Raised in Milestone: {amountRaisedMilestone} {asset}
-            </>)}
+                <>Seed Funding Round
+                    <BorderLinearProgress variant="determinate" value={percent} />
+                    {amountRaisedPre} {asset} Raised
+                </>)
+                :
+                (<>Milestone {tranche + 1}: <b>{milestoneName}</b>
+                    <BorderLinearProgress variant="determinate" value={percent} />
+                    {amountRaisedTotal} {asset} Raised
+                    <br></br>
+                </>)}
         </div>
     )
 }

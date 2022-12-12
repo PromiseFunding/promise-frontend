@@ -28,30 +28,15 @@ const categories = ["--", "Tech", "Film", "Product", "Gaming"]
 
 const modalStyle = {
     position: 'absolute' as 'absolute',
-    top: 0,
-    left: 0,
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
     width: "80%",
-    marginLeft: "auto",
-    marginRight: "auto",
-    marginTop: "150px",
-    marginBottom: "150px",
-    bgcolor: 'white',
+    bgcolor: 'background.paper',
     boxShadow: 24,
     p: 3,
     borderRadius: "25px"
 }
-
-// const modalStyle = {
-//     position: 'absolute' as 'absolute',
-//     top: '50%',
-//     left: '50%',
-//     transform: 'translate(-50%, -50%)',
-//     width: "80%",
-//     bgcolor: 'background.paper',
-//     boxShadow: 24,
-//     p: 3,
-//     borderRadius: "25px"
-// }
 
 
 //contract is already deployed... trying to look at features of contract
@@ -321,22 +306,23 @@ export default function NewFund() {
                 open={open}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
-                sx={modalStyle}
             >
-                {!done ? (
-                    <div style={{ display: "flex", flexDirection: "column", height: "100%", alignItems: "center" }}>
-                        <h1 style={{ fontSize: "50px", textAlign: "center", fontWeight: "700" }}>Transaction Loading...</h1>
-                        <Box style={{ display: 'flex', width: "300px", height: "300px", justifyContent: "center", }}>
-                            <CircularProgress style={{ marginTop: "50px" }} size={150} />
-                        </Box>
-                    </div>) : (
-                    <div style={{ display: "flex", flexDirection: "column", height: "100%", alignItems: "center", zIndex: "25" }}>
-                        <h1 style={{ fontSize: "50px", textAlign: "center", fontWeight: "700" }}>Transaction Completed!</h1>
+                <Box sx={modalStyle}>
+                    {!done ? (
+                        <div style={{ display: "flex", flexDirection: "column", height: "100%", alignItems: "center" }}>
+                            <h1 style={{ fontSize: "50px", textAlign: "center", fontWeight: "700" }}>New Fundraiser Loading...</h1>
+                            <Box style={{ display: 'flex', width: "300px", height: "300px", justifyContent: "center", }}>
+                                <CircularProgress style={{ marginTop: "50px" }} size={150} />
+                            </Box>
+                        </div>) : (
+                        <div style={{ display: "flex", flexDirection: "column", height: "100%", alignItems: "center", zIndex: "25" }}>
+                            <h1 style={{ fontSize: "50px", textAlign: "center", fontWeight: "700" }}>Fundraiser Created!</h1>
 
-                        <svg className={styles.animatedCheck} viewBox="0 0 24 24">
-                            <path d="M4.1 12.7L9 17.6 20.3 6.3" fill="none" />
-                        </svg>
-                    </div>)}
+                            <svg className={styles.animatedCheck} viewBox="0 0 24 24">
+                                <path d="M4.1 12.7L9 17.6 20.3 6.3" fill="none" />
+                            </svg>
+                        </div>)}
+                </Box>
             </Modal>
             <div className={styles.createNewFund}>
                 <h1 style={{ position: "relative", display: "table-cell", verticalAlign: "middle", fontWeight: "700" }}>Create A New Fund</h1>
