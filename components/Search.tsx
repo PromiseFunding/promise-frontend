@@ -120,9 +120,9 @@ export default function Search(props: propTypeFunds) {
         updateCategories()
     }, [props.fundAddressArray, category])
 
-    // useEffect(() => {
-    //     setMaxEntries(12)
-    // }, [category])
+    useEffect(() => {
+        setPage(1)
+    }, [category])
 
     return (
         <>
@@ -183,6 +183,7 @@ export default function Search(props: propTypeFunds) {
                     onChangePage={(newAmount: SetStateAction<Number>) =>
                         setPage(Number(newAmount))
                     }
+                    category={category}
                 />
             </div>
             {/* <div>

@@ -2,7 +2,7 @@ import { propTypeEntryNumber } from "../config/types"
 import Pagination from "@mui/material/Pagination"
 import Stack from "@mui/material/Stack"
 import Box from "@mui/material/Box"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function PaginationButtons(props: propTypeEntryNumber) {
     const [page, setPage] = useState(1)
@@ -10,6 +10,11 @@ export default function PaginationButtons(props: propTypeEntryNumber) {
         setPage(value)
         props.onChangePage!(value)
     }
+
+    useEffect(() => {
+        setPage(1)
+    }, [props.category])
+
     return (
         <Box
             my={2}
@@ -18,7 +23,7 @@ export default function PaginationButtons(props: propTypeEntryNumber) {
         >
             <Stack spacing={2}>
                 <Pagination
-                    count={Math.floor(props.amount! / 8) + 1}
+                    count={(props.amount! % 8 == 0) ? (props.amount!/8) : (Math.floor(props.amount! / 8) + 1)}
                     page={page}
                     onChange={handleChange}
                     showFirstButton

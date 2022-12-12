@@ -46,6 +46,7 @@ export interface propType {
 export interface propTypeEntryNumber {
     onChangePage?(arg0: number): void
     amount?: number
+    category?: string
 }
 
 export interface propTypeFunds {
