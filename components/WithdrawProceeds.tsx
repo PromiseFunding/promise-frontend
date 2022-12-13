@@ -1,8 +1,8 @@
 import { contractAddresses, abi, erc20Abi } from "../constants"
 import { useMoralis, useWeb3Contract } from "react-moralis"
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-import { BigNumber, ContractTransaction } from "ethers"
+import { ContractTransaction } from "ethers"
 import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
 
@@ -12,6 +12,7 @@ export default function WithdrawProceeds(props: propType) {
     const owner = props.ownerFund
     const tranche = props.tranche
     const state = props.currState
+    const milestoneSummary = props.milestoneSummary
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
@@ -31,8 +32,6 @@ export default function WithdrawProceeds(props: propType) {
 
     const decimals = chainId in addresses ? tokenConfig[chainIdNum][coinName].decimals : null
 
-    const [val, setVal] = useState("")
-
     const dispatch = useNotification()
 
     const {
@@ -43,24 +42,8 @@ export default function WithdrawProceeds(props: propType) {
         abi: abi,
         contractAddress: fundAddress!,
         functionName: "withdrawProceeds",
-        params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
-    })
-
-    const { runContractFunction: getTrancheAmountRaised } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getTrancheAmountRaised",
-        params: { level: tranche },
-    })
-
-    //gets current amount raised... used for prefunding round
-    const { runContractFunction: getPreMilestoneFunds } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getPreMilestoneTotalFunds",
         params: {},
     })
-
     const handleSuccess = async function (tx: ContractTransaction) {
         try {
             await tx.wait(1)
@@ -72,30 +55,31 @@ export default function WithdrawProceeds(props: propType) {
         }
     }
 
-    const initData = async function () {
-        if (isWeb3Enabled && fundAddress) {
-            //add if statement here for state for pre funding round
-            if(state == 4){
-                let withdrawableProceedsFromCall = (await getPreMilestoneFunds() as number)
+    const updateUI = async function () {
+        if (isWeb3Enabled && fundAddress && milestoneSummary) {
+            if (state == 4) {
+                let withdrawableProceedsFromCall = milestoneSummary!.preMilestoneTotalFunded
                 if (withdrawableProceedsFromCall > 0) {
                     setWithdrawableProceeds(withdrawableProceedsFromCall / 10 ** decimals!)
                 }
             }
-            else{
-                let withdrawableProceedsFromCall = (await getTrancheAmountRaised()) as number
-                if (withdrawableProceedsFromCall > 0) {
-                    setWithdrawableProceeds(withdrawableProceedsFromCall / 10 ** decimals!)
-                }
+            else {
+                let withdrawableProceedsFromCall = milestoneSummary!.milestones[tranche!].activeRaised!.toNumber()
+                setWithdrawableProceeds(withdrawableProceedsFromCall / 10 ** decimals!)
             }
         }
     }
 
     useEffect(() => {
-        initData()
-    }, [isWeb3Enabled, chainId])
+        if (milestoneSummary) {
+            updateUI()
+        }
+    }, [isWeb3Enabled, chainId, milestoneSummary])
 
     useEffect(() => {
-        initData()
+        if (milestoneSummary) {
+            updateUI()
+        }
     }, [])
 
     useEffect(() => {
@@ -104,23 +88,6 @@ export default function WithdrawProceeds(props: propType) {
         }
     }, [account])
 
-    // const handleChange = async (event: { target: { value: SetStateAction<string> } }) => {
-    //     const max = withdrawableProceeds
-    //     if (withdrawableProceeds == 0) {
-    //         setVal("0")
-    //     } else if ((event.target.value as unknown as number) > 0) {
-    //         const value = Math.max(
-    //             1 * 10 ** -decimals!,
-    //             Math.min(max as number, Number(Number(event.target.value).toFixed(decimals!)))
-    //         )
-    //         setVal(value.toString())
-    //     } else if ((event.target.value as unknown as number) < 0) {
-    //         setVal("0")
-    //     } else {
-    //         setVal(event.target.value)
-    //     }
-    // }
-
     const handleNewNotification = function () {
         dispatch({
             type: "info",
@@ -128,7 +95,7 @@ export default function WithdrawProceeds(props: propType) {
             title: "Transaction Notification",
             position: "topR",
         })
-        initData()
+        updateUI()
     }
 
     const handleNewNotification1 = function () {
@@ -148,18 +115,8 @@ export default function WithdrawProceeds(props: propType) {
                         <h1 className="text-xl font-bold">Withdraw Proceeds</h1>
                     </div>
                     <br></br>
-                    {/* <input
-                        maxLength={21 - (decimals || 6)}
-                        type="number"
-                        id="message"
-                        name="message"
-                        onChange={handleChange}
-                        value={val}
-                        autoComplete="off"
-                        className="text-slate-900"
-                    /> */}
-                        <h1 className="p-5 text-2xl font-normal bg-slate-800">
-                    Withdrawing is all or none. Clicking the button will result in {withdrawableProceeds.toString()} {coinName} being sent to your account.</h1>
+                    <h1 className="p-5 text-2xl font-normal bg-slate-800">
+                        Withdrawing is all or none. Clicking the button will result in {withdrawableProceeds.toString()} {coinName} being sent to your account.</h1>
                     <button
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async function () {

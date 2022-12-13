@@ -9,6 +9,7 @@ import { contractAddressesInterface, propType } from "../config/types"
 //contract is already deployed... trying to look at features of contract
 export default function PoolInfo(props: propType) {
     const fundAddress = props.fundAddress
+    const milestoneSummary = props.milestoneSummary
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
@@ -26,32 +27,18 @@ export default function PoolInfo(props: propType) {
 
     const [asset, setAsset] = useState("0")
 
-    const { runContractFunction: getAssetAddress } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getAssetAddress",
-        params: {},
-    })
-
-    const { runContractFunction: getOwner } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getOwner",
-        params: {},
-    })
-
     async function updateUI() {
-        const ownerFromCall = ((await getOwner()) as BigNumber).toString()
-        const assetFromCall = ((await getAssetAddress()) as BigNumber).toString()
+        const ownerFromCall = milestoneSummary!.owner
+        const assetFromCall = milestoneSummary!.assetAddress
         setAsset(assetFromCall)
         setOwner(ownerFromCall)
     }
 
     useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
+        if (isWeb3Enabled && milestoneSummary) {
             updateUI()
         }
-    }, [isWeb3Enabled, fundAddress])
+    }, [isWeb3Enabled, milestoneSummary])
 
     return (
         <div className="py-5 px-5 text-slate-800">

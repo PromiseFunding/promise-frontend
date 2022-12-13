@@ -12,12 +12,13 @@ import StraightDonation from "../components/StraightDonation"
 import SubmitVote from "../components/SubmitVote"
 import EndVote from "../components/EndVote"
 import StatusBar from "../components/StatusBar"
+import CommunityForum from "../components/details/CommunityForum"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
-import { useMoralis, useWeb3Contract } from "react-moralis"
+import { useMoralis, useWeb3Contract, useMoralisWeb3ApiCall, useMoralisWeb3Api } from "react-moralis"
 import { ref, onValue } from "firebase/database"
 import { database } from "../firebase-config"
-import { databaseFundObject } from "../config/types"
+import { databaseFundObject, milestoneSummary, milestone, funderSummary } from "../config/types"
 import { CardMedia } from "@mui/material"
 import { states } from "../config/helper-config"
 import { BigNumber } from "ethers"
@@ -44,6 +45,11 @@ const Details: NextPage = () => {
     const [funderCalledVote, setFunderCalledVote] = useState<boolean>(false)
     const [numVotesTried, setNumVotesTried] = useState(0)
     const [timeLeftVoting, setTimeLeftVoting] = useState(0)
+    const [milestoneSummary, setMilestoneSummary] = useState<milestoneSummary>()
+    const [funderSummary, setFunderSummary] = useState<funderSummary>()
+
+    const [funderParam, setFunderParam] = useState("")
+    const [levelParam, setLevelParam] = useState(0)
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
@@ -62,79 +68,23 @@ const Details: NextPage = () => {
 
     const decimals = chainId in addresses ? tokenConfig[chainIdNum][coinName].decimals : null
 
-
-    const { runContractFunction: getOwner } = useWeb3Contract({
+    const {
+        runContractFunction: getMilestoneSummary,
+    } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!,
-        functionName: "getOwner",
-        params: {},
-    })
-
-    const { runContractFunction: getAssetAddress } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress,
-        functionName: "getAssetAddress",
-        params: {},
-    })
-
-    const { runContractFunction: getState } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress,
-        functionName: "getState",
-        params: {},
-    })
-
-    const { runContractFunction: getCurrentTranche } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress,
-        functionName: "getCurrentTranche",
-        params: {},
-    })
-
-    const { runContractFunction: getMilestoneDurations } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress,
-        functionName: "getMilestoneDurations",
-        params: {},
-    })
-
-    const { runContractFunction: getTimeLeftMilestone } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress,
-        functionName: "getTimeLeftRound",
-        params: {},
-    })
-
-    const { runContractFunction: getTotalFunds } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress,
-        functionName: "getLifeTimeAmountFunded",
-        params: {},
-    })
-
-    const { runContractFunction: getVotesTried } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress,
-        functionName: "getVotesTried",
-        params: {},
-    })
-
-    const { runContractFunction: getFunderCalledVote } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress,
-        functionName: "getFunderCalledVote",
+        functionName: "getMilestoneSummary",
         params: {},
     })
 
     const {
-        runContractFunction: getTimeLeftVoting,
+        runContractFunction: getFunderSummary,
     } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!,
-        functionName: "getTimeLeftVoting",
-        params: {},
+        functionName: "getFunderSummary",
+        params: { funder: funderParam, level: levelParam },
     })
-
 
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
@@ -148,26 +98,46 @@ const Details: NextPage = () => {
         }
     }, [account])
 
+    function getDurations(milestones: milestone[]): number[] {
+        return milestones.map(milestone => milestone!.milestoneDuration!.toNumber())
+    }
+
+    async function updateFunderInfo() {
+        const funderInfo = await getFunderSummary() as funderSummary
+        setFunderSummary(funderInfo)
+    }
+
+    useEffect(() => {
+        if (funderParam && levelParam >= 0) {
+            updateFunderInfo()
+            setFunderParam("")
+            setLevelParam(-1)
+        }
+    }, [funderParam, levelParam])
+
     async function updateUI() {
-        const assetAddressFromCall = (await getAssetAddress()) as string
-        setAssetAddress(assetAddressFromCall)
-        const ownerFromCall = await getOwner()
+        const milestoneInfo = await getMilestoneSummary() as milestoneSummary
+        const assetAddressFromCall = milestoneInfo.assetAddress
+        const ownerFromCall = milestoneInfo.owner
+        const stateFromCall = milestoneInfo.state
+        const trancheFromCall = milestoneInfo.currentTranche
+        const timeLeftFromCall = milestoneInfo.timeLeftRound
+        const totalFromCall = milestoneInfo.lifeTimeRaised
+        const durationsFromCall = getDurations(milestoneInfo.milestones)
+        const votesTriedFromCall = milestoneInfo.votesTried
+        const timeLeftVotingFromCall = milestoneInfo.timeLeftVoting
+        const didFunderVoteFromCall = milestoneInfo.funderCalledVote
+
+        setMilestoneSummary(milestoneInfo)
+        setAssetAddress(assetAddressFromCall!)
         setOwner((ownerFromCall as String).toLowerCase())
-        const stateFromCall = await getState() as number
         setState(stateFromCall)
-        const trancheFromCall = await getCurrentTranche() as number
         setTranche(trancheFromCall)
-        const timeLeftFromCall = await getTimeLeftMilestone() as BigNumber
         setTimeLeft(timeLeftFromCall.toNumber())
-        const totalFromCall = await getTotalFunds() as BigNumber
         setTotalFunds(totalFromCall.toNumber() / 10 ** decimals!)
-        const durationsFromCall = await getMilestoneDurations()
-        setMilestoneDurations((durationsFromCall as BigNumber[]).map(num => num.toNumber()))
-        const didFunderVoteFromCall = (await getFunderCalledVote()) as boolean
+        setMilestoneDurations(durationsFromCall!)
         setFunderCalledVote(didFunderVoteFromCall)
-        const votesTriedFromCall = await getVotesTried() as BigNumber
         setNumVotesTried(votesTriedFromCall.toNumber())
-        const timeLeftVotingFromCall = (await getTimeLeftVoting()) as BigNumber
         setTimeLeftVoting(timeLeftVotingFromCall.toNumber())
     }
 
@@ -230,9 +200,9 @@ const Details: NextPage = () => {
                                 <div className="font-bold">
                                     <div className="font-normal">
                                         {state != 4 ? (timeLeft <= 0 ? (<><b className="text-2xl">Fund State:</b> Milestone period ended. Not accepting more Donations. Waiting for vote to start.</>) :
-                                        (<><b className="text-2xl">Fund State:</b> {states[state]} </>))
-                                         : (timeLeft <= 0 ? (<><b className="text-2xl">Fund State:</b> Not accepting more Seed Round Donations. Waiting on owner to start milestone funding process.</>) :
-                                        (<><b className="text-2xl">Fund State:</b> {states[state]} </>))
+                                            (<><b className="text-2xl">Fund State:</b> {states[state]} </>))
+                                            : (timeLeft <= 0 ? (<><b className="text-2xl">Fund State:</b> Not accepting more Seed Round Donations. Waiting on owner to start milestone funding process.</>) :
+                                                (<><b className="text-2xl">Fund State:</b> {states[state]} </>))
                                         }
                                     </div>
                                 </div>
@@ -240,7 +210,7 @@ const Details: NextPage = () => {
                                     <div className="font-normal">
                                         {state == 4 ? (
                                             <><b className="text-2xl">Current Stage:</b> Seed Funding</>
-                                        ): (
+                                        ) : (
                                             <><b className="text-2xl">Current Stage:</b> Milestone {tranche + 1}</>
                                         )}
                                     </div>
@@ -249,7 +219,7 @@ const Details: NextPage = () => {
                                     <div className="font-normal">
                                         {state == 4 ? (
                                             <><b className="text-2xl">Time Left in Seed Funding Round:</b> {timeLeft}</>
-                                        ): (
+                                        ) : (
                                             <><b className="text-2xl">Time Left in Milestone Round:</b> {timeLeft}</>
                                         )}
                                     </div>
@@ -258,9 +228,9 @@ const Details: NextPage = () => {
                                     <div className="font-normal">
                                         <b className="text-2xl">Votes Tried:</b> {numVotesTried}
                                         <br></br>
-                                        {funderCalledVote || numVotesTried >= 2? (
+                                        {funderCalledVote || numVotesTried >= 2 ? (
                                             <><b className="text-2xl">Last vote of round. Result of this vote is final.</b></>
-                                        ): (
+                                        ) : (
                                             <></>
                                         )}
                                     </div>
@@ -269,7 +239,7 @@ const Details: NextPage = () => {
                                     <div className="font-normal">
                                         {state == 1 ? (
                                             <><b className="text-2xl">Time Left in Voting Period:</b> {timeLeftVoting}</>
-                                        ): (
+                                        ) : (
                                             <></>
                                         )}
                                     </div>
@@ -287,7 +257,7 @@ const Details: NextPage = () => {
                                                     {state == 0 ? (
                                                         <><div>
                                                             {timeLeft > 0 ? (
-                                                            <><StraightDonation
+                                                                <><StraightDonation
                                                                     fundAddress={fundAddress}
                                                                     assetAddress={assetAddress}
                                                                     ownerFund={owner}
@@ -295,11 +265,18 @@ const Details: NextPage = () => {
                                                                     coinName={coinName}
                                                                     onChangeAmountFunded={() => {
                                                                         updateUI()
-                                                                    } }
+                                                                    }}
                                                                     totalRaised={totalFunds}
                                                                     tranche={tranche}
                                                                     currState={state}
-                                                                ></StraightDonation><hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" /><div className="text-center flex flex-col border-2 border-slate-500">
+                                                                    onGetFunderInfo={(funder, level) => {
+                                                                        setFunderParam(funder)
+                                                                        setLevelParam(level)
+                                                                    }}
+                                                                    funderSummary={funderSummary}
+                                                                ></StraightDonation>
+                                                                    <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                                                                    <div className="text-center flex flex-col">
                                                                         <CurrentTrancheDonation
                                                                             fundAddress={fundAddress}
                                                                             assetAddress={assetAddress}
@@ -309,26 +286,36 @@ const Details: NextPage = () => {
                                                                             coinName={coinName}
                                                                             onChangeAmountFunded={() => {
                                                                                 updateUI()
-                                                                            } }
+                                                                            }}
+                                                                            onGetFunderInfo={(funder, level) => {
+                                                                                setFunderParam(funder)
+                                                                                setLevelParam(level)
+                                                                            }}
+                                                                            funderSummary={funderSummary}
                                                                             totalRaised={totalFunds}
                                                                         ></CurrentTrancheDonation>
                                                                     </div></>
                                                             ) : (<><h1 className="p-5 text-2xl font-bold bg-slate-800">Milestone Round ended. Not accepting donations.</h1></>)}
                                                         </div>
-                                                        <div>
-                                                            {timeLeft <= 0 ? (
-                                                                <StartVote
-                                                                    fundAddress={fundAddress}
-                                                                    assetAddress={assetAddress}
-                                                                    onChangeState={() => {
-                                                                        updateUI()
-                                                                    }}
-                                                                    tranche={tranche}
-                                                                    ownerFund={owner}
-                                                                    decimals={decimals!}
-                                                                ></StartVote>
-                                                            ) : (<></>)}
-                                                        </div></>
+                                                            <div>
+                                                                {timeLeft <= 0 ? (
+                                                                    <StartVote
+                                                                        fundAddress={fundAddress}
+                                                                        assetAddress={assetAddress}
+                                                                        onChangeState={() => {
+                                                                            updateUI()
+                                                                        }}
+                                                                        tranche={tranche}
+                                                                        ownerFund={owner}
+                                                                        decimals={decimals!}
+                                                                        onGetFunderInfo={(funder, level) => {
+                                                                            setFunderParam(funder)
+                                                                            setLevelParam(level)
+                                                                        }}
+                                                                        funderSummary={funderSummary}
+                                                                    ></StartVote>
+                                                                ) : (<></>)}
+                                                            </div></>
                                                     ) : (<></>)}
                                                     {state == 1 ? (
                                                         <div>
@@ -337,6 +324,11 @@ const Details: NextPage = () => {
                                                                 assetAddress={assetAddress}
                                                                 tranche={tranche}
                                                                 decimals={decimals!}
+                                                                onGetFunderInfo={(funder, level) => {
+                                                                    setFunderParam(funder)
+                                                                    setLevelParam(level)
+                                                                }}
+                                                                funderSummary={funderSummary}
                                                             ></SubmitVote>
                                                             <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
 
@@ -350,6 +342,11 @@ const Details: NextPage = () => {
                                                                 decimals={decimals!}
                                                                 ownerFund={owner}
                                                                 timeLeftVoting={timeLeftVoting}
+                                                                onGetFunderInfo={(funder, level) => {
+                                                                    setFunderParam(funder)
+                                                                    setLevelParam(level)
+                                                                }}
+                                                                funderSummary={funderSummary}
                                                             ></EndVote>
                                                         </div>
 
@@ -369,23 +366,34 @@ const Details: NextPage = () => {
                                                             fundAddress={fundAddress}
                                                             assetAddress={assetAddress}
                                                             updateAmount={amt}
+                                                            onGetFunderInfo={(funder, level) => {
+                                                                setFunderParam(funder)
+                                                                setLevelParam(level)
+                                                            }}
+                                                            funderSummary={funderSummary}
+                                                            tranche={tranche}
                                                         ></Withdraw>
                                                     ) : (<></>)}
 
                                                     {state == 4 ? (timeLeft > 0 ? (
                                                         <StraightDonation
-                                                        fundAddress={fundAddress}
-                                                        assetAddress={assetAddress}
-                                                        ownerFund={owner}
-                                                        decimals={decimals!}
-                                                        coinName={coinName}
-                                                        onChangeAmountFunded={() => {
-                                                            updateUI()
-                                                        }}
-                                                        totalRaised={totalFunds}
-                                                        tranche={tranche}
-                                                        currState={state}
-                                                    ></StraightDonation>) : (<h1 className="p-5 text-2xl font-bold bg-slate-800">Seed Round ended. Not accepting donations.</h1>)
+                                                            fundAddress={fundAddress}
+                                                            assetAddress={assetAddress}
+                                                            ownerFund={owner}
+                                                            decimals={decimals!}
+                                                            coinName={coinName}
+                                                            onChangeAmountFunded={() => {
+                                                                updateUI()
+                                                            }}
+                                                            totalRaised={totalFunds}
+                                                            tranche={tranche}
+                                                            currState={state}
+                                                            onGetFunderInfo={(funder, level) => {
+                                                                setFunderParam(funder)
+                                                                setLevelParam(level)
+                                                            }}
+                                                            funderSummary={funderSummary}
+                                                        ></StraightDonation>) : (<h1 className="p-5 text-2xl font-bold bg-slate-800">Seed Round ended. Not accepting donations.</h1>)
                                                     ) : (<></>)}
                                                 </div>
                                             ) : (
@@ -401,6 +409,11 @@ const Details: NextPage = () => {
                                                             tranche={tranche}
                                                             ownerFund={owner}
                                                             decimals={decimals!}
+                                                            onGetFunderInfo={(funder, level) => {
+                                                                setFunderParam(funder)
+                                                                setLevelParam(level)
+                                                            }}
+                                                            funderSummary={funderSummary}
                                                         ></StartVote>
                                                     ) : (<></>)}
 
@@ -424,6 +437,11 @@ const Details: NextPage = () => {
                                                             decimals={decimals!}
                                                             ownerFund={owner}
                                                             timeLeftVoting={timeLeftVoting}
+                                                            onGetFunderInfo={(funder, level) => {
+                                                                setFunderParam(funder)
+                                                                setLevelParam(level)
+                                                            }}
+                                                            funderSummary={funderSummary}
                                                         ></EndVote>
                                                     </div>
                                                     ) : (<></>)}
@@ -438,6 +456,7 @@ const Details: NextPage = () => {
                                                                 updateUI()
                                                             }}
                                                             currState={state}
+                                                            milestoneSummary={milestoneSummary}
                                                         ></WithdrawProceeds>
                                                     ) : (<></>)}
 
@@ -446,21 +465,22 @@ const Details: NextPage = () => {
                                                         They will now be able to withdraw their funds.</h1>
                                                     ) : (<></>)}
 
-                                                    {state == 4 ? ((timeLeft <= 0 ) ? (
+                                                    {state == 4 ? ((timeLeft <= 0) ? (
                                                         <><WithdrawProceeds
-                                                                fundAddress={fundAddress}
-                                                                assetAddress={assetAddress}
-                                                                ownerFund={owner}
-                                                                tranche={tranche}
-                                                                onChangeState={() => {
-                                                                    updateUI()
-                                                                } }
-                                                                currState={state}
-                                                            ></WithdrawProceeds><h1 className="p-5 text-2xl font-bold bg-slate-800">
-                                                            You can now withdraw your seed round funding. This will immediately start your first milestone and the milestone funding process.</h1></>
+                                                            fundAddress={fundAddress}
+                                                            assetAddress={assetAddress}
+                                                            ownerFund={owner}
+                                                            tranche={tranche}
+                                                            onChangeState={() => {
+                                                                updateUI()
+                                                            }}
+                                                            currState={state}
+                                                            milestoneSummary={milestoneSummary}
+                                                        ></WithdrawProceeds><h1 className="p-5 text-2xl font-bold bg-slate-800">
+                                                                You can now withdraw your seed round funding. This will immediately start your first milestone and the milestone funding process.</h1></>
                                                     ) : (<><h1 className="p-5 text-2xl font-bold bg-slate-800">
-                                                    You are currently in the Seed Funding Phase of your project. All donations will go to you and the ability
-                                                    to withdraw will become available after the Seed Funding Phase ends.</h1></>)): (<></>)}
+                                                        You are currently in the Seed Funding Phase of your project. All donations will go to you and the ability
+                                                        to withdraw will become available after the Seed Funding Phase ends.</h1></>)) : (<></>)}
                                                 </div>
                                             )}
 
@@ -484,11 +504,17 @@ const Details: NextPage = () => {
                             currState={state}
                             totalRaised={totalFunds}
                             coinName={coinName}
+                            milestoneSummary={milestoneSummary}
                         ></StatusBar>
                         <Updates
                             fundAddress={fundAddress}
                             ownerFund={owner}
                         ></Updates>
+                        <CommunityForum
+                            fundAddress={fundAddress}
+                            ownerFund={owner}
+                            totalRaised={totalFunds}
+                        ></CommunityForum>
                     </div>
                 ) : (
                     <div></div>
@@ -496,7 +522,7 @@ const Details: NextPage = () => {
                 <div className="p-10">
                     <PoolInfo
                         fundAddress={router.query.fund as string}
-                        assetAddress={assetAddress}
+                        milestoneSummary={milestoneSummary}
                     />
                 </div>
             </div>

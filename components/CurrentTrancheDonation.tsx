@@ -17,6 +17,7 @@ export default function CurrentTrancheDonation(props: propType) {
     const decimals = props.decimals
     const coinName = props.coinName
     const totalRaised = props.totalRaised
+    const funderSummary = props.funderSummary
 
     const milestone = tranche! + 1
     // const addresses: contractAddressesInterface = contractAddresses
@@ -40,28 +41,27 @@ export default function CurrentTrancheDonation(props: propType) {
         },
     })
 
-    const { runContractFunction: getFunderTrancheAmountRaised } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getFunderTrancheAmountRaised",
-        params: { funder: account, level: tranche},
-    })
-
     const { runContractFunction: fundCurrent } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!,
-        functionName: "fundCurrentTrancheOnly",
-        params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
+        functionName: "fund",
+        params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()), current: true },
     })
 
     async function updateUI() {
-        const amountFundedFromCall = (await getFunderTrancheAmountRaised()) as number
+        const amountFundedFromCall = funderSummary!.funderTrancheAmountRaised.toNumber()
         setAmountFunded(amountFundedFromCall / 10 ** decimals!)
     }
 
     useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
+        if (funderSummary) {
             updateUI()
+        }
+    }, [funderSummary])
+
+    useEffect(() => {
+        if (isWeb3Enabled && fundAddress) {
+            props.onGetFunderInfo!(account!, tranche!)
         }
     }, [isWeb3Enabled, fundAddress, account, totalRaised])
 
@@ -73,7 +73,7 @@ export default function CurrentTrancheDonation(props: propType) {
             await fundTx.wait(1)
             props.onChangeAmountFunded!()
             handleNewNotification()
-            updateUI()
+            props.onGetFunderInfo!(account!, tranche!)
         } catch (error) {
             console.log(error)
             handleNewNotificationError()
@@ -117,7 +117,7 @@ export default function CurrentTrancheDonation(props: propType) {
 
     return (
         <div className="p-5 bg-slate-800 text-slate-200">
-           <div className={styles.tooltip}>
+            <div className={styles.tooltip}>
                 <h1 className="text-xl font-bold">Donation to Current Milestone Only</h1>
                 {/* <span className={styles.tooltiptext}>You will be donating x amount in milestone ___</span>
                 <br></br> */}

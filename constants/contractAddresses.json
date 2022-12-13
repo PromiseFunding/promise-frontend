@@ -1,11 +1,1 @@
-{
-    "5": { "FundFactory": ["0x2F18e468c26Ece483c966b7e997947F01f2f5c26"] },
-    "31337": {
-        "FundFactory": ["0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"],
-        "PromiseFundFactory": ["0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9"]
-    },
-    "421613": {
-        "FundFactory": ["0xC6078478EfEc509355d9158934A1153789710D5B"],
-        "PromiseFundFactory": ["0x02Ff3Cd2F718C73cbe44AeEFA359EdB4f9e2fb85"]
-    }
-}
+{"5":{"FundFactory":["0x2F18e468c26Ece483c966b7e997947F01f2f5c26"]},"31337":{"FundFactory":["0x5FC8d32690cc91D4c39d9d3abcBD16989F875707"],"PromiseFundFactory":["0x0165878A594ca255338adfa4d48449f69242Eb8F"]},"421613":{"FundFactory":["0xC6078478EfEc509355d9158934A1153789710D5B"],"PromiseFundFactory":["0xC300db952e17b3260F6C53864a9f9a17f0aF5017"]}}

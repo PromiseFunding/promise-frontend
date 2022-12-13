@@ -11,7 +11,6 @@ import Footer from "../components/landingPage/Footer"
 const Discover: NextPage = () => {
     function handleScroll(section: string) {
         const element = document.getElementById(section);
-        console.log(section)
         element!.scrollIntoView({ behavior: "smooth", inline: "nearest" });
     }
 

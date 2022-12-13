@@ -58,7 +58,7 @@ export default function StateStatus(props: propType) {
         const currentStateFromCall = milestoneInfo.state
         setState(currentStateFromCall!)
         await getMilestoneName()
-        const timeLeftFromCall = await getTimeLeftRound() as BigNumber
+        const timeLeftFromCall = milestoneInfo.timeLeftRound
         if (currentStateFromCall == 4) {
             const roundDuration = milestoneInfo.preDuration
             const percent = (roundDuration!.toNumber() - timeLeftFromCall.toNumber()) / roundDuration!.toNumber() * 100

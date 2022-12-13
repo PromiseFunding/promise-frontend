@@ -32,6 +32,7 @@ const modalStyle = {
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: "80%",
+    height: "50%",
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 3,
@@ -294,7 +295,6 @@ export default function NewFund() {
     }
 
     function handleDeleteMilestone(index: number) {
-        console.log(`Delete index ${index}`)
         let items = [...milestonesArray]
         items.splice(index, 1)
         setMilestonesArray(items)
