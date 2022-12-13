@@ -726,6 +726,17 @@
     display: none;
 }
 
+@media (max-width: 1330px) {
+    .headerInner {
+        display: none;
+        position: static;
+    }
+    .drawer {
+        position: relative;
+        display: grid;
+    }
+}
+
 @media (max-width: 1200px) {
     .grid {
         width: 100%;
@@ -746,14 +757,6 @@
     }
     .howItWorksLanding {
         height: 1200px;
-    }
-    .drawer {
-        position: relative;
-        display: grid;
-    }
-    .headerInner {
-        display: none;
-        position: static;
     }
     .searchbar {
         width: 20vw;

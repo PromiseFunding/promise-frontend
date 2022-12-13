@@ -136,7 +136,7 @@ export default function Search(props: propTypeFunds) {
                 }}
             >
                 <ul className={styles.funds} id="funds">
-                    {filteredData.slice(0 + (page - 1) * 8, page * 8).map((fund) => (
+                    {filteredData.slice(0 + (page - 1) * 10, page * 10).map((fund) => (
                         <li key={fund} style={{ paddingTop: "25px", paddingBottom: "25px" }}>
                             <FundCard fund={fund}></FundCard>
                         </li>

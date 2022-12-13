@@ -23,7 +23,7 @@ export default function PaginationButtons(props: propTypeEntryNumber) {
         >
             <Stack spacing={2}>
                 <Pagination
-                    count={(props.amount! % 8 == 0) ? (props.amount!/8) : (Math.floor(props.amount! / 8) + 1)}
+                    count={(props.amount! % 10 == 0) ? (props.amount!/10) : (Math.floor(props.amount! / 10) + 1)}
                     page={page}
                     onChange={handleChange}
                     showFirstButton

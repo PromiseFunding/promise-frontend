@@ -46,6 +46,12 @@ export default function TemporaryDrawer() {
                     </a>
                 </Link>
 
+                <Link legacyBehavior href="/myfunds">
+                    <a className={styles.drawerItem} onClick={toggleDrawer(anchor, false)}>
+                        My Fundraisers
+                    </a>
+                </Link>
+
                 <Link legacyBehavior href="/form">
                     <a className={styles.drawerItem} onClick={toggleDrawer(anchor, false)}>
                         Create New Fund
