@@ -178,13 +178,17 @@ export default function Search(props: propTypeFunds) {
                         }}
                     ></div>
                 </ul>
-                <Pages
-                    amount={filteredData.length}
-                    onChangePage={(newAmount: SetStateAction<Number>) =>
-                        setPage(Number(newAmount))
-                    }
-                    category={category}
-                />
+                {filteredData.length != 0 ? (
+                    <Pages
+                        amount={filteredData.length}
+                        onChangePage={(newAmount: SetStateAction<Number>) =>
+                            setPage(Number(newAmount))
+                        }
+                        category={category}
+                    />
+                ) : (
+                    <></>
+                )}
             </div>
             {/* <div>
                 <br></br>

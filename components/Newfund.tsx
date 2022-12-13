@@ -167,6 +167,7 @@ export default function NewFund() {
         )
         const uploadTask = uploadBytesResumable(iconRef, file as Blob)
 
+        // upload to fund folder
         uploadTask.on(
             "state_changed",
             (snapshot) => {},
@@ -182,6 +183,8 @@ export default function NewFund() {
                         asset: assetValue,
                     })
                 })
+
+                set(refDb(database, `users/${account}/owner/${fundAddress}`), {})
             }
         )
         await timeout(1000) //for 1 sec delay
