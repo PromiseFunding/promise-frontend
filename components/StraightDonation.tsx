@@ -7,6 +7,8 @@ import { BigNumber } from "ethers"
 import { propType } from "../config/types"
 import { ContractTransaction } from "ethers"
 import styles from "../styles/Home.module.css"
+import { update, set, ref as refDb, ref, onValue } from "firebase/database"
+import { database, storage } from "../firebase-config"
 
 //contract is already deployed... trying to look at features of contract
 export default function StraightDonation(props: propType) {
@@ -22,6 +24,8 @@ export default function StraightDonation(props: propType) {
 
     // const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
+    const chainId: string = parseInt(chainIdHex!).toString()
+
     const [amountFunded, setAmountFunded] = useState<number>()
     const [val, setVal] = useState("")
     const dispatch = useNotification()
@@ -91,6 +95,14 @@ export default function StraightDonation(props: propType) {
             console.log(error)
             handleNewNotificationError()
         }
+
+        var donorRef = ref(database, chainId + "/users/" + account + "/donor/" + fundAddress)
+
+        onValue(donorRef, (snapshot) => {
+            if (!snapshot.exists()) {
+                set(refDb(database, `${chainId}/users/${account}/donor/${fundAddress}`), {fundAddress: fundAddress})
+            }
+        })
     }
 
     const handleChange = (event: { target: { value: SetStateAction<string> } }) => {

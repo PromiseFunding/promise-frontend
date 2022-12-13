@@ -174,7 +174,7 @@ export default function NewFund() {
             (err) => console.log(err),
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                    set(refDb(database, `funds/${fundAddress}`), {
+                    set(refDb(database, `${chainId}/funds/${fundAddress}`), {
                         fundTitle: title,
                         imageURL: url,
                         description: description,
@@ -184,7 +184,7 @@ export default function NewFund() {
                     })
                 })
 
-                set(refDb(database, `users/${account}/owner/${fundAddress}`), {fundAddress: fundAddress})
+                set(refDb(database, `${chainId}/users/${account}/owner/${fundAddress}`), {fundAddress: fundAddress})
             }
         )
         await timeout(1000) //for 1 sec delay

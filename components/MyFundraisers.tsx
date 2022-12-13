@@ -21,21 +21,21 @@ export default function MyFundraisers() {
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
 
-    const fundFactoryAddress =
-        chainId in addresses
-            ? addresses[chainId]["PromiseFundFactory"][
-                  addresses[chainId]["PromiseFundFactory"].length - 1
-              ]
-            : null
+    // const fundFactoryAddress =
+    //     chainId in addresses
+    //         ? addresses[chainId]["PromiseFundFactory"][
+    //               addresses[chainId]["PromiseFundFactory"].length - 1
+    //           ]
+    //         : null
 
-    const [allFunds, setAllFunds] = useState<string[]>([])
+    // const [allFunds, setAllFunds] = useState<string[]>([])
 
-    const { runContractFunction: getAllPromiseFund } = useWeb3Contract({
-        abi: FundFactory,
-        contractAddress: fundFactoryAddress!,
-        functionName: "getAllPromiseFund",
-        params: {},
-    })
+    // const { runContractFunction: getAllPromiseFund } = useWeb3Contract({
+    //     abi: FundFactory,
+    //     contractAddress: fundFactoryAddress!,
+    //     functionName: "getAllPromiseFund",
+    //     params: {},
+    // })
 
     useWindowSize()
 
@@ -54,22 +54,19 @@ export default function MyFundraisers() {
     }
 
     async function updateUI() {
-        const allFundsFromCall = (await getAllPromiseFund()) as string[]
-        setAllFunds(allFundsFromCall)
+        // const allFundsFromCall = (await getAllPromiseFund()) as string[]
+        // setAllFunds(allFundsFromCall)
 
         const listOfDonationFunds: string[] = []
         const listOfOwnedFunds: string[] = []
 
-        var ownerRef = ref(database, "users/" + account + "/owner")
-        var donorRef = ref(database, "users/" + account + "/donations")
+        var ownerRef = ref(database, chainId + "/users/" + account + "/owner")
+        var donorRef = ref(database, chainId + "/users/" + account + "/donor")
 
         onValue(ownerRef, (snapshot) => {
             if (snapshot.exists()) {
                 snapshot.forEach(function (childSnapshot) {
-                    // add childSnapshot (fund address) to array if it is in props array (get rid of once chain Id exists in database)
-                    if (allFundsFromCall.indexOf(childSnapshot.val().fundAddress) != -1) {
-                        listOfOwnedFunds.push(childSnapshot.val().fundAddress)
-                    }
+                    listOfOwnedFunds.push(childSnapshot.val().fundAddress)
                 })
                 setOwnerData(listOfOwnedFunds)
             } else {
@@ -81,9 +78,9 @@ export default function MyFundraisers() {
             if (snapshot.exists()) {
                 snapshot.forEach(function (childSnapshot) {
                     // add childSnapshot (fund address) to array if it is in props array (get rid of once chain Id exists in database)
-                    if (allFundsFromCall.indexOf(childSnapshot.val()) != -1) {
-                        listOfDonationFunds.push(childSnapshot.val())
-                    }
+                    //if (allFundsFromCall.indexOf(childSnapshot.val().fundAddress) != -1) {
+                    listOfDonationFunds.push(childSnapshot.val().fundAddress)
+                    //}
                 })
                 setDonationsData(listOfDonationFunds)
             } else {
@@ -111,6 +108,13 @@ export default function MyFundraisers() {
             updateUI()
         }
     }, [])
+
+    useEffect(() => {
+        if (account && isWeb3Enabled) {
+            setPage(1)
+            updateUI()
+        }
+    }, [account])
 
     return (
         <>
