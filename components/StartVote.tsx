@@ -21,7 +21,6 @@ export default function StartVote(props: propType) {
 
     const dispatch = useNotification()
 
-
     const {
         runContractFunction: startVote,
         isLoading,

@@ -1,11 +1,10 @@
 import { contractAddresses, abi, erc20Abi } from "../constants"
 import { useMoralis, useWeb3Contract } from "react-moralis"
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-import { BigNumber, ContractTransaction } from "ethers"
+import { ContractTransaction } from "ethers"
 import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
-import { milestoneSummary } from "../config/types"
 
 export default function WithdrawProceeds(props: propType) {
     const fundAddress = props.fundAddress
@@ -33,8 +32,6 @@ export default function WithdrawProceeds(props: propType) {
 
     const decimals = chainId in addresses ? tokenConfig[chainIdNum][coinName].decimals : null
 
-    const [val, setVal] = useState("")
-
     const dispatch = useNotification()
 
     const {
@@ -47,22 +44,6 @@ export default function WithdrawProceeds(props: propType) {
         functionName: "withdrawProceeds",
         params: {},
     })
-
-    const { runContractFunction: getTrancheAmountRaised } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getTrancheAmountRaised",
-        params: { level: tranche },
-    })
-
-    //gets current amount raised... used for prefunding round
-    const { runContractFunction: getPreMilestoneFunds } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getPreMilestoneTotalFunds",
-        params: {},
-    })
-
     const handleSuccess = async function (tx: ContractTransaction) {
         try {
             await tx.wait(1)
@@ -83,7 +64,6 @@ export default function WithdrawProceeds(props: propType) {
                 }
             }
             else {
-                console.log("brrogg", milestoneSummary)
                 let withdrawableProceedsFromCall = milestoneSummary!.milestones[tranche!].activeRaised!.toNumber()
                 setWithdrawableProceeds(withdrawableProceedsFromCall / 10 ** decimals!)
             }

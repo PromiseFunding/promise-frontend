@@ -1,6 +1,6 @@
 import { contractAddresses, abi } from "../constants"
 import { useMoralis, useWeb3Contract } from "react-moralis"
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { BigNumber, ContractTransaction } from "ethers"
 import { contractAddressesInterface, propType } from "../config/types"
@@ -47,14 +47,6 @@ export default function Withdraw(props: propType) {
         functionName: "withdrawProceedsFunder",
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
-
-    const { runContractFunction: getFundAmount } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getFundAmount",
-        params: { funder: account },
-    })
-
 
     async function updateUI() {
         const amountFundedFromCall = funderSummary!.fundAmount.toNumber()

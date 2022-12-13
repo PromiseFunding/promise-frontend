@@ -27,20 +27,6 @@ export default function PoolInfo(props: propType) {
 
     const [asset, setAsset] = useState("0")
 
-    const { runContractFunction: getAssetAddress } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getAssetAddress",
-        params: {},
-    })
-
-    const { runContractFunction: getOwner } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getOwner",
-        params: {},
-    })
-
     async function updateUI() {
         const ownerFromCall = milestoneSummary!.owner
         const assetFromCall = milestoneSummary!.assetAddress

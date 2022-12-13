@@ -32,22 +32,6 @@ export default function SubmitVote(props: propType) {
         params: { support: voteVal },
     })
 
-    const {
-        runContractFunction: didFunderVote,
-    } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "didFunderVote",
-        params: { funder: account },
-    })
-
-    const { runContractFunction: getFunderTrancheAmountRaised } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getFunderTrancheAmountRaised",
-        params: { funder: account, level: tranche },
-    })
-
     async function updateUI() {
         const didFunderVoteFromCall = funderSummary!.didFunderVote
         const amountFundedFromCall = funderSummary!.funderTrancheAmountRaised.toNumber()

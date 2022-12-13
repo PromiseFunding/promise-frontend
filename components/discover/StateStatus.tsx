@@ -74,14 +74,12 @@ export default function StateStatus(props: propType) {
         const assetAddressFromCall = milestoneInfo.assetAddress
         const coinName = getAssetName(assetAddressFromCall!)
         setAsset(coinName)
-        console.log(coinName)
         setAmountRaisedMilestone(+(amountRaisedFromCall!.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
         setAmountRaisedTotal(+(amountRaisedTotalFromCall!.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
         setAmountRaisedPre(+(amountRaisedPreFromCall!.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
     }
 
     const getAssetName = (address: string) => {
-        console.log(address)
         for (const coin in tokenConfig[chainIdNum]) {
             if (tokenConfig[chainIdNum][coin].assetAddress == address) {
                 return coin

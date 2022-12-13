@@ -41,13 +41,6 @@ export default function CurrentTrancheDonation(props: propType) {
         },
     })
 
-    const { runContractFunction: getFunderTrancheAmountRaised } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getFunderTrancheAmountRaised",
-        params: { funder: account, level: tranche },
-    })
-
     const { runContractFunction: fundCurrent } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!,
@@ -57,8 +50,6 @@ export default function CurrentTrancheDonation(props: propType) {
 
     async function updateUI() {
         const amountFundedFromCall = funderSummary!.funderTrancheAmountRaised.toNumber()
-        console.log(decimals)
-        console.log(amountFundedFromCall / 10 ** decimals!)
         setAmountFunded(amountFundedFromCall / 10 ** decimals!)
     }
 

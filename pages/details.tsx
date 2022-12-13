@@ -68,13 +68,6 @@ const Details: NextPage = () => {
 
     const decimals = chainId in addresses ? tokenConfig[chainIdNum][coinName].decimals : null
 
-    const { runContractFunction: getFunderCalledVote } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress,
-        functionName: "getFunderCalledVote",
-        params: {},
-    })
-
     const {
         runContractFunction: getMilestoneSummary,
     } = useWeb3Contract({
@@ -92,21 +85,6 @@ const Details: NextPage = () => {
         functionName: "getFunderSummary",
         params: { funder: funderParam, level: levelParam },
     })
-
-    // const useFunderSummary = async (funder: string, level: number) => {
-    //     const { native } = useMoralisWeb3Api();
-    //     const options = {
-    //         chain: chainIdNum,
-    //         address: fundAddress,
-    //         function_name: "getFunderSummary",
-    //         abi: abi,
-    //         params: { funder: funder, level: level },
-    //     };
-    //     const { fetch, data, error, isLoading } = useMoralisWeb3ApiCall(
-    //         native.runContractFunction,
-    //         { ...options }
-    //     );
-    // }
 
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
@@ -139,7 +117,6 @@ const Details: NextPage = () => {
 
     async function updateUI() {
         const milestoneInfo = await getMilestoneSummary() as milestoneSummary
-        console.log(`brug`, milestoneInfo)
         const assetAddressFromCall = milestoneInfo.assetAddress
         const ownerFromCall = milestoneInfo.owner
         const stateFromCall = milestoneInfo.state
@@ -295,7 +272,6 @@ const Details: NextPage = () => {
                                                                     onGetFunderInfo={(funder, level) => {
                                                                         setFunderParam(funder)
                                                                         setLevelParam(level)
-                                                                        console.log("yo")
                                                                     }}
                                                                     funderSummary={funderSummary}
                                                                 ></StraightDonation>
@@ -499,6 +475,7 @@ const Details: NextPage = () => {
                                                                 updateUI()
                                                             }}
                                                             currState={state}
+                                                            milestoneSummary={milestoneSummary}
                                                         ></WithdrawProceeds><h1 className="p-5 text-2xl font-bold bg-slate-800">
                                                                 You can now withdraw your seed round funding. This will immediately start your first milestone and the milestone funding process.</h1></>
                                                     ) : (<><h1 className="p-5 text-2xl font-bold bg-slate-800">

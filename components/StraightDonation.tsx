@@ -4,8 +4,7 @@ import { useMoralis, useWeb3Contract } from "react-moralis"
 import { SetStateAction, useState, useEffect } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { BigNumber } from "ethers"
-import { contractAddressesInterface, propType } from "../config/types"
-import { tokenConfig } from "../config/token-config"
+import { propType } from "../config/types"
 import styles from "../styles/Home.module.css"
 
 //contract is already deployed... trying to look at features of contract
@@ -38,13 +37,6 @@ export default function StraightDonation(props: propType) {
             _spender: fundAddress,
             _value: BigNumber.from((Number(val) * 10 ** decimals!).toString()),
         },
-    })
-
-    const { runContractFunction: getFundAmount } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getFundAmount",
-        params: { funder: account },
     })
 
     const { runContractFunction: fund } = useWeb3Contract({

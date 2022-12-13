@@ -23,7 +23,6 @@ export default function CommunityForum(props: propType) {
 
     async function updateUI() {
         const funderVotesFromCall = await getFunderVotes() as BigNumber
-        console.log(funderVotesFromCall.toNumber())
         setIsFunder(owner != account && funderVotesFromCall.toNumber() > 0)
     }
 

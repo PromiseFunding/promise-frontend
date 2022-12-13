@@ -34,13 +34,6 @@ export default function EndVote(props: propType) {
         params: {},
     })
 
-    const { runContractFunction: getFunderTrancheAmountRaised } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getFunderTrancheAmountRaised",
-        params: { funder: account, level: tranche },
-    })
-
     const handleSuccess = async function (tx: ContractTransaction) {
         try {
             await tx.wait(1)

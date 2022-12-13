@@ -9,7 +9,7 @@ import { ref, get } from "firebase/database"
 import { database } from "../firebase-config"
 import styles from "../styles/Home.module.css"
 import NewMilestone from "./NewMilestone"
-import { contractAddresses, abi, erc20Abi } from "../constants"
+import { abi } from "../constants"
 // dont export from moralis when using react
 import { useMoralis, useWeb3Contract } from "react-moralis"
 
@@ -46,12 +46,10 @@ export default function HorizontalNonLinearStepper(props: propType) {
         params: { funder: account, level: activeStep > 0 ? activeStep - 1 : 6 },
     })
 
-
     const getMilestones = async () => {
         const milestonesRef = ref(database, "funds/" + fundAddress + "/milestones")
         const snapshot = await get(milestonesRef)
         setMilestonesArray(snapshot.val())
-        console.log(snapshot.val())
     }
 
     async function updateUI() {
