@@ -9,6 +9,7 @@ export default function SubmitVote(props: propType) {
     const fundAddress = props.fundAddress
     const tranche = props.tranche
     const decimals = props.decimals
+    const funderSummary = props.funderSummary
 
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
 
@@ -44,19 +45,26 @@ export default function SubmitVote(props: propType) {
         abi: abi,
         contractAddress: fundAddress!,
         functionName: "getFunderTrancheAmountRaised",
-        params: { funder: account, level: tranche},
+        params: { funder: account, level: tranche },
     })
 
     async function updateUI() {
-        const didFunderVoteFromCall = (await didFunderVote()) as boolean
+        const didFunderVoteFromCall = funderSummary!.didFunderVote
+        const amountFundedFromCall = funderSummary!.funderTrancheAmountRaised.toNumber()
+
         setAlreadyVoted(didFunderVoteFromCall)
-        const amountFundedFromCall = (await getFunderTrancheAmountRaised()) as number
         setAmountFundedInTranche(amountFundedFromCall / 10 ** decimals!)
     }
 
     useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
+        if (funderSummary) {
             updateUI()
+        }
+    }, [funderSummary])
+
+    useEffect(() => {
+        if (isWeb3Enabled && fundAddress) {
+            props.onGetFunderInfo!(account!, tranche!)
         }
     }, [isWeb3Enabled, fundAddress, account])
 
@@ -64,7 +72,7 @@ export default function SubmitVote(props: propType) {
         try {
             await tx.wait(1)
             handleNewNotification()
-            updateUI()
+            props.onGetFunderInfo!(account!, tranche!)
         } catch (error) {
             console.log(error)
             handleNewNotification1()
@@ -134,8 +142,8 @@ export default function SubmitVote(props: propType) {
                     <h1 className="p-5 text-2xl font-bold bg-slate-800">
                         You have successfully submitted your vote for this milestone. Thank you!</h1>
                 ))
-            : (<><h1 className="p-5 text-2xl font-bold bg-slate-800">
-            The fundraiser is currently in a voting period. You have not donated to this milestone and cannot vote.</h1></>)}
+                : (<><h1 className="p-5 text-2xl font-bold bg-slate-800">
+                    The fundraiser is currently in a voting period. You have not donated to this milestone and cannot vote.</h1></>)}
         </div>
     )
 }

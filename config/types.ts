@@ -28,6 +28,7 @@ export interface propType {
     ownerFund?: string
     onChangeAmountFunded?(arg0: void): void
     onChangeState?(arg0: void): void
+    onGetFunderInfo?(funder: string, level: number): void
     updateAmount?: number
     tranche?: number
     milestoneDurations?: number[]
@@ -37,6 +38,8 @@ export interface propType {
     currState?: number
     totalRaised?: number
     timeLeftVoting?: number
+    milestoneSummary?: milestoneSummary
+    funderSummary?: funderSummary
 }
 
 
@@ -58,16 +61,33 @@ export interface milestone {
     startTime?: BigNumber
     milestoneDuration?: BigNumber
     totalRaised?: BigNumber
+    activeRaised?: BigNumber
 }
 
 export interface milestoneSummary {
     milestones: milestone[]
     currentTranche: number
-    assetAddress?: string
-    state?: number
-    preTotalFunds?: BigNumber
-    preDuration?: BigNumber
-    lifeTimeRaised?: BigNumber
+    assetAddress: string
+    state: number
+    preTotalFunds: BigNumber
+    preDuration: BigNumber
+    lifeTimeRaised: BigNumber
+    owner: string
+    timeLeftRound: BigNumber
+    votesTried: BigNumber
+    timeLeftVoting: BigNumber
+    funderCalledVote: boolean
+    preMilestoneTotalFunded: number
+    preFundingDuration: BigNumber
+}
+
+export interface funderSummary {
+    didFunderWithdraw: boolean
+    didFunderVote: boolean
+    funderTrancheAmountRaised: BigNumber
+    trancheAmountRaised: BigNumber
+    trancheTotalAmountRaised: BigNumber
+    fundAmount: BigNumber
 }
 
 export interface databaseFundObject {

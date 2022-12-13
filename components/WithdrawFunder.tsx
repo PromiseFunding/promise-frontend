@@ -11,6 +11,8 @@ export default function Withdraw(props: propType) {
     const fundAddress = props.fundAddress
     const tokenAddress = props.assetAddress
     const updateAmount = props.updateAmount
+    const funderSummary = props.funderSummary
+    const tranche = props.tranche
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
@@ -55,13 +57,19 @@ export default function Withdraw(props: propType) {
 
 
     async function updateUI() {
-        const amountFundedFromCall = (await getFundAmount()) as number
+        const amountFundedFromCall = funderSummary!.fundAmount.toNumber()
         setAmountFunded(amountFundedFromCall / 10 ** decimals!)
     }
 
     useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
+        if (funderSummary) {
             updateUI()
+        }
+    }, [funderSummary])
+
+    useEffect(() => {
+        if (isWeb3Enabled && fundAddress) {
+            props.onGetFunderInfo!(account!, tranche!)
         }
     }, [isWeb3Enabled, fundAddress, updateAmount])
 
@@ -74,7 +82,7 @@ export default function Withdraw(props: propType) {
             console.log(error)
             handleNewNotification1()
         }
-        updateUI()
+        props.onGetFunderInfo!(account!, tranche!)
     }
 
     const handleNewNotification = function () {
@@ -105,7 +113,7 @@ export default function Withdraw(props: propType) {
                 amountFunded > 0 ? (
                     <div className="">
                         <h1 className="p-5 text-2xl font-normal bg-slate-800">
-                        Withdrawing is all or none. Clicking the button will result in {amountFunded} {coinName} being sent to your account.</h1>
+                            Withdrawing is all or none. Clicking the button will result in {amountFunded} {coinName} being sent to your account.</h1>
                         <button
                             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                             onClick={async function () {
@@ -134,7 +142,7 @@ export default function Withdraw(props: propType) {
                 ) : (
                     <>
                         <h1 className="p-5 text-2xl font-normal bg-slate-800">
-                        You have 0 {coinName} locked in this fundraiser, so you are not eligible to withdraw funds.</h1>
+                            You have 0 {coinName} locked in this fundraiser, so you are not eligible to withdraw funds.</h1>
                     </>
                 )
             ) : (

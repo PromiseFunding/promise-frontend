@@ -18,13 +18,12 @@ export default function StraightDonation(props: propType) {
     const tranche = props.tranche
     const state = props.currState
     const milestone = tranche! + 1
+    const funderSummary = props.funderSummary
 
     // const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-    const [amountFunded, setAmountFunded] = useState(0)
+    const [amountFunded, setAmountFunded] = useState<number>()
     const [val, setVal] = useState("")
-    const [currState, setCurrState] = useState(0)
-
     const dispatch = useNotification()
 
     const {
@@ -52,34 +51,38 @@ export default function StraightDonation(props: propType) {
         abi: abi,
         contractAddress: fundAddress!,
         functionName: "fund",
-        params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
+        params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()), current: false },
     })
 
     async function updateUI() {
-        const amountFundedFromCall = (await getFundAmount()) as number
+        const amountFundedFromCall = funderSummary!.fundAmount.toNumber()
         setAmountFunded(amountFundedFromCall / 10 ** decimals!)
-        setCurrState(state as number)
     }
+    useEffect(() => {
+        if (funderSummary) {
+            updateUI()
+        }
+    }, [funderSummary])
 
     useEffect(() => {
         if (isWeb3Enabled && fundAddress) {
-            updateUI()
+            props.onGetFunderInfo!(account!, tranche!)
         }
     }, [isWeb3Enabled, fundAddress, account, totalRaised])
 
     let alertMessage = ""
     const handleSuccess = async function () {
-        if (state == 4){
+        if (state == 4) {
             alertMessage = "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
-            JSON.stringify(val + " " + coinName) +
-            " to the seed round and it will go straight to the fundraiser."
+                JSON.stringify(val + " " + coinName) +
+                " to the seed round and it will go straight to the fundraiser."
         }
-        else{
+        else {
             alertMessage = "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
-            JSON.stringify(val + " " + coinName) +
-            " split evenly among the remaining Milestones. We are currently in Milestone " +
-            JSON.stringify(milestone) +
-            "."
+                JSON.stringify(val + " " + coinName) +
+                " split evenly among the remaining Milestones. We are currently in Milestone " +
+                JSON.stringify(milestone) +
+                "."
         }
         alert(
             alertMessage
@@ -90,7 +93,7 @@ export default function StraightDonation(props: propType) {
             await fundTx.wait(1)
             props.onChangeAmountFunded!()
             handleNewNotification()
-            updateUI()
+            props.onGetFunderInfo!(account!, tranche!)
         } catch (error) {
             console.log(error)
             handleNewNotificationError()
@@ -137,10 +140,10 @@ export default function StraightDonation(props: propType) {
             <div className={styles.tooltip}>
                 {state == 4 ? (
                     <h1 className="text-xl font-bold">
-                    Pre Milestone Round Donation
+                        Pre Milestone Round Donation
                     </h1>
                 ) : (<h1 className="text-xl font-bold">
-                Donation Split Equally Among Remaining Milestones
+                    Donation Split Equally Among Remaining Milestones
                 </h1>)}
                 {/* <span className={styles.tooltiptext}>You will be donating x amount in each remaining milestone</span>
                 <br></br> */}
@@ -148,46 +151,46 @@ export default function StraightDonation(props: propType) {
             </div>
 
             {isWeb3Enabled && fundAddress ? (
-                    <div className="">
-                        <input
-                            maxLength={21 - (decimals || 6)}
-                            type="number"
-                            min="0"
-                            placeholder="0.00"
-                            id="message"
-                            name="message"
-                            onChange={handleChange}
-                            value={val}
-                            autoComplete="off"
-                            className="text-slate-900"
-                        />
-                        <button
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
-                            onClick={async function () {
-                                await approve({
-                                    onSuccess: (tx) => handleSuccess(),
-                                    onError: (error) => console.log(error),
-                                })
-                            }}
-                            disabled={isLoading || isFetching}
-                        >
-                            {isLoading || isFetching ? (
-                                <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
-                            ) : (
-                                <div>Donate</div>
-                            )}
-                        </button>
-                        <h2>
-                            <br></br>
-                            Deposit Amount: {val || 0} {coinName}
-                        </h2>
-                        {state == 0 ? (
-                            <h1>
+                <div className="">
+                    <input
+                        maxLength={21 - (decimals || 6)}
+                        type="number"
+                        min="0"
+                        placeholder="0.00"
+                        id="message"
+                        name="message"
+                        onChange={handleChange}
+                        value={val}
+                        autoComplete="off"
+                        className="text-slate-900"
+                    />
+                    <button
+                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
+                        onClick={async function () {
+                            await approve({
+                                onSuccess: (tx) => handleSuccess(),
+                                onError: (error) => console.log(error),
+                            })
+                        }}
+                        disabled={isLoading || isFetching}
+                    >
+                        {isLoading || isFetching ? (
+                            <div className="animate-spin spinner-border h-8 w-8 border-b-2 rounded-full"></div>
+                        ) : (
+                            <div>Donate</div>
+                        )}
+                    </button>
+                    <h2>
+                        <br></br>
+                        Deposit Amount: {val || 0} {coinName}
+                    </h2>
+                    {state == 0 ? (
+                        <h1>
                             Total Funds Donated: {amountFunded} {coinName}</h1>
-                            ) : (<></>)
-                        }
-                        {/* Total Funds In Escrow: {amountFunded} {coinName} */}
-                    </div>
+                    ) : (<></>)
+                    }
+                    {/* Total Funds In Escrow: {amountFunded} {coinName} */}
+                </div>
             ) : (
                 <div>No Fund Address Detected</div>
             )}
