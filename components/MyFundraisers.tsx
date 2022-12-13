@@ -6,18 +6,36 @@ import Pages from "./Pagination"
 import { ref, onValue, get } from "firebase/database"
 import { database } from "../firebase-config"
 import styles from "../styles/Home.module.css"
-import { useMoralis } from "react-moralis"
+import { useMoralis, useWeb3Contract } from "react-moralis"
 import { OpenInBrowserRounded } from "@material-ui/icons"
+import { ConstructionOutlined } from "@mui/icons-material"
+import { contractAddressesInterface } from "../config/types"
+import { contractAddresses, FundFactory } from "../constants"
 
-export default function MyFundraisers(props: propTypeFunds) {
-    const fundAddressArray = props.fundAddressArray
+export default function MyFundraisers() {
     const [donationsData, setDonationsData] = useState<string[]>([])
     const [ownerData, setOwnerData] = useState<string[]>([])
     const [windowWidth, setWindowWidth] = useState(0)
     const [page, setPage] = useState(1)
-    const [userAddress, setAddress] = useState("0")
+    const addresses: contractAddressesInterface = contractAddresses
+    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
+    const chainId: string = parseInt(chainIdHex!).toString()
 
-    const { isWeb3Enabled, account } = useMoralis()
+    const fundFactoryAddress =
+        chainId in addresses
+            ? addresses[chainId]["PromiseFundFactory"][
+                  addresses[chainId]["PromiseFundFactory"].length - 1
+              ]
+            : null
+
+    const [allFunds, setAllFunds] = useState<string[]>([])
+
+    const { runContractFunction: getAllPromiseFund } = useWeb3Contract({
+        abi: FundFactory,
+        contractAddress: fundFactoryAddress!,
+        functionName: "getAllPromiseFund",
+        params: {},
+    })
 
     useWindowSize()
 
@@ -36,25 +54,26 @@ export default function MyFundraisers(props: propTypeFunds) {
     }
 
     async function updateUI() {
-        var ownerRef = ref(database, "users/" + account + "/owner")
-        var donorRef = ref(database, "users/" + account + "/donations")
+        const allFundsFromCall = (await getAllPromiseFund()) as string[]
+        setAllFunds(allFundsFromCall)
 
         const listOfDonationFunds: string[] = []
         const listOfOwnedFunds: string[] = []
 
+        var ownerRef = ref(database, "users/" + account + "/owner")
+        var donorRef = ref(database, "users/" + account + "/donations")
+
         onValue(ownerRef, (snapshot) => {
             if (snapshot.exists()) {
                 snapshot.forEach(function (childSnapshot) {
-                    console.log(childSnapshot.val())
-                    console.log(snapshot.val())
                     // add childSnapshot (fund address) to array if it is in props array (get rid of once chain Id exists in database)
-                    if (fundAddressArray.indexOf(childSnapshot.val()) != -1) {
-                        listOfOwnedFunds.push(childSnapshot.val())
+                    if (allFundsFromCall.indexOf(childSnapshot.val().fundAddress) != -1) {
+                        listOfOwnedFunds.push(childSnapshot.val().fundAddress)
                     }
                 })
                 setOwnerData(listOfOwnedFunds)
             } else {
-                setOwnerData(listOfOwnedFunds)
+                setOwnerData([])
             }
         })
 
@@ -62,13 +81,13 @@ export default function MyFundraisers(props: propTypeFunds) {
             if (snapshot.exists()) {
                 snapshot.forEach(function (childSnapshot) {
                     // add childSnapshot (fund address) to array if it is in props array (get rid of once chain Id exists in database)
-                    if (fundAddressArray.indexOf(childSnapshot.val()) != -1) {
+                    if (allFundsFromCall.indexOf(childSnapshot.val()) != -1) {
                         listOfDonationFunds.push(childSnapshot.val())
                     }
                 })
                 setDonationsData(listOfDonationFunds)
             } else {
-                setDonationsData(listOfDonationFunds)
+                setDonationsData([])
             }
         })
     }
@@ -87,17 +106,11 @@ export default function MyFundraisers(props: propTypeFunds) {
     }
 
     useEffect(() => {
-        if (isWeb3Enabled) {
-            updateUI()
-        }
-    }, [isWeb3Enabled])
-
-    useEffect(() => {
-        if (account) {
+        if (account && isWeb3Enabled) {
             setPage(1)
             updateUI()
         }
-    }, [account])
+    }, [])
 
     return (
         <>
@@ -111,112 +124,136 @@ export default function MyFundraisers(props: propTypeFunds) {
                 }}
             >
                 {/* Owned Funds */}
-                <h1>Funds You Own</h1>
-                <ul className={styles.funds} id="funds">
-                    {ownerData.slice(0 + (page - 1) * 5, page * 5).map((fund) => (
-                        <li key={fund} style={{ paddingTop: "25px", paddingBottom: "25px" }}>
-                            <FundCard fund={fund}></FundCard>
-                        </li>
-                    ))}
-                    <div
-                        style={{
-                            width: 250,
-                            height: 0,
-                            position: calculatePaddingToggle(windowWidth)
-                                ? "relative"
-                                : "absolute",
-                        }}
-                    ></div>
-                    <div
-                        style={{
-                            width: 250,
-                            height: 0,
-                            position: calculatePaddingToggle(windowWidth)
-                                ? "relative"
-                                : "absolute",
-                        }}
-                    ></div>
-                    <div
-                        style={{
-                            width: 250,
-                            height: 0,
-                            position: calculatePaddingToggle(windowWidth)
-                                ? "relative"
-                                : "absolute",
-                        }}
-                    ></div>
-                    <div
-                        style={{
-                            width: 250,
-                            height: 0,
-                            position: calculatePaddingToggle(windowWidth)
-                                ? "relative"
-                                : "absolute",
-                        }}
-                    ></div>
-                </ul>
-                {ownerData.length != 0 ? (
-                    <Pages
-                        amount={ownerData.length}
-                        onChangePage={(newAmount: SetStateAction<Number>) =>
-                            setPage(Number(newAmount))
-                        }
-                    />
+                {ownerData.length > 0 ? (
+                    <>
+                        <h1 className="text-4xl font-bold text-slate-200 text-center">
+                            Funds You Own
+                        </h1>
+                        <ul className={styles.funds} id="funds">
+                            {ownerData.slice(0 + (page - 1) * 5, page * 5).map((fund) => (
+                                <li
+                                    key={fund}
+                                    style={{ paddingTop: "25px", paddingBottom: "25px" }}
+                                >
+                                    <FundCard fund={fund}></FundCard>
+                                </li>
+                            ))}
+                            <div
+                                style={{
+                                    width: 250,
+                                    height: 0,
+                                    position: calculatePaddingToggle(windowWidth)
+                                        ? "relative"
+                                        : "absolute",
+                                }}
+                            ></div>
+                            <div
+                                style={{
+                                    width: 250,
+                                    height: 0,
+                                    position: calculatePaddingToggle(windowWidth)
+                                        ? "relative"
+                                        : "absolute",
+                                }}
+                            ></div>
+                            <div
+                                style={{
+                                    width: 250,
+                                    height: 0,
+                                    position: calculatePaddingToggle(windowWidth)
+                                        ? "relative"
+                                        : "absolute",
+                                }}
+                            ></div>
+                            <div
+                                style={{
+                                    width: 250,
+                                    height: 0,
+                                    position: calculatePaddingToggle(windowWidth)
+                                        ? "relative"
+                                        : "absolute",
+                                }}
+                            ></div>
+                        </ul>
+                        {ownerData.length != 0 ? (
+                            <Pages
+                                amount={ownerData.length}
+                                onChangePage={(newAmount: SetStateAction<Number>) =>
+                                    setPage(Number(newAmount))
+                                }
+                            />
+                        ) : (
+                            <></>
+                        )}
+                    </>
                 ) : (
                     <></>
                 )}
+
+                <br></br>
                 {/* Donations */}
-                <h1>Funds You Have Donated To</h1>
-                <ul className={styles.funds} id="funds">
-                    {donationsData.slice(0 + (page - 1) * 5, page * 5).map((fund) => (
-                        <li key={fund} style={{ paddingTop: "25px", paddingBottom: "25px" }}>
-                            <FundCard fund={fund}></FundCard>
-                        </li>
-                    ))}
-                    <div
-                        style={{
-                            width: 250,
-                            height: 0,
-                            position: calculatePaddingToggle(windowWidth)
-                                ? "relative"
-                                : "absolute",
-                        }}
-                    ></div>
-                    <div
-                        style={{
-                            width: 250,
-                            height: 0,
-                            position: calculatePaddingToggle(windowWidth)
-                                ? "relative"
-                                : "absolute",
-                        }}
-                    ></div>
-                    <div
-                        style={{
-                            width: 250,
-                            height: 0,
-                            position: calculatePaddingToggle(windowWidth)
-                                ? "relative"
-                                : "absolute",
-                        }}
-                    ></div>
-                    <div
-                        style={{
-                            width: 250,
-                            height: 0,
-                            position: calculatePaddingToggle(windowWidth)
-                                ? "relative"
-                                : "absolute",
-                        }}
-                    ></div>
-                </ul>
-                {donationsData.length != 0 ? (
-                    <Pages
-                        amount={donationsData.length}
-                        onChangePage={(newAmount: SetStateAction<Number>) =>
-                            setPage(Number(newAmount))
-                        }
-                    />
+                {donationsData.length > 0 ? (
+                    <>
+                        <h1 className="text-4xl font-bold text-slate-200 text-center">
+                            Funds You Have Contributed To
+                        </h1>
+                        <ul className={styles.funds} id="funds">
+                            {donationsData.slice(0 + (page - 1) * 5, page * 5).map((fund) => (
+                                <li
+                                    key={fund}
+                                    style={{ paddingTop: "25px", paddingBottom: "25px" }}
+                                >
+                                    <FundCard fund={fund}></FundCard>
+                                </li>
+                            ))}
+                            <div
+                                style={{
+                                    width: 250,
+                                    height: 0,
+                                    position: calculatePaddingToggle(windowWidth)
+                                        ? "relative"
+                                        : "absolute",
+                                }}
+                            ></div>
+                            <div
+                                style={{
+                                    width: 250,
+                                    height: 0,
+                                    position: calculatePaddingToggle(windowWidth)
+                                        ? "relative"
+                                        : "absolute",
+                                }}
+                            ></div>
+                            <div
+                                style={{
+                                    width: 250,
+                                    height: 0,
+                                    position: calculatePaddingToggle(windowWidth)
+                                        ? "relative"
+                                        : "absolute",
+                                }}
+                            ></div>
+                            <div
+                                style={{
+                                    width: 250,
+                                    height: 0,
+                                    position: calculatePaddingToggle(windowWidth)
+                                        ? "relative"
+                                        : "absolute",
+                                }}
+                            ></div>
+                        </ul>
+                        {ownerData.length != 0 ? (
+                            <Pages
+                                amount={donationsData.length}
+                                onChangePage={(newAmount: SetStateAction<Number>) =>
+                                    setPage(Number(newAmount))
+                                }
+                            />
+                        ) : (
+                            <></>
+                        )}
+                    </>
                 ) : (
                     <></>
                 )}

@@ -5,7 +5,7 @@ import { SetStateAction, useEffect, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { tokenConfig } from "../config/token-config"
 import { contractAddressesInterface } from "../config/types"
-import { set, ref as refDb } from "firebase/database"
+import { update, set, ref as refDb } from "firebase/database"
 import { ref as refStore, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { database, storage } from "../firebase-config"
 import { milestone } from "../config/types"
@@ -184,7 +184,7 @@ export default function NewFund() {
                     })
                 })
 
-                set(refDb(database, `users/${account}/owner/${fundAddress}`), {})
+                set(refDb(database, `users/${account}/owner/${fundAddress}`), {fundAddress: fundAddress})
             }
         )
         await timeout(1000) //for 1 sec delay

@@ -12,48 +12,7 @@ import { ref, get } from "firebase/database"
 import { database } from "../firebase-config"
 
 const MyFunds: NextPage = () => {
-    const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
-
-    const fundFactoryAddress =
-        chainId in addresses
-            ? addresses[chainId]["PromiseFundFactory"][
-                  addresses[chainId]["PromiseFundFactory"].length - 1
-              ]
-            : null
-
-    //TODO: get helper-config working instead!... gets rid of decimal function
-    const [allFunds, setAllFunds] = useState<string[]>([])
-
-    const { runContractFunction: getAllPromiseFund } = useWeb3Contract({
-        abi: FundFactory,
-        contractAddress: fundFactoryAddress!,
-        functionName: "getAllPromiseFund",
-        params: {},
-    })
-
-    async function updateUI() {
-        const allFundsFromCall = (await getAllPromiseFund()) as string[]
-        const finalFunds: string[] = []
-        if (allFundsFromCall) {
-            for (const fund of allFundsFromCall) {
-                const categoryRef = ref(database, "funds/" + fund + "/fundTitle")
-                const snapshot = await get(categoryRef)
-
-                if (snapshot.val()) {
-                    finalFunds.push(fund)
-                }
-            }
-        }
-        setAllFunds(finalFunds)
-    }
-
-    useEffect(() => {
-        if (isWeb3Enabled && fundFactoryAddress) {
-            updateUI()
-        }
-    }, [isWeb3Enabled, fundFactoryAddress])
 
     return (
         <div>
@@ -71,13 +30,13 @@ const MyFunds: NextPage = () => {
                         verticalAlign: "middle",
                     }}
                 >
-                    Fundraisers We Love...
+                    Your Fundraisers
                 </h1>
             </div>
-            {isWeb3Enabled && fundFactoryAddress ? (
+            {isWeb3Enabled && account ? (
                 <>
                     <div>
-                        <MyFundraisers fundAddressArray={allFunds}></MyFundraisers>
+                        <MyFundraisers></MyFundraisers>
                     </div>
                 </>
             ) : (
