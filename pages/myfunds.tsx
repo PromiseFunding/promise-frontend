@@ -33,6 +33,7 @@ const MyFunds: NextPage = () => {
                     Your Fundraisers
                 </h1>
             </div>
+            <br></br>
             {isWeb3Enabled && account ? (
                 <>
                     <div>

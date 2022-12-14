@@ -12,6 +12,7 @@ import { ConstructionOutlined } from "@mui/icons-material"
 import { contractAddressesInterface } from "../config/types"
 import { contractAddresses, FundFactory } from "../constants"
 import { ScrollMenu } from "react-horizontal-scrolling-menu"
+import Box from "@mui/material/Box"
 
 export default function MyFundraisers() {
     const [donationsData, setDonationsData] = useState<string[]>([])
@@ -68,12 +69,17 @@ export default function MyFundraisers() {
         })
     }
 
-    // may have to change this to be specific to donations and another functions specific to owner
-    const calculatePaddingToggle = (width: number): boolean => {
-        const maxWidth =
-            (donationsData.length + ownerData.length) * 250 +
-            (donationsData.length + ownerData.length - 1) * 35 +
-            20
+    const calculatePaddingToggleDonor = (width: number): boolean => {
+        const maxWidth = donationsData.length * 250 + (donationsData.length - 1) * 35 + 20
+
+        if (width < maxWidth) {
+            return true
+        }
+        return false
+    }
+
+    const calculatePaddingToggleOwner = (width: number): boolean => {
+        const maxWidth = ownerData.length * 250 + (ownerData.length - 1) * 35 + 20
 
         if (width < maxWidth) {
             return true
@@ -110,46 +116,24 @@ export default function MyFundraisers() {
                 {ownerData.length > 0 ? (
                     <>
                         <h1 className="text-4xl font-bold text-slate-200 text-center">
-                            Funds You Own
+                            Your Fundraisers
                         </h1>
-                        <ul className={styles.funds} id="funds">
-                            {ownerData.map((fund) => (
-                                <li
-                                    key={fund}
-                                    style={{ paddingTop: "25px", paddingBottom: "25px" }}
-                                >
-                                    <FundCard fund={fund}></FundCard>
-                                </li>
-                            ))}
-                        </ul>
-                        {/* {ownerData.length != 0 ? (
-                            <Pages
-                                amount={ownerData.length}
-                                onChangePage={(newAmount: SetStateAction<Number>) =>
-                                    setPage(Number(newAmount))
-                                }
-                            />
+                        {!calculatePaddingToggleOwner(windowWidth) ? (
+                            <Box my={2} display="flex" justifyContent="center">
+                                {ownerData.map((fund) => (
+                                    <li
+                                        key={fund}
+                                        style={{
+                                            paddingTop: "5px",
+                                            paddingBottom: "25px",
+                                            margin: "25px",
+                                        }}
+                                    >
+                                        <FundCard fund={fund}></FundCard>
+                                    </li>
+                                ))}
+                            </Box>
                         ) : (
-                            <></>
-                        )} */}
-                    </>
-                ) : (
-                    <></>
-                )}
-
-                <br></br>
-                {/* Donations */}
-                {donationsData.length > 0 ? (
-                    <>
-                        <h1 className="text-4xl font-bold text-slate-200 text-center">
-                            Funds You Have Contributed To
-                        </h1>
-                        <div
-                            style={{
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                        >
                             <ScrollMenu
                                 options={{
                                     ratio: 0.9,
@@ -161,26 +145,66 @@ export default function MyFundraisers() {
                                     <li
                                         key={fund}
                                         style={{
-                                            paddingTop: "25px",
+                                            paddingTop: "5px",
                                             paddingBottom: "25px",
-                                            margin: "15px",
+                                            margin: "25px",
                                         }}
                                     >
                                         <FundCard fund={fund}></FundCard>
                                     </li>
                                 ))}
                             </ScrollMenu>
-                        </div>
-                        {/* {ownerData.length != 0 ? (
-                            <Pages
-                                amount={donationsData.length}
-                                onChangePage={(newAmount: SetStateAction<Number>) =>
-                                    setPage(Number(newAmount))
-                                }
-                            />
+                        )}
+                    </>
+                ) : (
+                    <></>
+                )}
+
+                <br></br>
+                <br></br>
+                {/* Donations */}
+                {donationsData.length > 0 ? (
+                    <>
+                        <h1 className="text-4xl font-bold text-slate-200 text-center">
+                            Fundraisers You Have Contributed To
+                        </h1>
+                        {!calculatePaddingToggleDonor(windowWidth) ? (
+                            <Box my={2} display="flex" justifyContent="center">
+                                {donationsData.map((fund, index) => (
+                                    <li
+                                        key={fund}
+                                        style={{
+                                            paddingTop: "5px",
+                                            paddingBottom: "25px",
+                                            margin: "25px",
+                                        }}
+                                    >
+                                        <FundCard fund={fund}></FundCard>
+                                    </li>
+                                ))}
+                            </Box>
                         ) : (
-                            <></>
-                        )} */}
+                            <ScrollMenu
+                                options={{
+                                    ratio: 0.9,
+                                    rootMargin: "10px",
+                                    threshold: [0.01, 0.05, 0.5, 0.75, 0.95, 1],
+                                }}
+                            >
+                                {donationsData.map((fund, index) => (
+                                    <li
+                                        key={fund}
+                                        style={{
+                                            paddingTop: "5px",
+                                            paddingBottom: "25px",
+                                            margin: "25px",
+                                        }}
+                                    >
+                                        <FundCard fund={fund}></FundCard>
+                                    </li>
+                                ))}
+                            </ScrollMenu>
+                        )}
                     </>
                 ) : (
                     <></>
