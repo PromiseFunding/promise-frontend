@@ -21,22 +21,6 @@ export default function MyFundraisers() {
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
 
-    // const fundFactoryAddress =
-    //     chainId in addresses
-    //         ? addresses[chainId]["PromiseFundFactory"][
-    //               addresses[chainId]["PromiseFundFactory"].length - 1
-    //           ]
-    //         : null
-
-    // const [allFunds, setAllFunds] = useState<string[]>([])
-
-    // const { runContractFunction: getAllPromiseFund } = useWeb3Contract({
-    //     abi: FundFactory,
-    //     contractAddress: fundFactoryAddress!,
-    //     functionName: "getAllPromiseFund",
-    //     params: {},
-    // })
-
     useWindowSize()
 
     function useWindowSize() {
@@ -54,9 +38,6 @@ export default function MyFundraisers() {
     }
 
     async function updateUI() {
-        // const allFundsFromCall = (await getAllPromiseFund()) as string[]
-        // setAllFunds(allFundsFromCall)
-
         const listOfDonationFunds: string[] = []
         const listOfOwnedFunds: string[] = []
 
@@ -77,10 +58,7 @@ export default function MyFundraisers() {
         onValue(donorRef, (snapshot) => {
             if (snapshot.exists()) {
                 snapshot.forEach(function (childSnapshot) {
-                    // add childSnapshot (fund address) to array if it is in props array (get rid of once chain Id exists in database)
-                    //if (allFundsFromCall.indexOf(childSnapshot.val().fundAddress) != -1) {
                     listOfDonationFunds.push(childSnapshot.val().fundAddress)
-                    //}
                 })
                 setDonationsData(listOfDonationFunds)
             } else {

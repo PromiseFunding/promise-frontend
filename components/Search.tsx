@@ -200,7 +200,7 @@ export default function Search(props: propTypeFunds) {
 
                     <ShowMoreLess
                         amount={maxEntries}
-                        onChangeAmount={(newAmount: SetStateAction<Number>) =>
+                        onChangePage={(newAmount: SetStateAction<Number>) =>
                             setMaxEntries(Number(newAmount))
                         }
                     />) : (<div></div>
