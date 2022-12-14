@@ -36,7 +36,7 @@ const Discover: NextPage = () => {
         const finalFunds: string[] = []
         if (allFundsFromCall) {
             for (const fund of allFundsFromCall) {
-                const categoryRef = ref(database, "funds/" + fund + "/fundTitle")
+                const categoryRef = ref(database, chainId + "/funds/" + fund + "/fundTitle")
                 const snapshot = await get(categoryRef)
 
                 if (snapshot.val()) {

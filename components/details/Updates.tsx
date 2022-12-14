@@ -39,7 +39,9 @@ export default function Updates(props: propType) {
     const [uploading, setUploading] = useState(false)
     const [updates, setUpdates] = useState<update[]>()
 
-    const fundRef = refDb(database, "funds/" + fundAddress + '/updates')
+    const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
+    const chainId: string = parseInt(chainIdHex!).toString()
+    const fundRef = refDb(database, chainId + "/funds/" + fundAddress + '/updates')
 
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
@@ -54,7 +56,6 @@ export default function Updates(props: propType) {
     const dispatch = useNotification()
 
     const [expanded, setExpanded] = useState<string | false>(false);
-    const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => {
@@ -71,7 +72,7 @@ export default function Updates(props: propType) {
         setUploading(true)
 
         if (file) {
-            const iconRef = refStore(storage, `/files/${fundAddress}/${crypto.randomUUID()}${file!.name}`)
+            const iconRef = refStore(storage, `/files/${chainId}/${fundAddress}/${crypto.randomUUID()}${file!.name}`)
             const uploadTask = uploadBytesResumable(iconRef, file as Blob)
 
             uploadTask.on(
@@ -80,7 +81,7 @@ export default function Updates(props: propType) {
                 (err) => console.log(err),
                 () => {
                     getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                        push(refDb(database, `funds/${fundAddress}/updates`), {
+                        push(refDb(database, `${chainId}/funds/${fundAddress}/updates`), {
                             subject: subject,
                             description: description,
                             imageUrl: url,
@@ -90,7 +91,7 @@ export default function Updates(props: propType) {
                 }
             )
         } else {
-            push(refDb(database, `funds/${fundAddress}/updates`), {
+            push(refDb(database, `${chainId}/funds/${fundAddress}/updates`), {
                 subject: subject,
                 description: description,
                 imageUrl: "",

@@ -48,7 +48,10 @@ export default function StraightDonation(props: propType) {
         abi: abi,
         contractAddress: fundAddress!,
         functionName: "fund",
-        params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()), current: false },
+        params: {
+            amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()),
+            current: false,
+        },
     })
 
     async function updateUI() {
@@ -68,22 +71,27 @@ export default function StraightDonation(props: propType) {
     }, [isWeb3Enabled, fundAddress, account, totalRaised])
 
     let alertMessage = ""
-    const handleSuccess = async function () {
-        if (state == 4) {
-            alertMessage = "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
-                JSON.stringify(val + " " + coinName) +
-                " to the seed round and it will go straight to the fundraiser."
+    const handleSuccess = async function (tx: ContractTransaction) {
+        // if (state == 4) {
+        //     alertMessage =
+        //         "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
+        //         JSON.stringify(val + " " + coinName) +
+        //         " to the seed round and it will go straight to the fundraiser."
+        // } else {
+        //     alertMessage =
+        //         "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
+        //         JSON.stringify(val + " " + coinName) +
+        //         " split evenly among the remaining Milestones. We are currently in Milestone " +
+        //         JSON.stringify(milestone) +
+        //         "."
+        // }
+        // alert(alertMessage)
+        try {
+            await tx.wait(1)
+        } catch (error) {
+            console.log(error)
+            handleNewNotificationError()
         }
-        else {
-            alertMessage = "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
-                JSON.stringify(val + " " + coinName) +
-                " split evenly among the remaining Milestones. We are currently in Milestone " +
-                JSON.stringify(milestone) +
-                "."
-        }
-        alert(
-            alertMessage
-        )
         const fundTx: any = await fund()
         setVal("0")
         try {
@@ -91,18 +99,20 @@ export default function StraightDonation(props: propType) {
             props.onChangeAmountFunded!()
             handleNewNotification()
             props.onGetFunderInfo!(account!, tranche!)
+
+            var donorRef = ref(database, chainId + "/users/" + account + "/donor/" + fundAddress)
+
+            onValue(donorRef, (snapshot) => {
+                if (!snapshot.exists()) {
+                    set(refDb(database, `${chainId}/users/${account}/donor/${fundAddress}`), {
+                        fundAddress: fundAddress,
+                    })
+                }
+            })
         } catch (error) {
             console.log(error)
             handleNewNotificationError()
         }
-
-        var donorRef = ref(database, chainId + "/users/" + account + "/donor/" + fundAddress)
-
-        onValue(donorRef, (snapshot) => {
-            if (!snapshot.exists()) {
-                set(refDb(database, `${chainId}/users/${account}/donor/${fundAddress}`), {fundAddress: fundAddress})
-            }
-        })
     }
 
     const handleChange = (event: { target: { value: SetStateAction<string> } }) => {
@@ -145,11 +155,9 @@ export default function StraightDonation(props: propType) {
                     <h1 className="text-xl font-bold">Pre Milestone Round Donation</h1>
                 ) : (
                     <h1 className="text-xl font-bold">
-                        Pre Milestone Round Donation
+                        Donation Split Equally Among Remaining Milestones
                     </h1>
-                ) : (<h1 className="text-xl font-bold">
-                    Donation Split Equally Among Remaining Milestones
-                </h1>)}
+                )}
                 {/* <span className={styles.tooltiptext}>You will be donating x amount in each remaining milestone</span>
                 <br></br> */}
                 <br></br>

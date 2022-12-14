@@ -8,6 +8,8 @@ import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
 import styles from "../styles/Home.module.css"
 import { ContractTransaction } from "ethers"
+import { database, storage } from "../firebase-config"
+import { update, set, ref as refDb, ref, onValue } from "firebase/database"
 
 //contract is already deployed... trying to look at features of contract
 export default function CurrentTrancheDonation(props: propType) {
@@ -22,6 +24,7 @@ export default function CurrentTrancheDonation(props: propType) {
     const milestone = tranche! + 1
     // const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
+    const chainId: string = parseInt(chainIdHex!).toString()
     const [amountFunded, setAmountFunded] = useState(0)
     const [val, setVal] = useState("")
 
@@ -45,7 +48,10 @@ export default function CurrentTrancheDonation(props: propType) {
         abi: abi,
         contractAddress: fundAddress!,
         functionName: "fund",
-        params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()), current: true },
+        params: {
+            amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()),
+            current: true,
+        },
     })
 
     async function updateUI() {
@@ -80,6 +86,15 @@ export default function CurrentTrancheDonation(props: propType) {
             props.onChangeAmountFunded!()
             handleNewNotification()
             props.onGetFunderInfo!(account!, tranche!)
+            var donorRef = ref(database, chainId + "/users/" + account + "/donor/" + fundAddress)
+
+            onValue(donorRef, (snapshot) => {
+                if (!snapshot.exists()) {
+                    set(refDb(database, `${chainId}/users/${account}/donor/${fundAddress}`), {
+                        fundAddress: fundAddress,
+                    })
+                }
+            })
         } catch (error) {
             console.log(error)
             handleNewNotificationError()

@@ -163,7 +163,7 @@ export default function NewFund() {
 
         const iconRef = refStore(
             storage,
-            `/files/${fundAddress}/${crypto.randomUUID()}${file!.name}`
+            `/files/${chainId}/${fundAddress}/${crypto.randomUUID()}${file!.name}`
         )
         const uploadTask = uploadBytesResumable(iconRef, file as Blob)
 

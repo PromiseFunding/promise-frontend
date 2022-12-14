@@ -16,7 +16,7 @@ export default function StateStatus(props: propType) {
 
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
     const chainIdNum = parseInt(chainIdHex!)
-
+    const chainId: string = parseInt(chainIdHex!).toString()
     const [percent, setPercent] = useState(0)
     const [tranche, setTranche] = useState(0)
     const [state, setState] = useState(0)
@@ -27,7 +27,7 @@ export default function StateStatus(props: propType) {
     const [milestoneName, setMilestoneName] = useState("")
 
     const getMilestoneName = async () => {
-        const milestonesRef = ref(database, "funds/" + fundAddress + "/milestones/" + tranche + "/name")
+        const milestonesRef = ref(database, chainId + "/funds/" + fundAddress + "/milestones/" + tranche + "/name")
         const snapshot = await get(milestonesRef)
         setMilestoneName(snapshot.val())
     }

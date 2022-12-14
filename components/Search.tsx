@@ -7,6 +7,7 @@ import Pages from "./Pagination"
 import { ref, onValue, get } from "firebase/database"
 import { database } from "../firebase-config"
 import styles from "../styles/Home.module.css"
+import { useMoralis } from "react-moralis"
 
 export default function Search(props: propTypeFunds) {
     const [filteredData, setFilteredData] = useState<string[]>(props.fundAddressArray)
@@ -17,6 +18,9 @@ export default function Search(props: propTypeFunds) {
 
     const router = useRouter()
     const category = (router.query.category as string) || ""
+
+    const { chainId: chainIdHex } = useMoralis()
+    const chainId: string = parseInt(chainIdHex!).toString()
 
     useWindowSize()
 
@@ -40,7 +44,7 @@ export default function Search(props: propTypeFunds) {
         const newFilter = props.fundAddressArray.filter((fund) => {
             let holder = ""
             let categoryVal = ""
-            const categoryRef = ref(database, "funds/" + fund + "/category")
+            const categoryRef = ref(database, chainId + "/funds/" + fund + "/category")
 
             onValue(categoryRef, (snapshot) => {
                 categoryVal += snapshot.val()
@@ -56,11 +60,11 @@ export default function Search(props: propTypeFunds) {
             if (lowerCase === "" && categoryMatch) {
                 return true
             } else {
-                const titleRef = ref(database, "funds/" + fund + "/fundTitle")
+                const titleRef = ref(database, chainId + "/funds/" + fund + "/fundTitle")
                 onValue(titleRef, (snapshot) => {
                     holder += snapshot.val()
                 })
-                const descriptionRef = ref(database, "funds/" + fund + "/description")
+                const descriptionRef = ref(database, chainId + "/funds/" + fund + "/description")
                 onValue(descriptionRef, (snapshot) => {
                     holder += snapshot.val()
                 })
@@ -78,7 +82,7 @@ export default function Search(props: propTypeFunds) {
             return funds
         } else {
             for (const fund of funds) {
-                const categoryRef = ref(database, "funds/" + fund + "/category")
+                const categoryRef = ref(database, chainId + "/funds/" + fund + "/category")
                 const snapshot = await get(categoryRef)
                 const categoryVal = snapshot.val()
                 if (categoryVal && categoryVal.toLowerCase() == category.toLowerCase()) {

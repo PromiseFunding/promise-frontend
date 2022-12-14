@@ -9,10 +9,14 @@ import { database } from "../firebase-config"
 import { databaseFundObject } from "../config/types"
 import styles from "../styles/Home.module.css"
 import StateStatus from "./discover/StateStatus"
+import { useMoralis, useWeb3Contract } from "react-moralis"
+
 
 export default function FundCard(props: { fund: string }) {
+    const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
+    const chainId: string = parseInt(chainIdHex!).toString()
     const fund = props.fund
-    const fundRef = ref(database, "funds/" + fund)
+    const fundRef = ref(database, chainId + "/funds/" + fund)
 
     const [data, setData] = useState<databaseFundObject>()
     useEffect(() => {
