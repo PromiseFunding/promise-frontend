@@ -18,7 +18,6 @@ export default function MyFundraisers() {
     const [donationsData, setDonationsData] = useState<string[]>([])
     const [ownerData, setOwnerData] = useState<string[]>([])
     const [windowWidth, setWindowWidth] = useState(0)
-    //const [page, setPage] = useState(1)
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
@@ -70,7 +69,7 @@ export default function MyFundraisers() {
     }
 
     const calculatePaddingToggleDonor = (width: number): boolean => {
-        const maxWidth = donationsData.length * 250 + (donationsData.length - 1) * 35 + 20
+        const maxWidth = donationsData.length * 250 + (donationsData.length - 1) * 50 + 20
 
         if (width < maxWidth) {
             return true
@@ -79,7 +78,7 @@ export default function MyFundraisers() {
     }
 
     const calculatePaddingToggleOwner = (width: number): boolean => {
-        const maxWidth = ownerData.length * 250 + (ownerData.length - 1) * 35 + 20
+        const maxWidth = ownerData.length * 250 + (ownerData.length - 1) * 50 + 20
 
         if (width < maxWidth) {
             return true
@@ -89,14 +88,12 @@ export default function MyFundraisers() {
 
     useEffect(() => {
         if (account && isWeb3Enabled) {
-            //setPage(1)
             updateUI()
         }
     }, [])
 
     useEffect(() => {
         if (account && isWeb3Enabled) {
-            //setPage(1)
             updateUI()
         }
     }, [account])

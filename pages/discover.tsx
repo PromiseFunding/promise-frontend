@@ -4,16 +4,26 @@ import styles from "../styles/Home.module.css"
 import Header from "../components/Header"
 import { useEffect, useState } from "react"
 import Search from "../components/Search"
+import CategorySelector from "../components/CategorySelector"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { contractAddressesInterface } from "../config/types"
 import { contractAddresses, FundFactory } from "../constants"
 import { ref, get } from "firebase/database"
 import { database } from "../firebase-config"
+import * as React from 'react';
+
 
 const Discover: NextPage = () => {
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
+
+    const [state, setState] = React.useState({
+        top: false,
+        left: false,
+        bottom: false,
+        right: false,
+    });
 
     const fundFactoryAddress =
         chainId in addresses
@@ -64,6 +74,10 @@ const Discover: NextPage = () => {
             }} main={true}></Header>
             <div className={styles.fundsWeLove}>
                 <h1 style={{ position: "relative", fontWeight: "700", display: "table-cell", verticalAlign: "middle" }}>Fundraisers We Love...</h1>
+            </div>
+            <br></br>
+            <div>
+                <CategorySelector></CategorySelector>
             </div>
             {
                 isWeb3Enabled && fundFactoryAddress ? (

@@ -21,7 +21,7 @@ const MyFunds: NextPage = () => {
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
             </Head>
             <Header main={false}></Header>
-            <div className={styles.fundsWeLove}>
+            <div className={styles.yourFunds}>
                 <h1
                     style={{
                         position: "relative",

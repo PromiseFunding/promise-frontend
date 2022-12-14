@@ -20,7 +20,7 @@ export default function Header(props: { onChangeQuery?(arg0: string): void; main
                 style={{ marginRight: "20px" }}
             />
             <div className={styles.headerMain}>
-                <div className="text-lg lg:flex-grow flex flex-row  flex-nowrap ">
+                <div className="text-lg lg:flex-grow flex flex-row flex-nowrap ">
                     {props.main ? (
                         <SearchBar
                             className={styles.searchbar}
@@ -33,12 +33,10 @@ export default function Header(props: { onChangeQuery?(arg0: string): void; main
                     )}
 
                     <div className={styles.headerInner}>
-                        <CategorySelector></CategorySelector>
 
                         <Link legacyBehavior href="/discover">
                             <a className={styles.headerItem}>Discover</a>
                         </Link>
-
                         <Link legacyBehavior href="/info">
                             <a className={styles.headerItem}>How It Works</a>
                         </Link>
