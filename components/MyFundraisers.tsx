@@ -11,12 +11,13 @@ import { OpenInBrowserRounded } from "@material-ui/icons"
 import { ConstructionOutlined } from "@mui/icons-material"
 import { contractAddressesInterface } from "../config/types"
 import { contractAddresses, FundFactory } from "../constants"
+import { ScrollMenu } from "react-horizontal-scrolling-menu"
 
 export default function MyFundraisers() {
     const [donationsData, setDonationsData] = useState<string[]>([])
     const [ownerData, setOwnerData] = useState<string[]>([])
     const [windowWidth, setWindowWidth] = useState(0)
-    const [page, setPage] = useState(1)
+    //const [page, setPage] = useState(1)
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
@@ -82,14 +83,14 @@ export default function MyFundraisers() {
 
     useEffect(() => {
         if (account && isWeb3Enabled) {
-            setPage(1)
+            //setPage(1)
             updateUI()
         }
     }, [])
 
     useEffect(() => {
         if (account && isWeb3Enabled) {
-            setPage(1)
+            //setPage(1)
             updateUI()
         }
     }, [account])
@@ -112,7 +113,7 @@ export default function MyFundraisers() {
                             Funds You Own
                         </h1>
                         <ul className={styles.funds} id="funds">
-                            {ownerData.slice(0 + (page - 1) * 5, page * 5).map((fund) => (
+                            {ownerData.map((fund) => (
                                 <li
                                     key={fund}
                                     style={{ paddingTop: "25px", paddingBottom: "25px" }}
@@ -120,44 +121,8 @@ export default function MyFundraisers() {
                                     <FundCard fund={fund}></FundCard>
                                 </li>
                             ))}
-                            <div
-                                style={{
-                                    width: 250,
-                                    height: 0,
-                                    position: calculatePaddingToggle(windowWidth)
-                                        ? "relative"
-                                        : "absolute",
-                                }}
-                            ></div>
-                            <div
-                                style={{
-                                    width: 250,
-                                    height: 0,
-                                    position: calculatePaddingToggle(windowWidth)
-                                        ? "relative"
-                                        : "absolute",
-                                }}
-                            ></div>
-                            <div
-                                style={{
-                                    width: 250,
-                                    height: 0,
-                                    position: calculatePaddingToggle(windowWidth)
-                                        ? "relative"
-                                        : "absolute",
-                                }}
-                            ></div>
-                            <div
-                                style={{
-                                    width: 250,
-                                    height: 0,
-                                    position: calculatePaddingToggle(windowWidth)
-                                        ? "relative"
-                                        : "absolute",
-                                }}
-                            ></div>
                         </ul>
-                        {ownerData.length != 0 ? (
+                        {/* {ownerData.length != 0 ? (
                             <Pages
                                 amount={ownerData.length}
                                 onChangePage={(newAmount: SetStateAction<Number>) =>
@@ -166,7 +131,7 @@ export default function MyFundraisers() {
                             />
                         ) : (
                             <></>
-                        )}
+                        )} */}
                     </>
                 ) : (
                     <></>
@@ -179,53 +144,34 @@ export default function MyFundraisers() {
                         <h1 className="text-4xl font-bold text-slate-200 text-center">
                             Funds You Have Contributed To
                         </h1>
-                        <ul className={styles.funds} id="funds">
-                            {donationsData.slice(0 + (page - 1) * 5, page * 5).map((fund) => (
-                                <li
-                                    key={fund}
-                                    style={{ paddingTop: "25px", paddingBottom: "25px" }}
-                                >
-                                    <FundCard fund={fund}></FundCard>
-                                </li>
-                            ))}
-                            <div
-                                style={{
-                                    width: 250,
-                                    height: 0,
-                                    position: calculatePaddingToggle(windowWidth)
-                                        ? "relative"
-                                        : "absolute",
+                        <div
+                            style={{
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            <ScrollMenu
+                                options={{
+                                    ratio: 0.9,
+                                    rootMargin: "10px",
+                                    threshold: [0.01, 0.05, 0.5, 0.75, 0.95, 1],
                                 }}
-                            ></div>
-                            <div
-                                style={{
-                                    width: 250,
-                                    height: 0,
-                                    position: calculatePaddingToggle(windowWidth)
-                                        ? "relative"
-                                        : "absolute",
-                                }}
-                            ></div>
-                            <div
-                                style={{
-                                    width: 250,
-                                    height: 0,
-                                    position: calculatePaddingToggle(windowWidth)
-                                        ? "relative"
-                                        : "absolute",
-                                }}
-                            ></div>
-                            <div
-                                style={{
-                                    width: 250,
-                                    height: 0,
-                                    position: calculatePaddingToggle(windowWidth)
-                                        ? "relative"
-                                        : "absolute",
-                                }}
-                            ></div>
-                        </ul>
-                        {ownerData.length != 0 ? (
+                            >
+                                {ownerData.map((fund) => (
+                                    <li
+                                        key={fund}
+                                        style={{
+                                            paddingTop: "25px",
+                                            paddingBottom: "25px",
+                                            margin: "15px",
+                                        }}
+                                    >
+                                        <FundCard fund={fund}></FundCard>
+                                    </li>
+                                ))}
+                            </ScrollMenu>
+                        </div>
+                        {/* {ownerData.length != 0 ? (
                             <Pages
                                 amount={donationsData.length}
                                 onChangePage={(newAmount: SetStateAction<Number>) =>
@@ -234,7 +180,7 @@ export default function MyFundraisers() {
                             />
                         ) : (
                             <></>
-                        )}
+                        )} */}
                     </>
                 ) : (
                     <></>
