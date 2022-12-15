@@ -63,11 +63,12 @@
 
 .headerItem {
     font-size: 16px;
-    color: rgb(226 232 240);
+    color: rgb(20, 20, 20);
     margin-left: 30px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding: 5px;
 }
 
 .drawerItem {
@@ -97,9 +98,11 @@
 .newFundButton {
     padding: 10px;
     font-size: 15px;
-    color: rgb(226 232 240);
+    color: rgb(255, 255, 255);
     background: linear-gradient(125.78deg, #e5509acc 17.93%, #b02588cc 42.06%, #694dcbcc 73.89%);
     border-radius: 10px;
+    border-color: rgb(0, 0, 0);
+    border-width: 0.02cm;
     margin-top: auto;
     margin-bottom: auto;
     margin-left: 30px;
@@ -109,7 +112,7 @@
 }
 
 .newFundButton:hover {
-    color: "white";
+    color: rgb(45, 65, 166);
 }
 
 .header {
@@ -130,7 +133,13 @@
 }
 
 .headerItem:hover {
-    color: white;
+    color: rgb(45, 65, 166);
+    background-color: #f0f2f6;
+    padding-top: 10px;
+	padding-bottom: 10px;
+    padding-right: 5px;
+    padding-left: 5px;
+    border-radius: 10px 10px 10px 10px;
 }
 
 .drawerItem:hover {
@@ -378,7 +387,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    color: white;
+    color: rgb(20, 20, 20);
     margin-top: 100px;
     text-align: center;
     margin-bottom: 50px;
@@ -730,7 +739,7 @@
 }
 
 .menuBar {
-    color: white;
+    color: rgb(20, 20, 20);
     font-size: 20px;
 }
 

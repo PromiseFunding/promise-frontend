@@ -12,7 +12,7 @@ export default function CategorySelector(props: { onChangeCategory?(arg0: void):
     return (
         <Menu as="div" className={props.onChangeCategory ? styles.drawerItem : styles.category}>
             <div>
-                <Menu.Button className={props.onChangeCategory ?"inline-flex justify-center rounded text-slate-200 hover:text-white"  : "inline-flex justify-center rounded py-2 text-slate-200 hover:text-white"}>
+                <Menu.Button className={props.onChangeCategory ?"inline-flex justify-center rounded text-slate-900 hover:text-indigo-900"  : "inline-flex justify-center rounded py-2 text-slate-900 hover:text-indigo-900"}>
                     Categories
                     <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
                 </Menu.Button>

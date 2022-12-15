@@ -30,7 +30,7 @@ export default function PaginationButtons(props: propTypeEntryNumber) {
                     showLastButton
                     size="large"
                     color="primary"
-                    style={{ textAlign: "center", color: "white", justifyContent: "center"}}
+                    style={{ textAlign: "center", color: "black", justifyContent: "center"}}
                 />
             </Stack>
         </Box>

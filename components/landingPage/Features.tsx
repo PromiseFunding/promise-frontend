@@ -4,7 +4,7 @@ import styles from "../../styles/Home.module.css"
 
 export default function Features() {
     return (<div className={styles.landingPageFeatures} id="features" >
-        <h2 style={{ fontSize: "40px", fontWeight: "700" }}>Features</h2>
+        <h2 style={{ fontSize: "40px", fontWeight: "700", color: "black"}}>Features</h2>
         <div className={styles.featuresBlock}>
             <div className={styles.featuresBlockInner}>
                 <div className={styles.featureCard} style={{ "--bg-color": "#694dcb" } as React.CSSProperties}>
