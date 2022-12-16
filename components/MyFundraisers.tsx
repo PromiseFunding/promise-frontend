@@ -112,7 +112,7 @@ export default function MyFundraisers() {
                 {/* Owned Funds */}
                 {ownerData.length > 0 ? (
                     <>
-                        <h1 className="text-4xl font-bold text-slate-200 text-center">
+                        <h1 className="text-4xl font-bold text-black-header text-center">
                             Your Fundraisers
                         </h1>
                         {!calculatePaddingToggleOwner(windowWidth) ? (
@@ -162,7 +162,7 @@ export default function MyFundraisers() {
                 {/* Donations */}
                 {donationsData.length > 0 ? (
                     <>
-                        <h1 className="text-4xl font-bold text-slate-200 text-center">
+                        <h1 className="text-4xl font-bold text-black-header text-center">
                             Fundraisers You Have Contributed To
                         </h1>
                         {!calculatePaddingToggleDonor(windowWidth) ? (
