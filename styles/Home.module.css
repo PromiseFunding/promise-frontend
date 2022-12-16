@@ -292,7 +292,7 @@
     width: 300px;
     height: 400px;
     font-size: 30px;
-    background-color: #1a202f;
+    background-color: #ffffff;
     padding-top: 20px;
     transition: box-shadow 0.3s;
     z-index: 0;
@@ -318,6 +318,7 @@
     font-size: 15px;
     margin-left: 30px;
     margin-right: 30px;
+    color: rgb(20, 20, 20);
 }
 
 .launchAppInner {

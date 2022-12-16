@@ -8,7 +8,7 @@ export default function HowItWorks() {
 
 
             <div className={styles.howItWorksLanding} id="how-it-works">
-                <div style={{ color: "white", fontSize: "40px", fontWeight: "700", marginTop: "20px" }}>
+                <div style={{ color: "white", fontSize: "50px", fontWeight: "700", marginTop: "20px" }}>
                     How It Works
                 </div>
                 <div className={styles.howItWorksLandingOuter}>
