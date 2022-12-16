@@ -279,7 +279,7 @@
     flex-direction: row;
     justify-content: center;
     width: 100%;
-    margin-top: 50px;
+    margin-top: 20px;
 }
 
 .featuresBlockInner {
@@ -303,7 +303,7 @@
     background: rgb(226, 56, 56);
     background: linear-gradient(125.78deg, #e5509a 17.93%, #b02588 42.06%, #694dcb 73.89%);
     border: 1rem solid;
-    color: #1a202f;
+    color: #ffffff;
     border: black 2px;
 }
 
