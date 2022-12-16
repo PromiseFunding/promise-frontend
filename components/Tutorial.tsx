@@ -35,7 +35,7 @@ export default function Tutorial() {
                     <div className={styles.tutorialText} >
                         <div>
                             <h1 style={{ fontSize: "50px", fontWeight: "700" }}>Determine a timeline</h1>
-                            <h2 style={{ fontSize: "20px" }}>Set milestones that will be achieved over the course of the fundraiser. These milestones are the core promises the fundraiser is making to its funders.</h2>
+                            <h2 style={{ fontSize: "20px" }}>Set clear milestones that will be achieved over the course of the fundraiser. These milestones are the core promises the fundraiser is making to its funders.</h2>
                         </div>
                     </div>
                     <div className={styles.tutorialImage}>
@@ -49,7 +49,7 @@ export default function Tutorial() {
                     <div className={styles.tutorialText} >
                         <div>
                             <h1 style={{ fontSize: "50px", fontWeight: "700" }}>Agree on the terms of the fundraiser</h1>
-                            <h2 style={{ fontSize: "20px" }}>Once the terms for the fundraiser are decided they are locked into a new Promise Smart Contract. Users will be able to interact with this contract when they donate, vote, and withdraw. Since it is a Smart Contract, the owner can never change the fundraiser&apos;s terms. </h2>
+                            <h2 style={{ fontSize: "20px" }}>Once the terms for the fundraiser are decided they are locked into a new Promise Smart Contract. Users will be able to interact with this contract when they donate, vote, and withdraw. Since it is a Smart Contract, the owner can never change the fundraiser&apos;s terms and users can track their funds. </h2>
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@ export default function Tutorial() {
                     <div className={styles.tutorialText} >
                         <div>
                             <h1 style={{ fontSize: "50px", fontWeight: "700" }}>Work towards goals</h1>
-                            <h2 style={{ fontSize: "20px" }}>Over the course of the milestone, the fundraiser should be working hard to achieve their goals by the end of the milestone period.</h2>
+                            <h2 style={{ fontSize: "20px" }}>After a seed funding round to kickstart the project, the milestone based funding begins. Over the course of each milestone, the fundraiser should be working hard to achieve the goals established for the period. On their fundraiser page, owners of the project can provide periodic updates as well as link a discord chat to better communicate their progress and thoughts with their community.</h2>
                         </div>
                     </div>
                     <div className={styles.tutorialImage}>
@@ -71,7 +71,7 @@ export default function Tutorial() {
                     <div className={styles.tutorialText} >
                         <div>
                             <h1 style={{ fontSize: "50px", fontWeight: "700" }}>Accountability Voting</h1>
-                            <h2 style={{ fontSize: "20px" }}>At the end of each milestone, the fundraiser owner communicates their progress with their funders. If the funders agree the fundraiser has held up the promises for the milestone, they receive the money.</h2>
+                            <h2 style={{ fontSize: "20px" }}>At the end of each milestone, the fundraiser owner has communicated their progress with their funders and a voting period begins. If the funders agree the fundraiser has held up the promises for the milestone, the fundraiser receives the money and the fundraiser continues. If not, the funders of the milestone and future milestones get their money back and the fundraiser is ended.</h2>
                         </div>
                     </div>
                 </div>
@@ -79,7 +79,7 @@ export default function Tutorial() {
                     <div className={styles.tutorialText} >
                         <div>
                             <h1 style={{ fontSize: "50px", fontWeight: "700" }}>Success!</h1>
-                            <h2 style={{ fontSize: "20px" }}>If a fundraiser follows through on all their promises they will be rewarded with the funds raised each milestone and at the end of the process will have a reliable customer base to start with.</h2>
+                            <h2 style={{ fontSize: "20px" }}>If a fundraiser follows through on all their promises they will be rewarded with the funds raised each milestone and at the end of the process will have a reliable customer base to begin with.</h2>
                         </div>
                     </div>
                     <div className={styles.tutorialImage}>

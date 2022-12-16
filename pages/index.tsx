@@ -48,11 +48,11 @@ const Discover: NextPage = () => {
                         handleScroll("about")
                     }}>About</button>
                     <button type="button" className={styles.launchPageHeaderItem} onClick={(e) => {
-                        handleScroll("features")
-                    }}>Features</button>
-                    <button type="button" className={styles.launchPageHeaderItem} onClick={(e) => {
                         handleScroll("how-it-works")
                     }}>How It Works</button>
+                    <button type="button" className={styles.launchPageHeaderItem} onClick={(e) => {
+                        handleScroll("features")
+                    }}>Features</button>
                     <div className={styles.launchPageHeaderItem}>Contact</div>
                     <Link className={styles.launchPageHeaderItem} href="https://github.com/PromiseFunding">GitHub
                     </Link>

@@ -28,7 +28,7 @@ export default function HowItWorks() {
                         <div className={styles.howItWorksPanel}>
                             <h1>Progress</h1>
                             <FontAwesomeIcon className={styles.howItWorksIcon} icon={["fas", "list-check"]} size="6x" transform="shrink-4" />
-                            <h2 style={{ fontSize: "20px", marginTop: "30px", fontWeight: "400" }}>With the initial capital, fundraisers can start progressing towards their goals. Funders hold votes after each milestone to ensure the fundraiser is keeping their promises. </h2>
+                            <h2 style={{ fontSize: "20px", marginTop: "30px", fontWeight: "400" }}>Funders hold votes after each milestone to ensure the fundraiser is keeping their promises. The outcome of the vote determines if the funds from the milestone are given to the project or back to the funders.</h2>
                         </div>
                         <div className={styles.howItWorksPanel}>
                             <h1>Finish</h1>

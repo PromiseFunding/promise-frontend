@@ -22,18 +22,32 @@ export default function Header(props: { onChangeQuery?(arg0: string): void; main
             <div className={styles.headerMain}>
                 <div className="text-lg lg:flex-grow flex flex-row flex-nowrap ">
                     {props.main ? (
-                        <SearchBar
-                            className={styles.searchbar}
-                            onChange={(query) => {
-                                props.onChangeQuery!(query)
-                            }}
-                        ></SearchBar>
+                        <>
+                            <SearchBar
+                                className={styles.searchbar}
+                                onChange={(query) => {
+                                    props.onChangeQuery!(query)
+                                }}
+                            ></SearchBar>
+                            <div className={styles.headerInner}>
+                                <div className={styles.headerFix}>
+                                    <Link legacyBehavior href="/discover">
+                                        <a className={styles.headerItem}>Discover</a>
+                                    </Link>
+                                    <Link legacyBehavior href="/info">
+                                        <a className={styles.headerItem}>How It Works</a>
+                                    </Link>
+                                    <Link legacyBehavior href="/myfunds">
+                                        <a className={styles.headerItem}>My Fundraisers</a>
+                                    </Link>
+                                    <Link legacyBehavior href="/form">
+                                        <a className={styles.newFundButton}>Create New Fund</a>
+                                    </Link>
+                                </div>
+                            </div>
+                        </>
                     ) : (
-                        <></>
-                    )}
-
-                    <div className={styles.headerInner}>
-
+                        <><div className={styles.headerInner}>
                         <Link legacyBehavior href="/discover">
                             <a className={styles.headerItem}>Discover</a>
                         </Link>
@@ -46,7 +60,22 @@ export default function Header(props: { onChangeQuery?(arg0: string): void; main
                         <Link legacyBehavior href="/form">
                             <a className={styles.newFundButton}>Create New Fund</a>
                         </Link>
-                    </div>
+                    </div></>
+                    )}
+                    {/* <div className={styles.headerInner}>
+                        <Link legacyBehavior href="/discover">
+                            <a className={styles.headerItem}>Discover</a>
+                        </Link>
+                        <Link legacyBehavior href="/info">
+                            <a className={styles.headerItem}>How It Works</a>
+                        </Link>
+                        <Link legacyBehavior href="/myfunds">
+                            <a className={styles.headerItem}>My Fundraisers</a>
+                        </Link>
+                        <Link legacyBehavior href="/form">
+                            <a className={styles.newFundButton}>Create New Fund</a>
+                        </Link>
+                    </div> */}
                 </div>
             </div>
 
