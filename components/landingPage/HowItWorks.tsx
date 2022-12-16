@@ -14,9 +14,9 @@ export default function HowItWorks() {
                 <div className={styles.howItWorksLandingOuter}>
                     <div className={styles.howItWorksLandingInner}>
                         <div className={styles.howItWorksPanel}>
-                            <h1>Start</h1>
+                            <h1 style={{ color: "black"}}>Start</h1>
                             <FontAwesomeIcon className={styles.howItWorksIcon} icon={["fas", "lightbulb"]} transform="shrink-4" />
-                            <h2 style={{ fontSize: "20px", marginTop: "30px", fontWeight: "400" }}>Start with an idea. It can be anything: A new DeFi protocol, an artistic project, or a new type of physical product. Set goals and timelines for future milestones.</h2>
+                            <h2 style={{ fontSize: "20px", marginTop: "30px", fontWeight: "400"  }}>Start with an idea. It can be anything: A new DeFi protocol, an artistic project, or a new type of physical product. Set goals and timelines for future milestones.</h2>
                         </div>
                         <div className={styles.howItWorksPanel}>
                             <h1>Seed</h1>

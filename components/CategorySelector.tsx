@@ -12,7 +12,7 @@ export default function CategorySelector(props: { onChangeCategory?(arg0: void):
     return (
         <Menu as="div" className={props.onChangeCategory ? styles.drawerItem : styles.category}>
             <div>
-                <Menu.Button className={props.onChangeCategory ?"inline-flex justify-center rounded text-slate-900 hover:text-indigo-900"  : "inline-flex justify-center rounded py-2 text-slate-900 hover:text-indigo-900"}>
+                <Menu.Button className={props.onChangeCategory ?"inline-flex justify-center rounded text-black-header"  : "inline-flex justify-center rounded py-2 text-black-header hover:text-purple-header"}>
                     Categories
                     <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
                 </Menu.Button>
@@ -35,7 +35,7 @@ export default function CategorySelector(props: { onChangeCategory?(arg0: void):
                                     <a
 
                                         className={classNames(
-                                            active ? 'bg-gray-100 text-gray-900 hover:text-indigo-900 hover:bg-stone-100' : 'text-gray-700 hover:text-indigo-900 hover:bg-stone-100',
+                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:text-purple-header hover:bg-background-header',
                                             'block px-4 py-2 text-lg'
                                         )} onClick={(e) => { if (props.onChangeCategory) { props.onChangeCategory() } }}
                                     >
@@ -50,7 +50,7 @@ export default function CategorySelector(props: { onChangeCategory?(arg0: void):
                                     <a
 
                                         className={classNames(
-                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:text-purple-header hover:bg-background-header',
                                             'block px-4 py-2 text-lg'
                                         )} onClick={(e) => { if (props.onChangeCategory) { props.onChangeCategory() } }}
                                     >
@@ -65,7 +65,7 @@ export default function CategorySelector(props: { onChangeCategory?(arg0: void):
                                     <a
 
                                         className={classNames(
-                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:text-purple-header hover:bg-background-header',
                                             'block px-4 py-2 text-lg'
                                         )} onClick={(e) => { if (props.onChangeCategory) { props.onChangeCategory() } }}
                                     >
@@ -79,7 +79,7 @@ export default function CategorySelector(props: { onChangeCategory?(arg0: void):
                                 <Link legacyBehavior href="/discover/?category=product">
                                     <a
                                         className={classNames(
-                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:text-purple-header hover:bg-background-header',
                                             'block px-4 py-2 text-lg'
                                         )} onClick={(e) => { if (props.onChangeCategory) { props.onChangeCategory() } }}
                                     >
@@ -93,7 +93,7 @@ export default function CategorySelector(props: { onChangeCategory?(arg0: void):
                                 <Link legacyBehavior href="/discover/?category=gaming">
                                     <a
                                         className={classNames(
-                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700',
+                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:text-purple-header hover:bg-background-header',
                                             'block px-4 py-2 text-lg'
                                         )} onClick={(e) => { if (props.onChangeCategory) { props.onChangeCategory() } }}
                                     >

@@ -18,6 +18,11 @@ export default function Search(props: propTypeFunds) {
 
     const router = useRouter()
     const category = (router.query.category as string) || ""
+    let categoryHeader = category + " Fundraisers"
+
+    if (category == "") {
+        categoryHeader = ""
+    }
 
     const { chainId: chainIdHex } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
@@ -139,6 +144,16 @@ export default function Search(props: propTypeFunds) {
                     padding: "10px",
                 }}
             >
+                <h1
+                    style={{
+                        textAlign: "center",
+                        color: "#141414",
+                        fontSize: "22px",
+                    }}
+                >
+                    {categoryHeader.charAt(0).toUpperCase() + categoryHeader.slice(1)}
+                </h1>
+                <br></br>
                 <ul className={styles.funds} id="funds">
                     {filteredData.slice(0 + (page - 1) * 10, page * 10).map((fund) => (
                         <li key={fund} style={{ paddingTop: "25px", paddingBottom: "25px" }}>

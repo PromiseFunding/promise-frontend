@@ -136,15 +136,15 @@
     color: rgb(45, 65, 166);
     background-color: #f0f2f6;
     padding-top: 10px;
-	padding-bottom: 10px;
+    padding-bottom: 10px;
     padding-right: 5px;
     padding-left: 5px;
     border-radius: 10px 10px 10px 10px;
 }
 
 .drawerItem:hover {
-    color: white;
-    background-color: #1a202f;
+    color: rgb(45, 65, 166);
+    background-color: #f0f2f6;
 }
 
 .searchbar {
@@ -152,6 +152,7 @@
     margin-top: auto;
     margin-bottom: auto;
     font-size: 10px;
+    caret-color: rgb(45, 65, 166);
 }
 
 .heading {
@@ -741,14 +742,23 @@
 
 .menuBar {
     color: rgb(20, 20, 20);
-    font-size: 20px;
+    font-size: 30px;
+}
+
+.menuBar:hover {
+    color: rgb(45, 65, 166);
+    background-color: #f0f2f6;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 5px;
+    padding-left: 5px;
+    border-radius: 10px 10px 10px 10px;
 }
 
 .drawer {
     position: absolute;
     display: none;
 }
-
 
 @media (max-width: 1200px) {
     .grid {
