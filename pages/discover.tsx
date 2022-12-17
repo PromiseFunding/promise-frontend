@@ -5,6 +5,7 @@ import Header from "../components/Header"
 import { useEffect, useState } from "react"
 import Search from "../components/Search"
 import CategorySelector from "../components/CategorySelector"
+import SortSelector from "../components/SortingSearch"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { contractAddressesInterface } from "../config/types"
 import { contractAddresses, FundFactory } from "../constants"
@@ -78,6 +79,7 @@ const Discover: NextPage = () => {
             <br></br>
             <div>
                 <CategorySelector></CategorySelector>
+                <SortSelector></SortSelector>
             </div>
             {
                 isWeb3Enabled && fundFactoryAddress ? (

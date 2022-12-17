@@ -9,10 +9,15 @@ import { database } from "../firebase-config"
 import styles from "../styles/Home.module.css"
 import { useMoralis } from "react-moralis"
 
+type DictionaryNumber = {
+    [x: string]: number
+}
+
 export default function Search(props: propTypeFunds) {
     const [filteredData, setFilteredData] = useState<string[]>(props.fundAddressArray)
     //const [maxEntries, setMaxEntries] = useState(12)
     const [windowWidth, setWindowWidth] = useState(0)
+    const [amountPerFund, setAmountPerFund] = useState<DictionaryNumber>({})
     const [invisPadding, setInvisPadding] = useState(false)
     const [page, setPage] = useState(1)
 
@@ -23,6 +28,8 @@ export default function Search(props: propTypeFunds) {
     if (category == "") {
         categoryHeader = ""
     }
+
+    const sortBy = (router.query.sortby as string) || ""
 
     const { chainId: chainIdHex } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
@@ -105,6 +112,42 @@ export default function Search(props: propTypeFunds) {
         })
     }
 
+    const updateSorting = async () => {
+        if (sortBy == "top5") {
+            // var items = Object.keys(amountPerFund).map(function(key) {
+            //     return [key, amountPerFund[key]];
+            // })
+            // //console.log(items)
+            // items.sort(function(first, second) {
+            //     return Number(second[1]) - Number(first[1]);
+            // })
+            console.log(amountPerFund)
+            const sortedDictionaryPromise = new Promise((resolve) => {
+                const sortedDictionary = Object.entries(amountPerFund).sort((a, b) => {
+                    if (a[1] > b[1]) {
+                        return -1
+                    }
+                    if (a[1] < b[1]) {
+                        return 1
+                    }
+                    return 0
+                })
+                resolve(sortedDictionary)
+            })
+
+            let temp: string[]
+            sortedDictionaryPromise.then((sortedDictionary) => {
+                temp = (sortedDictionary as string[]).map((pair) => pair[0].toString())
+                setFilteredData(temp.slice(0,5))
+            })
+            //console.log(temp)
+
+            //console.log(Object.keys(items).slice(0,5))
+        } else {
+            updateCategories()
+        }
+    }
+
     const calculatePaddingToggle = (width: number): boolean => {
         const maxWidth = filteredData.length * 250 + (filteredData.length - 1) * 35 + 20
 
@@ -128,6 +171,10 @@ export default function Search(props: propTypeFunds) {
     useEffect(() => {
         updateCategories()
     }, [props.fundAddressArray, category])
+
+    useEffect(() => {
+        updateSorting()
+    }, [sortBy])
 
     useEffect(() => {
         setPage(1)
@@ -157,7 +204,15 @@ export default function Search(props: propTypeFunds) {
                 <ul className={styles.funds} id="funds">
                     {filteredData.slice(0 + (page - 1) * 10, page * 10).map((fund) => (
                         <li key={fund} style={{ paddingTop: "25px", paddingBottom: "25px" }}>
-                            <FundCard fund={fund}></FundCard>
+                            <FundCard
+                                fund={fund}
+                                onChangeAmount={(newAmount: SetStateAction<Number>) =>
+                                    setAmountPerFund({
+                                        ...amountPerFund,
+                                        [fund]: Number(newAmount),
+                                    })
+                                }
+                            ></FundCard>
                         </li>
                     ))}
                     <div

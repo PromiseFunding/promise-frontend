@@ -2,7 +2,7 @@ import Card from "@mui/material/Card"
 import CardContent from "@mui/material/CardContent"
 import CardMedia from "@mui/material/CardMedia"
 import Typography from "@mui/material/Typography"
-import { useEffect, useState } from "react"
+import { SetStateAction, useEffect, useState } from "react"
 import { CardActionArea } from "@mui/material"
 import { ref, onValue } from "firebase/database"
 import { database } from "../firebase-config"
@@ -10,15 +10,22 @@ import { databaseFundObject } from "../config/types"
 import styles from "../styles/Home.module.css"
 import StateStatus from "./discover/StateStatus"
 import { useMoralis, useWeb3Contract } from "react-moralis"
+import { propTypeFundCard } from "../config/types"
 
 
-export default function FundCard(props: { fund: string }) {
+export default function FundCard(props: propTypeFundCard) {
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
     const fund = props.fund
     const fundRef = ref(database, chainId + "/funds/" + fund)
 
+    const [amountPerFund, setAmountPerFund] = useState(0)
     const [data, setData] = useState<databaseFundObject>()
+
+    useEffect(() => {
+        props.onChangeAmount!(amountPerFund)
+    }, [amountPerFund])
+
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
             setData(snapshot.val())
@@ -65,7 +72,9 @@ export default function FundCard(props: { fund: string }) {
                                 }}>{data.description}</div>
                             </div>
 
-                            <StateStatus fundAddress={fund!}></StateStatus>
+                            <StateStatus fund={fund!} onChangeAmount={(newAmount: SetStateAction<Number>) =>
+                            setAmountPerFund(Number(newAmount))
+                        }></StateStatus>
                         </CardActionArea>
                     </Card>
                 </div>

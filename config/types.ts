@@ -55,6 +55,12 @@ export interface propTypeFunds {
     children?: React.ReactNode;
 }
 
+export interface propTypeFundCard {
+    fund: string
+    onChangeAmount?(arg0: number): void
+    onChangeRound?(arg0: void): void
+}
+
 export interface milestone {
     name?: string
     description?: string
