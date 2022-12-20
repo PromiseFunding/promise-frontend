@@ -18,9 +18,9 @@ const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ""
 const APP_ID = process.env.NEXT_PUBLIC_APP_ID || ""
 
 const poppins = Poppins({
-    weight: ["400", "700"],
-    style: ["normal", "italic"],
-    subsets: ["latin"],
+    weight: ['400', '500', '700'],
+    style: ['normal', 'italic'],
+    subsets: ['latin'],
 })
 
 function MyApp({ Component, pageProps }: AppProps) {

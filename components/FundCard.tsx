@@ -116,10 +116,7 @@ export default function FundCard(props: propTypeFundCard) {
                                         {data.description}
                                     </div>
                                 </div>
-                                {/* <StateStatus fund={fund!} onChangeAmount={(newAmount: SetStateAction<Number>) =>
-                            setAmountPerFund(Number(newAmount))
-                        }></StateStatus> */}
-                                <StateStatus fund={fund!}></StateStatus>
+                                <StateStatus fundAddress={fund!} format="discover"></StateStatus>
                             </CardActionArea>
                         </Card>
                     </div>
