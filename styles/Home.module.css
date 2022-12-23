@@ -117,7 +117,9 @@
 }
 
 .newFundButton:hover {
-    color: rgb(45, 65, 166);
+    /* color: rgb(45, 65, 166); */
+    /* color: rgb(135, 33, 94); */
+    color:rgb(164, 37, 37)
 }
 
 .header {

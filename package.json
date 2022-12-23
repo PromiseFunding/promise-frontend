@@ -39,6 +39,8 @@
     "react-dom": "18.2.0",
     "react-horizontal-scrolling-menu": "^3.2.3",
     "react-moralis": "^1.4.2",
+    "react-tsparticles": "^2.7.0",
+    "tsparticles": "^2.7.0",
     "web3uikit": "^1.0.4"
   },
   "devDependencies": {
