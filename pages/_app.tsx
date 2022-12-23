@@ -10,7 +10,7 @@ import Particles from "react-tsparticles"
 import { loadFull } from "tsparticles"
 import { useCallback } from "react"
 import { Engine } from "tsparticles-engine"
-
+import { connectStorageEmulator } from "firebase/storage"
 
 library.add(fab, faCoffee, fas)
 
@@ -24,7 +24,11 @@ const poppins = Poppins({
 })
 
 function MyApp({ Component, pageProps }: AppProps) {
-    let page = "" //for now
+    let page = ""
+    if (typeof window !== "undefined") {
+        page = window.location.pathname
+    }
+    console.log(page)
     const options = {
         // background: {
         //     color: "#fff",
