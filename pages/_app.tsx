@@ -70,7 +70,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <main className={poppins.className}>
             <MoralisProvider initializeOnMount={false}>
                 <NotificationProvider>
-                    {!page.includes("form") ? (
+                    {!(page.includes("form") || page.includes("details")) ? (
                         <Particles options={options} init={particlesInit} style={{ zIndex: -1 }} />
                     ) : null}
                     <Component {...pageProps} />
