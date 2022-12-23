@@ -112,41 +112,41 @@ export default function Search(props: propTypeFunds) {
         })
     }
 
-    const updateSorting = async () => {
-        if (sortBy == "top5") {
-            // var items = Object.keys(amountPerFund).map(function(key) {
-            //     return [key, amountPerFund[key]];
-            // })
-            // //console.log(items)
-            // items.sort(function(first, second) {
-            //     return Number(second[1]) - Number(first[1]);
-            // })
-            console.log(amountPerFund)
-            const sortedDictionaryPromise = new Promise((resolve) => {
-                const sortedDictionary = Object.entries(amountPerFund).sort((a, b) => {
-                    if (a[1] > b[1]) {
-                        return -1
-                    }
-                    if (a[1] < b[1]) {
-                        return 1
-                    }
-                    return 0
-                })
-                resolve(sortedDictionary)
-            })
+    // const updateSorting = async () => {
+    //     if (sortBy == "top5") {
+    //         // var items = Object.keys(amountPerFund).map(function(key) {
+    //         //     return [key, amountPerFund[key]];
+    //         // })
+    //         // //console.log(items)
+    //         // items.sort(function(first, second) {
+    //         //     return Number(second[1]) - Number(first[1]);
+    //         // })
+    //         console.log(amountPerFund)
+    //         const sortedDictionaryPromise = new Promise((resolve) => {
+    //             const sortedDictionary = Object.entries(amountPerFund).sort((a, b) => {
+    //                 if (a[1] > b[1]) {
+    //                     return -1
+    //                 }
+    //                 if (a[1] < b[1]) {
+    //                     return 1
+    //                 }
+    //                 return 0
+    //             })
+    //             resolve(sortedDictionary)
+    //         })
 
-            let temp: string[]
-            sortedDictionaryPromise.then((sortedDictionary) => {
-                temp = (sortedDictionary as string[]).map((pair) => pair[0].toString())
-                setFilteredData(temp.slice(0,5))
-            })
-            //console.log(temp)
+    //         let temp: string[]
+    //         sortedDictionaryPromise.then((sortedDictionary) => {
+    //             temp = (sortedDictionary as string[]).map((pair) => pair[0].toString())
+    //             setFilteredData(temp.slice(0,5))
+    //         })
+    //         //console.log(temp)
 
-            //console.log(Object.keys(items).slice(0,5))
-        } else {
-            updateCategories()
-        }
-    }
+    //         //console.log(Object.keys(items).slice(0,5))
+    //     } else {
+    //         updateCategories()
+    //     }
+    // }
 
     const calculatePaddingToggle = (width: number): boolean => {
         const maxWidth = filteredData.length * 250 + (filteredData.length - 1) * 35 + 20
@@ -172,9 +172,9 @@ export default function Search(props: propTypeFunds) {
         updateCategories()
     }, [props.fundAddressArray, category])
 
-    useEffect(() => {
-        updateSorting()
-    }, [sortBy])
+    // useEffect(() => {
+    //     updateSorting()
+    // }, [sortBy])
 
     useEffect(() => {
         setPage(1)
@@ -204,7 +204,7 @@ export default function Search(props: propTypeFunds) {
                 <ul className={styles.funds} id="funds">
                     {filteredData.slice(0 + (page - 1) * 10, page * 10).map((fund) => (
                         <li key={fund} style={{ paddingTop: "25px", paddingBottom: "25px" }}>
-                            <FundCard
+                            {/* <FundCard
                                 fund={fund}
                                 onChangeAmount={(newAmount: SetStateAction<Number>) =>
                                     setAmountPerFund({
@@ -212,6 +212,9 @@ export default function Search(props: propTypeFunds) {
                                         [fund]: Number(newAmount),
                                     })
                                 }
+                            ></FundCard> */}
+                            <FundCard
+                                fund={fund}
                             ></FundCard>
                         </li>
                     ))}

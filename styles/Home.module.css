@@ -104,8 +104,9 @@
     font-size: 15px;
     color: rgb(255, 255, 255);
     background: linear-gradient(125.78deg, #e5509acc 17.93%, #b02588cc 42.06%, #694dcbcc 73.89%);
+    /* background-color: #694dcb; */
     border-radius: 10px;
-    border-color: rgb(0, 0, 0);
+    /* border-color: rgb(0, 0, 0); */
     border-width: 0.02cm;
     margin-top: auto;
     margin-bottom: auto;

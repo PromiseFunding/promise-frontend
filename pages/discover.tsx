@@ -79,7 +79,7 @@ const Discover: NextPage = () => {
             <br></br>
             <div>
                 <CategorySelector></CategorySelector>
-                <SortSelector></SortSelector>
+                {/* <SortSelector></SortSelector> */}
             </div>
             {
                 isWeb3Enabled && fundFactoryAddress ? (
