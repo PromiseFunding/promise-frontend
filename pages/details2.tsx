@@ -16,6 +16,9 @@ import Header from "../components/Header"
 import StateStatus from "../components/discover/StateStatus"
 import TabsContent from "../components/details/TabsContent"
 import Donate from "../components/details/Donate"
+import Withdraw from "../components/details/Withdraw"
+import StartVote from "../components/details/StartVote"
+import Vote from "../components/details/Vote"
 
 const Details2: NextPage = () => {
     const router = useRouter()
@@ -24,7 +27,6 @@ const Details2: NextPage = () => {
     const fundRef = ref(database, "funds/" + fundAddress)
     const [data, setData] = useState<databaseFundObject>()
     const [assetAddress, setAssetAddress] = useState("")
-    const [userAddress, setAddress] = useState("0")
     const [owner, setOwner] = useState("")
     const [amt, setAmt] = useState(0)
     const [state, setState] = useState(0)
@@ -40,6 +42,7 @@ const Details2: NextPage = () => {
 
     const [funderParam, setFunderParam] = useState("")
     const [levelParam, setLevelParam] = useState(0)
+    const [userAddress, setUserAddress] = useState("")
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
@@ -81,12 +84,6 @@ const Details2: NextPage = () => {
             setData(snapshot.val())
         })
     }, [fundAddress])
-
-    useEffect(() => {
-        if (account) {
-            setAddress(account.toLowerCase())
-        }
-    }, [account])
 
     function getDurations(milestones: milestone[]): number[] {
         return milestones.map(milestone => milestone!.milestoneDuration!.toNumber())
@@ -135,14 +132,38 @@ const Details2: NextPage = () => {
     useEffect(() => {
         if (isWeb3Enabled && fundAddress) {
             updateUI()
+            setFunderParam(userAddress)
+            setLevelParam(tranche)
         }
     }, [isWeb3Enabled, fundAddress])
 
+    useEffect(() => {
+        if (account) {
+            setUserAddress(account)
+        }
+    }, [account])
+
+    const donateVisible = (): boolean => {
+        // when voting donating shouldn't be visible
+        if (state == 1) {
+            return false
+        }
+        if (account == owner) {
+            // Withdraw Time, Donate gets replaced by withdraw button
+            if (state == 4 && milestoneSummary!.timeLeftRound.toNumber() == 0 || state == 2) {
+                return false
+            }
+        }
+        if (state == 0 && (userAddress == owner || milestoneSummary!.timeLeftRound.toNumber() == 0)) {
+            return false
+        }
+        return true
+    }
+
     return (
         <div>
-
             <Header main={false}></Header>
-            {data ? (
+            {data && milestoneSummary && funderSummary ? (
                 <div className={styles.detailsMain}>
                     <Head>
                         <title>{data.fundTitle}: {data.description}</title>
@@ -160,28 +181,53 @@ const Details2: NextPage = () => {
                         <div className={styles.actionsOuter}>
                             <div className={styles.actionsInner}>
                                 <StateStatus fundAddress={fundAddress} milestoneSummary={milestoneSummary} format="details"></StateStatus>
-                                {(state != 1) ? (
-                                    <Donate
-                                        fundAddress={fundAddress}
-                                        tranche={tranche}
-                                        milestoneDurations={milestoneDurations}
-                                        ownerFund={owner}
-                                        decimals={decimals!}
-                                        userAddress={userAddress}
-                                        currState={state}
-                                        totalRaised={totalFunds}
-                                        coinName={coinName}
-                                        milestoneSummary={milestoneSummary}
-                                        onGetFunderInfo={(funder, level) => {
-                                            setFunderParam(funder)
-                                            setLevelParam(level)
-                                        }}
-                                        funderSummary={funderSummary}
-                                        assetAddress={assetAddress}
-                                    ></Donate>
-                                ) :
-                                    (<></>)
-                                }
+                                <div className={styles.buttons}>
+                                    <Button className={styles.shareButton}>Share</Button>
+
+                                    {donateVisible() ? (
+                                        <Donate
+                                            milestoneSummary={milestoneSummary}
+                                            funderSummary={funderSummary}
+                                            fundAddress={fundAddress}
+                                            decimals={decimals!}
+                                            onGetFunderInfo={(funder, level) => {
+                                                setFunderParam(funder)
+                                                setLevelParam(level)
+                                            }}
+                                        ></Donate>
+                                    ) :
+                                        (<></>)
+                                    }
+                                    {state == 0 && (userAddress == owner || milestoneSummary!.timeLeftRound.toNumber() == 0) ?
+                                        (<StartVote
+                                            fundAddress={fundAddress}
+                                            onChangeState={() => {
+                                                updateUI()
+                                            }}
+                                            milestoneSummary={milestoneSummary}
+                                            userAddress={userAddress}
+                                        ></StartVote>) :
+                                        (<></>)}
+                                    {((state == 4 && userAddress == owner && milestoneSummary!.timeLeftRound.toNumber() == 0) || state == 2) ? (
+                                        <Withdraw
+                                            fundAddress={fundAddress}
+                                            onChangeState={() => {
+                                                updateUI()
+                                            }}
+                                        ></Withdraw>
+                                    ) : (<></>)}
+                                    {state == 1 ? (
+                                        <Vote
+                                            milestoneSummary={milestoneSummary}
+                                            funderSummary={funderSummary}
+                                            fundAddress={fundAddress}
+                                            onGetFunderInfo={(funder, level) => {
+                                                setFunderParam(funder)
+                                                setLevelParam(level)
+                                            }}
+                                        ></Vote>
+                                    ) : <></>}
+                                </div>
 
                             </div>
                         </div>

@@ -11,7 +11,7 @@ export const formatDuration = (seconds: number) => {
     var hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
     var mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
     var sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
-    return dDisplay + hDisplay + mDisplay + sDisplay;
+    return dDisplay + hDisplay + mDisplay + 'and ' + sDisplay;
 };
 
 export function convertSeconds(s: number): string {
@@ -36,7 +36,7 @@ export function convertSeconds(s: number): string {
     }
     const minutes = date.getMinutes();
 
-    return `${month} ${day}, ${year} at ${hours}:${minutes} ${suffix} `
+    return `${month} ${day}, ${year} at ${hours}:${minutes} ${suffix}`
 }
 
 

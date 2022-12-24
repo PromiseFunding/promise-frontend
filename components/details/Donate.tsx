@@ -17,7 +17,7 @@ import Select from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
 import { TextField } from "@material-ui/core";
 import { BigNumber } from 'ethers'
-import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
+import { useNotification } from "web3uikit"
 
 const modalStyle = {
     position: 'absolute' as 'absolute',
@@ -33,17 +33,16 @@ const modalStyle = {
 }
 
 export default function Donate(props: propType) {
-    const fundAddress = props.fundAddress
-    const tranche = props.tranche
-    const milestoneDurations = props.milestoneDurations
-    const decimals = props.decimals
-    const coinName = props.coinName
-    const userAddress = props.userAddress
-    const state = props.currState!
-    const totalRaised = props.totalRaised
-    const owner = props.ownerFund
+    const milestoneSummary = props.milestoneSummary
     const funderSummary = props.funderSummary
-    const assetAddress = props.assetAddress
+    const fundAddress = props.fundAddress
+    const decimals = props.decimals
+    const tranche = milestoneSummary!.currentTranche
+    const state = milestoneSummary!.state
+    const totalRaised = milestoneSummary!.lifeTimeRaised
+    const owner = milestoneSummary!.owner
+    const assetAddress = milestoneSummary!.assetAddress
+    const timeLeftRound = milestoneSummary!.timeLeftRound.toNumber()
 
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
 
@@ -116,6 +115,26 @@ export default function Donate(props: propType) {
         setOpen(false)
     }
 
+    const disabled = (): boolean => {
+        if ((state < 4 && state > 0) || (owner == account) || (timeLeftRound == 0)) {
+            return true
+        }
+        return false
+    }
+
+    const disabledMessage = (): string => {
+        if (state < 4 && state > 0) {
+            return "* Donating only enabled during fundraising periods."
+        }
+        if (owner == account) {
+            return "* Fundraiser owners may not donate to their own funds."
+        }
+        if (timeLeftRound == 0) {
+            return "* The donating period has ended."
+        }
+        return "* Donating is currently disbled"
+    }
+
     const handleSuccess = async function () {
         const fundTx: any = await fund()
         setAmount("0")
@@ -127,7 +146,6 @@ export default function Donate(props: propType) {
             console.log(error)
             handleNewNotificationError()
         }
-        handleClose()
     }
 
     const handleNewNotification = function () {
@@ -149,7 +167,7 @@ export default function Donate(props: propType) {
     }
 
     return (
-        <div className={styles.buttons}>
+        <div>
             <Modal
                 open={open}
                 aria-labelledby="modal-modal-title"
@@ -157,7 +175,7 @@ export default function Donate(props: propType) {
                 onClose={handleClose}
             >
                 <Box sx={modalStyle}>
-                    <div className={styles.donateForm}>
+                    <div className={styles.modalForm}>
                         <div>
                             {state != 4 ? (
                                 <FormControl variant="filled">
@@ -200,6 +218,7 @@ export default function Donate(props: propType) {
                         </div>
 
                         <Button className={styles.donateButton2} style={{ bottom: "0px" }} onClick={async function () {
+                            handleClose()
                             await approve({
                                 onSuccess: (tx) => handleSuccess(),
                                 onError: (error) => console.log(error),
@@ -210,17 +229,15 @@ export default function Donate(props: propType) {
                 </Box>
             </Modal>
 
-            <Button className={styles.shareButton}>Share</Button>
-            <Button className={(((state == 0 || state == 4) && owner != account) ? styles.donateButton : styles.disabledButton)} disabled={(state < 4 && state > 0) || (owner == account)} onClick={(e) => { setOpen(true) }}>
+            <Button className={!disabled() ? styles.donateButton : styles.disabledButton} disabled={disabled()} onClick={(e) => { setOpen(true) }}>
                 Donate
             </Button>
-            <div className={styles.donateDisableTest} style={{ "--visibility": (state < 4 && state > 0 ? 'visible' : 'hidden'), "--position": (state < 4 && state > 0 ? 'relative' : 'absolute') } as React.CSSProperties}>
-                * Donating only enabled during fundraising periods.
-            </div>
 
-            <div className={styles.donateDisableTest} style={{ "--visibility": (owner == account ? 'visible' : 'hidden'), "--position": (owner == account ? 'relative' : 'absolute') } as React.CSSProperties}>
-                * Fundraiser owners may not donate to their own funds.
-            </div>
-        </div>
+            {disabled() ? (
+                <div className={styles.disabledText} style={{ "--visibility": (disabled() ? 'visible' : 'hidden'), "--position": (disabled() ? 'relative' : 'absolute') } as React.CSSProperties}>
+                    {disabledMessage()}
+                </div>) : (<div></div>)
+            }
+        </div >
     )
 }
