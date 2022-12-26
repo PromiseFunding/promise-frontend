@@ -24,55 +24,10 @@ const poppins = Poppins({
 })
 
 function MyApp({ Component, pageProps }: AppProps) {
-    let page = ""
-    if (typeof window !== "undefined") {
-        page = window.location.pathname
-    }
-    console.log(page)
-    const options = {
-        // background: {
-        //     color: "#fff",
-        // },
-        particles: {
-            shape: {
-                type: "circle",
-            },
-            number: {
-                value: 7,
-            },
-            color: {
-                // value: "random",
-                //value: ["#0A1A6A", "#A42525"]
-                value: "#A42525",
-            },
-            opacity: {
-                value: 0.3,
-            },
-            size: {
-                value: { min: 15, max: 30 },
-            },
-            move: {
-                enable: true,
-                speed: 0.25,
-                random: false,
-            },
-            bounds: {
-                top: 500,
-            },
-        },
-    }
-
-    const particlesInit = useCallback(async (engine: Engine) => {
-        await loadFull(engine)
-    }, [])
-
     return (
         <main className={poppins.className}>
             <MoralisProvider initializeOnMount={false}>
                 <NotificationProvider>
-                    {!(page.includes("form") || page.includes("details")) ? (
-                        <Particles options={options} init={particlesInit} style={{ zIndex: -1 }} />
-                    ) : null}
                     <Component {...pageProps} />
                 </NotificationProvider>
             </MoralisProvider>

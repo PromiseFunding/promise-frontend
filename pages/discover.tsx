@@ -11,8 +11,11 @@ import { contractAddressesInterface } from "../config/types"
 import { contractAddresses, FundFactory } from "../constants"
 import { ref, get } from "firebase/database"
 import { database } from "../firebase-config"
-import * as React from 'react';
-
+import * as React from "react"
+import Particles from "react-tsparticles"
+import { loadFull } from "tsparticles"
+import { useCallback } from "react"
+import { Engine } from "tsparticles-engine"
 
 const Discover: NextPage = () => {
     const addresses: contractAddressesInterface = contractAddresses
@@ -24,11 +27,13 @@ const Discover: NextPage = () => {
         left: false,
         bottom: false,
         right: false,
-    });
+    })
 
     const fundFactoryAddress =
         chainId in addresses
-            ? addresses[chainId]["PromiseFundFactory"][addresses[chainId]["PromiseFundFactory"].length - 1]
+            ? addresses[chainId]["PromiseFundFactory"][
+                  addresses[chainId]["PromiseFundFactory"].length - 1
+              ]
             : null
 
     //TODO: get helper-config working instead!... gets rid of decimal function
@@ -64,38 +69,83 @@ const Discover: NextPage = () => {
         }
     }, [isWeb3Enabled, fundFactoryAddress])
 
+    const options = {
+        // background: {
+        //     color: "#fff",
+        // },
+        particles: {
+            shape: {
+                type: "circle",
+            },
+            number: {
+                value: 7,
+            },
+            color: {
+                // value: "random",
+                //value: ["#0A1A6A", "#A42525"]
+                value: "#A42525",
+            },
+            opacity: {
+                value: 0.3,
+            },
+            size: {
+                value: { min: 15, max: 30 },
+            },
+            move: {
+                enable: true,
+                speed: 0.25,
+                random: false,
+            },
+            bounds: {
+                top: 500,
+            },
+        },
+    }
+
+    const particlesInit = useCallback(async (engine: Engine) => {
+        await loadFull(engine)
+    }, [])
+
     return (
-        <div >
+        <div>
+            <Particles options={options} init={particlesInit} style={{ zIndex: -1 }} />
             <Head>
                 <title>Promise</title>
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
             </Head>
-            <Header onChangeQuery={(queryString) => {
-                setQuery(queryString)
-            }} main={true}></Header>
+            <Header
+                onChangeQuery={(queryString) => {
+                    setQuery(queryString)
+                }}
+                main={true}
+            ></Header>
             <div className={styles.fundsWeLove}>
-                <h1 style={{ position: "relative", fontWeight: "700", display: "table-cell", verticalAlign: "middle" }}>Fundraisers We Love...</h1>
+                <h1
+                    style={{
+                        position: "relative",
+                        fontWeight: "700",
+                        display: "table-cell",
+                        verticalAlign: "middle",
+                    }}
+                >
+                    Fundraisers We Love...
+                </h1>
             </div>
             <br></br>
             <div>
                 <CategorySelector></CategorySelector>
                 {/* <SortSelector></SortSelector> */}
             </div>
-            {
-                isWeb3Enabled && fundFactoryAddress ? (
-                    <>
-                        <div>
-                            <Search
-                                fundAddressArray={allFunds}
-                                query={query}>
-                            </Search>
-                        </div>
-                    </>
-                ) : (
-                    <div>Not available on this chain</div>
-                )
-            }
-        </div >
+            {isWeb3Enabled && fundFactoryAddress ? (
+                <>
+                    <div>
+                        <Search fundAddressArray={allFunds} query={query}></Search>
+                    </div>
+                </>
+            ) : (
+                <div>Not available on this chain</div>
+            )}
+        </div>
     )
 }
 
