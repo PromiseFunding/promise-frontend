@@ -7,6 +7,7 @@ import Particles from "react-tsparticles"
 import { loadFull } from "tsparticles"
 import { useCallback } from "react"
 import { Engine } from "tsparticles-engine"
+import AccordionFAQ from "../components/AccordionFAQ"
 
 const Info: NextPage = () => {
     const options = {
@@ -29,7 +30,7 @@ const Info: NextPage = () => {
                 value: 0.3,
             },
             size: {
-                value: { min: 15, max: 30 },
+                value: { min: 30, max: 50 },
             },
             move: {
                 enable: true,
@@ -48,13 +49,16 @@ const Info: NextPage = () => {
 
     return (
         <div>
-            <Particles options={options} init={particlesInit} style={{ zIndex: -1 }} />
+            {/* <Particles options={options} init={particlesInit} style={{ zIndex: -1 }} /> */}
             <Head>
                 <title>Promise</title>
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
             </Head>
             <Header main={false}></Header>
             <Tutorial></Tutorial>
+            <br></br>
+            <br></br>
+            <AccordionFAQ></AccordionFAQ>
 
         </div>
     )

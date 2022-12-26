@@ -89,7 +89,7 @@ const Discover: NextPage = () => {
                 value: 0.3,
             },
             size: {
-                value: { min: 15, max: 30 },
+                value: { min: 30, max: 50 },
             },
             move: {
                 enable: true,
@@ -108,7 +108,7 @@ const Discover: NextPage = () => {
 
     return (
         <div>
-            <Particles options={options} init={particlesInit} style={{ zIndex: -1 }} />
+            {/* <Particles options={options} init={particlesInit} style={{ zIndex: -1 }} /> */}
             <Head>
                 <title>Promise</title>
                 <meta name="description" content="Version one of the FundMe Smart Contract" />

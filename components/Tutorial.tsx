@@ -87,7 +87,7 @@ export default function Tutorial() {
                     </div>
                 </div>
             </div>
-            <a href="http://www.freepik.com" style={{ color: "black", textAlign: "center", width: "100%", marginTop: "50px" }}>Images designed by vectorjuice / Freepik</a>
+            {/* <a href="http://www.freepik.com" style={{ color: "black", textAlign: "center", width: "100%", marginTop: "50px" }}>Images designed by vectorjuice / Freepik</a> */}
         </div >
     )
 }
