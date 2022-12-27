@@ -90,6 +90,16 @@ export default function CustomizedAccordions() {
           </Typography>
         </AccordionDetails>
       </Accordion>
+      <Accordion expanded={expanded === 'panel4'} onChange={handleChange('panel4')}>
+        <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
+          <Typography>What are the badges in the top left corners of the fundraisers on the discover page?</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>
+            There are two different types of badges, representing the two different types of fundraisers that are available on our platform. The purple badge with the letter 'P' represents our 'Promise' milestone based fundraiser. The yellow badge with the letter 'Y' represents our secondary fundraising option for one time causes and stands for yield generating fundraisers. Yield generating fundraisers allow donors to donate straight to the fundraiser or through a yield generating protocol which allows the donor to donate the interest earned.
+          </Typography>
+        </AccordionDetails>
+      </Accordion>
     </div>
     <br></br>
     <div style={{ justifyContent: "center", textAlign: "center" }}>
