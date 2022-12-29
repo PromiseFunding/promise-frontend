@@ -272,10 +272,7 @@ const Details: NextPage = () => {
                                                                     totalRaised={totalFunds}
                                                                     tranche={tranche}
                                                                     currState={state}
-                                                                    onGetFunderInfo={(funder, level) => {
-                                                                        setFunderParam(funder)
-                                                                        setLevelParam(level)
-                                                                    }}
+                                                                    onGetFunderInfo={() => { updateFunderInfo() }}
                                                                     funderSummary={funderSummary}
                                                                 ></StraightDonation>
                                                                     <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
@@ -290,10 +287,7 @@ const Details: NextPage = () => {
                                                                             onChangeAmountFunded={() => {
                                                                                 updateUI()
                                                                             }}
-                                                                            onGetFunderInfo={(funder, level) => {
-                                                                                setFunderParam(funder)
-                                                                                setLevelParam(level)
-                                                                            }}
+                                                                            onGetFunderInfo={() => { updateFunderInfo() }}
                                                                             funderSummary={funderSummary}
                                                                             totalRaised={totalFunds}
                                                                         ></CurrentTrancheDonation>
@@ -311,10 +305,7 @@ const Details: NextPage = () => {
                                                                         tranche={tranche}
                                                                         ownerFund={owner}
                                                                         decimals={decimals!}
-                                                                        onGetFunderInfo={(funder, level) => {
-                                                                            setFunderParam(funder)
-                                                                            setLevelParam(level)
-                                                                        }}
+                                                                        onGetFunderInfo={() => { updateFunderInfo() }}
                                                                         funderSummary={funderSummary}
                                                                     ></StartVote>
                                                                 ) : (<></>)}
@@ -327,10 +318,7 @@ const Details: NextPage = () => {
                                                                 assetAddress={assetAddress}
                                                                 tranche={tranche}
                                                                 decimals={decimals!}
-                                                                onGetFunderInfo={(funder, level) => {
-                                                                    setFunderParam(funder)
-                                                                    setLevelParam(level)
-                                                                }}
+                                                                onGetFunderInfo={() => { updateFunderInfo() }}
                                                                 funderSummary={funderSummary}
                                                             ></SubmitVote>
                                                             <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
@@ -345,10 +333,7 @@ const Details: NextPage = () => {
                                                                 decimals={decimals!}
                                                                 ownerFund={owner}
                                                                 timeLeftVoting={timeLeftVoting}
-                                                                onGetFunderInfo={(funder, level) => {
-                                                                    setFunderParam(funder)
-                                                                    setLevelParam(level)
-                                                                }}
+                                                                onGetFunderInfo={() => { updateFunderInfo() }}
                                                                 funderSummary={funderSummary}
                                                             ></EndVote>
                                                         </div>
@@ -369,10 +354,7 @@ const Details: NextPage = () => {
                                                             fundAddress={fundAddress}
                                                             assetAddress={assetAddress}
                                                             updateAmount={amt}
-                                                            onGetFunderInfo={(funder, level) => {
-                                                                setFunderParam(funder)
-                                                                setLevelParam(level)
-                                                            }}
+                                                            onGetFunderInfo={() => { updateFunderInfo() }}
                                                             funderSummary={funderSummary}
                                                             tranche={tranche}
                                                         ></Withdraw>
@@ -391,10 +373,7 @@ const Details: NextPage = () => {
                                                             totalRaised={totalFunds}
                                                             tranche={tranche}
                                                             currState={state}
-                                                            onGetFunderInfo={(funder, level) => {
-                                                                setFunderParam(funder)
-                                                                setLevelParam(level)
-                                                            }}
+                                                            onGetFunderInfo={() => { updateFunderInfo() }}
                                                             funderSummary={funderSummary}
                                                         ></StraightDonation>) : (<h1 className="p-5 text-2xl font-bold bg-slate-800">Seed Round ended. Not accepting donations.</h1>)
                                                     ) : (<></>)}
@@ -412,10 +391,7 @@ const Details: NextPage = () => {
                                                             tranche={tranche}
                                                             ownerFund={owner}
                                                             decimals={decimals!}
-                                                            onGetFunderInfo={(funder, level) => {
-                                                                setFunderParam(funder)
-                                                                setLevelParam(level)
-                                                            }}
+                                                            onGetFunderInfo={() => { updateFunderInfo() }}
                                                             funderSummary={funderSummary}
                                                         ></StartVote>
                                                     ) : (<></>)}
@@ -440,10 +416,7 @@ const Details: NextPage = () => {
                                                             decimals={decimals!}
                                                             ownerFund={owner}
                                                             timeLeftVoting={timeLeftVoting}
-                                                            onGetFunderInfo={(funder, level) => {
-                                                                setFunderParam(funder)
-                                                                setLevelParam(level)
-                                                            }}
+                                                            onGetFunderInfo={() => { updateFunderInfo() }}
                                                             funderSummary={funderSummary}
                                                         ></EndVote>
                                                     </div>
