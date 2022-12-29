@@ -36,7 +36,7 @@ export function convertSeconds(s: number): string {
     }
     const minutes = date.getMinutes();
 
-    return `${month} ${day}, ${year} at ${hours}:${minutes} ${suffix}`
+    return `${month} ${day}, ${year} at ${hours}:${minutes >= 10 ? minutes : `0${minutes}`} ${suffix}`
 }
 
 

@@ -28,7 +28,7 @@ export interface propType {
     ownerFund?: string
     onChangeAmountFunded?(arg0: void): void
     onChangeState?(arg0: void): void
-    onGetFunderInfo?(funder: string, level: number): void
+    onGetFunderInfo?(): void
     updateAmount?: number
     tranche?: number
     milestoneDurations?: number[]
@@ -88,6 +88,7 @@ export interface milestoneSummary {
     preFundingDuration: BigNumber
     preFundingEnd: BigNumber
     roundEnd: BigNumber
+    withdrawExpired: boolean
 }
 
 export interface funderSummary {

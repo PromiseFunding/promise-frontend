@@ -61,7 +61,8 @@ export default function Withdraw(props: propType) {
 
     useEffect(() => {
         if (isWeb3Enabled && fundAddress) {
-            props.onGetFunderInfo!(account!, tranche!)
+            props.onGetFunderInfo!()
+
         }
     }, [isWeb3Enabled, fundAddress, updateAmount])
 
@@ -74,7 +75,8 @@ export default function Withdraw(props: propType) {
             console.log(error)
             handleNewNotification1()
         }
-        props.onGetFunderInfo!(account!, tranche!)
+        props.onGetFunderInfo!()
+
     }
 
     const handleNewNotification = function () {

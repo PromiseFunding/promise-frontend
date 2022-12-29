@@ -19,6 +19,7 @@ import Donate from "../components/details/Donate"
 import Withdraw from "../components/details/Withdraw"
 import StartVote from "../components/details/StartVote"
 import Vote from "../components/details/Vote"
+import WithdrawExpired from "../components/details/WithdrawExpired"
 
 const Details2: NextPage = () => {
     const router = useRouter()
@@ -79,12 +80,6 @@ const Details2: NextPage = () => {
         params: { funder: funderParam, level: levelParam },
     })
 
-    useEffect(() => {
-        onValue(fundRef, (snapshot) => {
-            setData(snapshot.val())
-        })
-    }, [fundAddress])
-
     function getDurations(milestones: milestone[]): number[] {
         return milestones.map(milestone => milestone!.milestoneDuration!.toNumber())
     }
@@ -95,16 +90,9 @@ const Details2: NextPage = () => {
         updateUI()
     }
 
-    useEffect(() => {
-        if (funderParam && levelParam >= 0) {
-            updateFunderInfo()
-            setFunderParam("")
-            setLevelParam(-1)
-        }
-    }, [funderParam, levelParam])
-
     async function updateUI() {
         const milestoneInfo = await getMilestoneSummary() as milestoneSummary
+        console.log('update UI')
         const assetAddressFromCall = milestoneInfo.assetAddress
         const ownerFromCall = milestoneInfo.owner
         const stateFromCall = milestoneInfo.state
@@ -131,11 +119,10 @@ const Details2: NextPage = () => {
 
     useEffect(() => {
         if (isWeb3Enabled && fundAddress) {
-            updateUI()
             setFunderParam(userAddress)
             setLevelParam(tranche)
         }
-    }, [isWeb3Enabled, fundAddress])
+    }, [isWeb3Enabled, fundAddress, userAddress])
 
     useEffect(() => {
         if (account) {
@@ -143,14 +130,30 @@ const Details2: NextPage = () => {
         }
     }, [account])
 
+    useEffect(() => {
+        if (funderParam && levelParam >= 0) {
+            updateFunderInfo()
+        }
+    }, [funderParam, levelParam])
+
+    useEffect(() => {
+        onValue(fundRef, (snapshot) => {
+            setData(snapshot.val())
+        })
+    }, [fundAddress])
+
     const donateVisible = (): boolean => {
         // when voting donating shouldn't be visible
-        if (state == 1) {
+        if (state == 1 || state == 3) {
             return false
         }
         if (account == owner) {
             // Withdraw Time, Donate gets replaced by withdraw button
             if (state == 4 && milestoneSummary!.timeLeftRound.toNumber() == 0 || state == 2) {
+                return false
+            }
+        } else {
+            if (state == 2) {
                 return false
             }
         }
@@ -163,6 +166,7 @@ const Details2: NextPage = () => {
     return (
         <div>
             <Header main={false}></Header>
+
             {data && milestoneSummary && funderSummary ? (
                 <div className={styles.detailsMain}>
                     <Head>
@@ -180,9 +184,11 @@ const Details2: NextPage = () => {
                         </div>
                         <div className={styles.actionsOuter}>
                             <div className={styles.actionsInner}>
-                                <StateStatus fundAddress={fundAddress} milestoneSummary={milestoneSummary} format="details"></StateStatus>
+                                <StateStatus fundAddress={fundAddress} milestoneSummary={milestoneSummary} funderSummary={funderSummary} decimals={decimals!}
+                                    format="details"></StateStatus>
                                 <div className={styles.buttons}>
-                                    <Button className={styles.shareButton}>Share</Button>
+                                    {state != 3 ? (<Button className={styles.shareButton}>Share</Button>
+                                    ) : (<></>)}
 
                                     {donateVisible() ? (
                                         <Donate
@@ -190,10 +196,7 @@ const Details2: NextPage = () => {
                                             funderSummary={funderSummary}
                                             fundAddress={fundAddress}
                                             decimals={decimals!}
-                                            onGetFunderInfo={(funder, level) => {
-                                                setFunderParam(funder)
-                                                setLevelParam(level)
-                                            }}
+                                            onGetFunderInfo={() => { updateFunderInfo() }}
                                         ></Donate>
                                     ) :
                                         (<></>)
@@ -208,23 +211,34 @@ const Details2: NextPage = () => {
                                             userAddress={userAddress}
                                         ></StartVote>) :
                                         (<></>)}
-                                    {((state == 4 && userAddress == owner && milestoneSummary!.timeLeftRound.toNumber() == 0) || state == 2) ? (
+                                    {(((state == 3 && userAddress != owner) || state == 4 && userAddress == owner && milestoneSummary!.timeLeftRound.toNumber() == 0) || (state == 2 && owner.toLowerCase() == userAddress)) ? (
                                         <Withdraw
                                             fundAddress={fundAddress}
                                             onChangeState={() => {
                                                 updateUI()
                                             }}
+                                            milestoneSummary={milestoneSummary}
+                                            funderSummary={funderSummary}
+                                            onGetFunderInfo={() => { updateFunderInfo() }}
                                         ></Withdraw>
+                                    ) : (<></>)}
+                                    {state == 2 && milestoneSummary.withdrawExpired ? (
+                                        <WithdrawExpired
+                                            fundAddress={fundAddress}
+                                            onChangeState={() => {
+                                                updateUI()
+                                            }}
+                                            milestoneSummary={milestoneSummary}
+                                            funderSummary={funderSummary}
+                                            onGetFunderInfo={() => { updateFunderInfo() }}
+                                        ></WithdrawExpired>
                                     ) : (<></>)}
                                     {state == 1 ? (
                                         <Vote
                                             milestoneSummary={milestoneSummary}
                                             funderSummary={funderSummary}
                                             fundAddress={fundAddress}
-                                            onGetFunderInfo={(funder, level) => {
-                                                setFunderParam(funder)
-                                                setLevelParam(level)
-                                            }}
+                                            onGetFunderInfo={() => { updateFunderInfo() }}
                                         ></Vote>
                                     ) : <></>}
                                 </div>

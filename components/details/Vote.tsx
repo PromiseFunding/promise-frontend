@@ -27,6 +27,7 @@ export default function Vote(props: propType) {
     const funderSummary = props.funderSummary
     const milestoneSummary = props.milestoneSummary
     const tranche = milestoneSummary!.currentTranche
+    const owner = milestoneSummary!.owner
 
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
 
@@ -34,6 +35,8 @@ export default function Vote(props: propType) {
     const [didFunderVote, setFunderVote] = useState(false)
     const [isFunder, setIsFunder] = useState(false)
     const [voteVal, setVoteVal] = useState("yes")
+    const [timeLeftVoting, setTimeLeftVoting] = useState(0)
+    const [userAddress, setUserAddress] = useState("0")
 
     const dispatch = useNotification()
 
@@ -43,6 +46,7 @@ export default function Vote(props: propType) {
 
         setFunderVote(funderVoteFromCall)
         setIsFunder(funderTrancheAmountRaised > 0)
+        setTimeLeftVoting(milestoneSummary!.timeLeftVoting.toNumber())
     }
 
     useEffect(() => {
@@ -52,8 +56,11 @@ export default function Vote(props: propType) {
     }, [funderSummary])
 
     useEffect(() => {
+        if (account) {
+            setUserAddress(account)
+        }
         if (isWeb3Enabled && fundAddress) {
-            props.onGetFunderInfo!(account!, tranche!)
+            props.onGetFunderInfo!()
         }
     }, [isWeb3Enabled, fundAddress, account])
 
@@ -88,6 +95,15 @@ export default function Vote(props: propType) {
         params: { support: voteVal == "yes" ? true : false },
     })
 
+    const {
+        runContractFunction: endVote
+    } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "endVote",
+        params: {},
+    })
+
     const handleNewNotification = function () {
         dispatch({
             type: "info",
@@ -109,11 +125,40 @@ export default function Vote(props: propType) {
     const handleSuccess = async function (tx: ContractTransaction) {
         try {
             await tx.wait(1)
-            props.onGetFunderInfo!(account!, tranche!)
+            props.onGetFunderInfo!()
             handleNewNotification()
         } catch (error) {
             console.log(error)
             handleNewNotificationError()
+        }
+    }
+
+    const handleNewNotification2 = function () {
+        dispatch({
+            type: "info",
+            message: "Vote End Successful!",
+            title: "Transaction Notification",
+            position: "topR",
+        })
+    }
+
+    const handleNewNotificationError2 = function () {
+        dispatch({
+            type: "info",
+            message: "Vote End Failed!",
+            title: "Transaction Notification",
+            position: "topR",
+        })
+    }
+
+    const handleSuccess2 = async function (tx: ContractTransaction) {
+        try {
+            await tx.wait(1)
+            props.onGetFunderInfo!()
+            handleNewNotification2()
+        } catch (error) {
+            console.log(error)
+            handleNewNotificationError2()
         }
     }
 
@@ -168,10 +213,28 @@ export default function Vote(props: propType) {
                     </div>
                 </Box>
             </Modal>
-            <Button className={styles.donateButton}
-                onClick={() => { setOpen(true) }}>
-                Vote
-            </Button>
+            {timeLeftVoting > 0 ? (
+                <div>
+                    <Button className={owner.toLowerCase() != userAddress ? styles.donateButton : styles.disabledButton} disabled={owner.toLowerCase() == userAddress}
+                        onClick={() => { setOpen(true) }}>
+                        Vote
+                    </Button>
+                    {owner.toLowerCase() == userAddress ? (<h1 className={styles.disabledText}>* Creators may not participate in the vote.</h1>) : (<></>)}
+
+                </div>) : (
+                <Button className={styles.donateButton}
+                    onClick={
+                        async function () {
+                            await endVote({
+                                onSuccess: (tx) => handleSuccess2(tx as ContractTransaction),
+                                onError: (error) => console.log(error),
+                            })
+                        }
+                    }>
+                    End Vote
+                </Button>)
+            }
+
         </div >
     )
 }

@@ -11,11 +11,14 @@ import { ref, get } from "firebase/database"
 import { database } from "../../firebase-config"
 import { states } from "../../config/helper-config"
 import { formatDuration, convertSeconds } from '../../utils/utils';
+import { H1Styled } from 'web3uikit';
 
 export default function StateStatus(props: propType) {
     const fundAddress = props.fundAddress
     const milestoneInfo = props.milestoneSummary!
+    const funderSummary = props.funderSummary
     const format = props.format
+    const decimals = props.decimals
 
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
     const chainIdNum = parseInt(chainIdHex!)
@@ -26,6 +29,7 @@ export default function StateStatus(props: propType) {
     const [amountRaisedMilestone, setAmountRaisedMilestone] = useState(0)
     const [amountRaisedTotal, setAmountRaisedTotal] = useState(0)
     const [amountRaisedPre, setAmountRaisedPre] = useState(0)
+    const [withdrawableAmount, setWithdrawableAmount] = useState(0)
     const [asset, setAsset] = useState("")
     const [milestoneName, setMilestoneName] = useState("")
     const [timeLeft, setTimeLeft] = useState(0)
@@ -34,6 +38,7 @@ export default function StateStatus(props: propType) {
     const [owner, setOwner] = useState("")
     const [userAddress, setUserAddress] = useState("")
     const [timeLeftVoting, setTimeLeftVoting] = useState(0)
+    const [votesTried, setVotesTried] = useState(0)
 
 
     const getMilestoneName = async () => {
@@ -64,7 +69,9 @@ export default function StateStatus(props: propType) {
         const amountRaisedTotalFromCall = milestoneInfo.lifeTimeRaised
         const amountRaisedPreFromCall = milestoneInfo.preTotalFunds
         const assetAddressFromCall = milestoneInfo.assetAddress
+        const amountFundedFromCall = funderSummary!.fundAmount.toNumber()
         const coinName = getAssetName(assetAddressFromCall!)
+        const votesTriedFromCall = milestoneInfo.votesTried
         setOwner(milestoneInfo.owner.toLowerCase())
         setAsset(coinName)
         setAmountRaisedMilestone(+(amountRaisedFromCall!.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
@@ -74,6 +81,8 @@ export default function StateStatus(props: propType) {
         setPreFundingEnd(milestoneInfo.preFundingEnd.toNumber())
         setRoundEnd(milestoneInfo.roundEnd.toNumber())
         setTimeLeftVoting(milestoneInfo.timeLeftVoting.toNumber())
+        setWithdrawableAmount(amountFundedFromCall / 10 ** decimals!)
+        setVotesTried(votesTriedFromCall.toNumber())
     }
 
     const getAssetName = (address: string) => {
@@ -86,10 +95,10 @@ export default function StateStatus(props: propType) {
     }
 
     useEffect(() => {
-        if (isWeb3Enabled && fundAddress && milestoneInfo) {
+        if (isWeb3Enabled && fundAddress && milestoneInfo && funderSummary) {
             updateUI()
         }
-    }, [isWeb3Enabled, fundAddress, milestoneInfo])
+    }, [isWeb3Enabled, fundAddress, milestoneInfo, funderSummary])
 
     useEffect(() => {
         if (account) {
@@ -149,28 +158,79 @@ export default function StateStatus(props: propType) {
                         </div>
                     </>)
                     :
-                    (<div>
-                        <div style={{ marginBottom: "10px" }}>
-                            <b style={{ fontSize: "40px", color: "green", fontWeight: "400" }}>{amountRaisedMilestone.toLocaleString("en-US")}</b>
-                            <div>{asset} Raised in <b>{milestoneName}</b> of <b style={{ color: "green", fontWeight: "400" }}>{amountRaisedTotal} </b> {asset} Total.
-                            </div>
-                        </div>
-                        {state == 1 ? (
-                            <h1 style={{ fontSize: "20px", color: timeLeftVoting > 172800 ? "green" : timeLeftVoting > 86400 ? "orange" : "red" }}>
-                                {formatDuration(timeLeftVoting)} left in voting period.
-                            </h1>) : (
-                            <div>
-                                <div style={{ marginTop: "10px", marginBottom: "10px", textAlign: "center" }}>
-                                    Milestone {tranche + 1} of {milestoneInfo.milestones.length}: <b>{milestoneName}</b>
-                                    <BorderLinearProgress sx={{ height: "20px", borderRadius: "30px" }} variant="determinate" value={percent} />
-                                    <div style={{ fontSize: "10px" }}>milestone progress</div>
+
+                    (
+                        <div>
+                            {state == 3 ? (
+                                <div style={{ marginBottom: "10px" }}>
+                                    <b style={{ fontSize: "20px", color: "red", fontWeight: "400" }}>Fundraiser Ended.</b>
+                                    {owner == userAddress ? (<div>The funders of this project have determined that you did not live up to the promises of the milestones and will now be able to withdraw their money.</div>) : (
+                                        <div>
+                                            The funders of this project have determined the creator did not live up to the promises made for this milestone.
+                                            <div style={{ textAlign: "center", marginTop: "20px" }}>
+                                                <h1 style={{ fontSize: "40px", color: "green", fontWeight: "400" }}>{withdrawableAmount.toLocaleString("en-US")} {asset}</h1>
+                                                Available to withdraw
+                                            </div>
+
+                                        </div>
+                                    )}
                                 </div>
+                            ) : (
+                                <div>
+                                    <div style={{ marginBottom: "10px" }}>
+                                        <b style={{ fontSize: "40px", color: "green", fontWeight: "400" }}>{amountRaisedMilestone.toLocaleString("en-US")}</b>
+                                        <div>{asset} Raised in <b>{milestoneName}</b> of <b style={{ color: "green", fontWeight: "400" }}>{amountRaisedTotal} </b> {asset} Total.
+                                        </div>
+                                    </div>
+                                    {state == 1 ? (
+                                        <h1 style={{ fontSize: "20px", color: timeLeftVoting > 172800 ? "green" : timeLeftVoting > 86400 ? "orange" : "red" }}>
+                                            {timeLeftVoting > 0 ? `${formatDuration(timeLeftVoting)} left in voting period.` : "The voting period has ended. Anyone may now end the vote to process the results."}
+                                        </h1>) : (
+                                        <div>
+                                            {state == 2 ? (
+                                                <div>
+                                                    {milestoneInfo.withdrawExpired && userAddress != owner.toLowerCase() ? (
+                                                        <h1 style={{ fontWeight: "500", color: "red" }}>
+                                                            The Creator has not withdrawn the funds in the 30 day period. Anyone may now terminate the fundraiser to release the remaining funds back to the fundraisers.
+                                                        </h1>) : (
+                                                        <div>
+                                                            {milestoneInfo.milestones[milestoneInfo.currentTranche].activeRaised!.toNumber() ? (
+                                                                <div>
+                                                                    {userAddress == owner.toLowerCase() ?
+                                                                        (milestoneInfo.currentTranche + 1 != milestoneInfo.milestones.length ? "Milestone vote successful! You may now withdraw the funds raised in this milestone. The next milestone will start immediately upon withdrawal." : "Milestone vote successful! You may now withdraw the final funds raised in this fundraiser. If you wish, you may add another milestone to continue the fundraiser.")
+                                                                        : (milestoneInfo.currentTranche + 1 != milestoneInfo.milestones.length ? "Milestone vote successful. The next Milestone will start after the creator withdraws the funds raised." : "Milestone vote successful. The creator may now withdraw the final funds raised for the fundraiser. ")}</div>
+                                                            ) : (<h1>All funds have been withdrawn, the fundraiser is complete.</h1>)
 
-                                The fundraiser will accept donations for this milestone until {convertSeconds(roundEnd)}
-                            </div>)}
+                                                            }</div>)}
 
-                    </div>)}
-            </div>)
+
+
+                                                </div>) : (
+                                                <div>
+                                                    {votesTried < 1 ? (
+                                                        <div>
+                                                            <div style={{ marginTop: "10px", marginBottom: "10px", textAlign: "center" }}>
+                                                                Milestone {tranche + 1} of {milestoneInfo.milestones.length}: <b>{milestoneName}</b>
+                                                                <BorderLinearProgress sx={{ height: "20px", borderRadius: "30px" }} variant="determinate" value={percent} />
+                                                                <div style={{ fontSize: "10px" }}>milestone progress</div>
+                                                            </div>
+
+                                                            The fundraiser will accept donations for this milestone until {convertSeconds(roundEnd)}
+                                                        </div>) : (
+                                                        <h1>The initial vote for this milestone failed. It is now eligible for a re-vote to determine the final status of the fundraiser.</h1>
+                                                    )}
+
+                                                </div>)}
+                                        </div>
+                                    )}
+
+                                </div>
+                            )
+                            }
+                        </div>
+                    )
+                }
+            </div >)
             }
 
         </div >

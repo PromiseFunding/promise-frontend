@@ -50,6 +50,7 @@ export default function Donate(props: propType) {
     const [open, setOpen] = useState(false)
     const [donateType, setDonateType] = useState("spread")
     const [amount, setAmount] = useState("0")
+    const [userAddress, setUserAddress] = useState("0")
     const [amountFunded, setAmountFunded] = useState(0)
     const dispatch = useNotification()
 
@@ -106,19 +107,24 @@ export default function Donate(props: propType) {
     }, [funderSummary])
 
     useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
-            props.onGetFunderInfo!(account!, tranche!)
+        if (account) {
+            setUserAddress(account)
         }
-    }, [isWeb3Enabled, fundAddress, account, totalRaised])
+        if (isWeb3Enabled && fundAddress) {
+            props.onGetFunderInfo!()
+            console.log('test')
+        }
+    }, [isWeb3Enabled, fundAddress, account])
 
     const handleClose = () => {
         setOpen(false)
     }
 
     const disabled = (): boolean => {
-        if ((state < 4 && state > 0) || (owner == account) || (timeLeftRound == 0)) {
+        if ((state < 4 && state > 0) || (owner.toLowerCase() == userAddress.toLowerCase()) || (timeLeftRound == 0)) {
             return true
         }
+        console.log(owner.toLowerCase(), userAddress.toLowerCase())
         return false
     }
 
@@ -126,7 +132,7 @@ export default function Donate(props: propType) {
         if (state < 4 && state > 0) {
             return "* Donating only enabled during fundraising periods."
         }
-        if (owner == account) {
+        if (owner.toLowerCase() == userAddress.toLowerCase()) {
             return "* Fundraiser owners may not donate to their own funds."
         }
         if (timeLeftRound == 0) {
@@ -141,7 +147,7 @@ export default function Donate(props: propType) {
         try {
             await fundTx.wait(1)
             handleNewNotification()
-            props.onGetFunderInfo!(account!, tranche!)
+            props.onGetFunderInfo!()
         } catch (error) {
             console.log(error)
             handleNewNotificationError()
