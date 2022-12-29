@@ -11,6 +11,8 @@ import styles from "../styles/Home.module.css"
 import StateStatus from "./discover/StateStatus"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { propTypeFundCard } from "../config/types"
+import Tooltip from "@mui/material/Tooltip"
+import Link from "next/link"
 
 export default function FundCard(props: propTypeFundCard) {
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
@@ -54,7 +56,33 @@ export default function FundCard(props: propTypeFundCard) {
                                     height: "100%",
                                 }}
                             >
-                                <div className={styles.purpleBadge}>P</div>
+                                <Tooltip
+                                    title={
+                                        <>
+                                            Promise Fund: This fundraiser uses Promises unique
+                                            milestone based fundraising functionality.{" "}
+                                            <a
+                                                href="/info"
+                                                style={{
+                                                    textDecoration: "underline",
+                                                    color: "lightblue",
+                                                }}
+                                                onClick={() =>
+                                                    document.body.scrollIntoView({
+                                                        behavior: "smooth",
+                                                        block: "end",
+                                                    })
+                                                }
+                                            >
+                                                Learn more
+                                            </a>
+                                        </>
+                                    }
+                                    placement="top"
+                                    arrow
+                                >
+                                    <div className={styles.purpleBadge}>P</div>
+                                </Tooltip>{" "}
                                 <CardMedia
                                     component="img"
                                     height="100"
@@ -94,7 +122,6 @@ export default function FundCard(props: propTypeFundCard) {
                                         {data.description}
                                     </div>
                                 </div>
-
                                 {/* <StateStatus fund={fund!} onChangeAmount={(newAmount: SetStateAction<Number>) =>
                             setAmountPerFund(Number(newAmount))
                         }></StateStatus> */}
