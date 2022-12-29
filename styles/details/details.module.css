@@ -160,9 +160,8 @@
     font-size: 180px;
     /* width: 50%; */
     background: linear-gradient(125.78deg, #e5509a 17.93%, #b02588 42.06%, #694dcb 73.89%);
-    border: 1rem solid;
     color: white;
-    border: black 2px;
+    border: 1rem solid;
 }
 
 .modalForm {

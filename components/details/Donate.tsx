@@ -16,7 +16,7 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import InputLabel from '@mui/material/InputLabel'
 import { TextField } from "@material-ui/core";
-import { BigNumber } from 'ethers'
+import { BigNumber, ContractTransaction } from 'ethers'
 import { useNotification } from "web3uikit"
 
 const modalStyle = {
@@ -124,7 +124,6 @@ export default function Donate(props: propType) {
         if ((state < 4 && state > 0) || (owner.toLowerCase() == userAddress.toLowerCase()) || (timeLeftRound == 0)) {
             return true
         }
-        console.log(owner.toLowerCase(), userAddress.toLowerCase())
         return false
     }
 
@@ -141,7 +140,8 @@ export default function Donate(props: propType) {
         return "* Donating is currently disbled"
     }
 
-    const handleSuccess = async function () {
+    const handleSuccess = async function (tx: ContractTransaction) {
+        await tx.wait(1)
         const fundTx: any = await fund()
         setAmount("0")
         try {
@@ -204,7 +204,7 @@ export default function Donate(props: propType) {
                                 <FormControl>
                                     <h1 style={{ fontSize: "30px", fontWeight: "500", textAlign: "center" }}>Seed Donation</h1>
                                     <div style={{ textAlign: "center" }}>
-                                        <FontAwesomeIcon className={styles.donateIcon} icon={["fas", 'seedling']} mask={["fas", "square-full"]} size="6x" transform="shrink-4" />
+                                        <FontAwesomeIcon className={styles.donateIcon} icon={["fas", 'seedling']} mask={["fas", "square-full"]} size="5x" transform="shrink-4" />
                                     </div>
                                     <FormHelperText style={{ textAlign: "center" }}>The money raised in this round will go directly to the fundraiser to start them off before milestone funding begins.</FormHelperText>
                                 </FormControl>
@@ -219,14 +219,14 @@ export default function Donate(props: propType) {
                                 variant="filled"
                                 value={amount}
                                 onChange={handleChangeAmount}
-                                style={{ width: "50%", marginTop: "15px" }}
+                                style={{ width: "60%", marginTop: "15px", backgroundColor: "rgb(241 245 249)", borderRadius: "10px" }}
                             />
                         </div>
 
                         <Button className={styles.donateButton2} style={{ bottom: "0px" }} onClick={async function () {
                             handleClose()
                             await approve({
-                                onSuccess: (tx) => handleSuccess(),
+                                onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
                                 onError: (error) => console.log(error),
                             })
                         }}>Donate</Button>
