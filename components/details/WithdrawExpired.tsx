@@ -37,7 +37,7 @@ export default function WithdrawExpired(props: propType) {
     const handleNewNotification = function () {
         dispatch({
             type: "info",
-            message: "Withdraw Complete!",
+            message: "Fundraiser Termination Complete.",
             title: "Transaction Notification",
             position: "topR",
         })
@@ -46,7 +46,7 @@ export default function WithdrawExpired(props: propType) {
     const handleNewNotificationError = function () {
         dispatch({
             type: "info",
-            message: "Withdraw Failed!",
+            message: "Fundraiser Termination Failed.",
             title: "Transaction Notification",
             position: "topR",
         })
