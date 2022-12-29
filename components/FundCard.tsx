@@ -11,25 +11,6 @@ import styles from "../styles/Home.module.css"
 import StateStatus from "./discover/StateStatus"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { propTypeFundCard } from "../config/types"
-import { makeStyles } from "@material-ui/core/styles"
-
-const useStyles = makeStyles({
-    purpleBadge: {
-        position: "absolute",
-        top: 6,
-        left: 6,
-        backgroundColor: "#9C27B0",
-        color: "#FFFFFF",
-        width: 30,
-        height: 30,
-        //borderRadius: "50%", //circular option
-        borderRadius: "4px 4px 4px 4px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-        fontSize: "1 rem",
-    },
-})
 
 export default function FundCard(props: propTypeFundCard) {
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
@@ -49,8 +30,6 @@ export default function FundCard(props: propTypeFundCard) {
             setData(snapshot.val())
         })
     }, [])
-
-    const classes = useStyles()
 
     return (
         <div>
@@ -75,7 +54,7 @@ export default function FundCard(props: propTypeFundCard) {
                                     height: "100%",
                                 }}
                             >
-                                <div className={classes.purpleBadge}>P</div>
+                                <div className={styles.purpleBadge}>P</div>
                                 <CardMedia
                                     component="img"
                                     height="100"

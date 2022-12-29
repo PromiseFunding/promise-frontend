@@ -54,7 +54,7 @@ export default function CustomizedAccordions() {
 
   return (
     <><div>
-      <div style={{ justifyContent: "center", textAlign: "center", fontSize: "45px", fontWeight: "700"}}>FAQ</div>
+      <div style={{ justifyContent: "center", textAlign: "center", fontSize: "45px", fontWeight: "700"}}>Frequently Asked Questions</div>
       <br></br>
       <Accordion expanded={expanded === 'panel1'} onChange={handleChange('panel1')}>
         <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">

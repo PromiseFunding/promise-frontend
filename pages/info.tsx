@@ -8,6 +8,7 @@ import { loadFull } from "tsparticles"
 import { useCallback } from "react"
 import { Engine } from "tsparticles-engine"
 import AccordionFAQ from "../components/AccordionFAQ"
+import Box from "@mui/material/Box"
 
 const Info: NextPage = () => {
     const options = {
@@ -58,8 +59,9 @@ const Info: NextPage = () => {
             <Tutorial></Tutorial>
             <br></br>
             <br></br>
-            <AccordionFAQ></AccordionFAQ>
-
+            <div className={styles.faqAccordion}>
+                <AccordionFAQ></AccordionFAQ>
+            </div>
         </div>
     )
 }

@@ -65,6 +65,11 @@
     padding-top: 10px;
 }
 
+.faqAccordion {
+    margin-left: 12%;
+    margin-right: 12%;
+}
+
 .headerItem {
     font-size: 16px;
     color: rgb(20, 20, 20);
@@ -104,10 +109,7 @@
     font-size: 15px;
     color: rgb(255, 255, 255);
     background: linear-gradient(125.78deg, #e5509acc 17.93%, #b02588cc 42.06%, #694dcbcc 73.89%);
-    /* background-color: #694dcb; */
     border-radius: 10px;
-    /* border-color: rgb(0, 0, 0); */
-    border-width: 0.02cm;
     margin-top: auto;
     margin-bottom: auto;
     margin-left: 30px;
@@ -119,7 +121,33 @@
 .newFundButton:hover {
     /* color: rgb(45, 65, 166); */
     /* color: rgb(135, 33, 94); */
-    color:rgb(164, 37, 37)
+    /* color:rgb(164, 37, 37) */
+    background: linear-gradient(125.78deg, #694dcb 17.93%, #b02588 42.06%, #e5509a 73.89%);
+    color: lightgrey;
+    cursor: pointer;
+}
+
+.purpleBadge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    /* background-color: #9C27B0; */
+    background: linear-gradient(125.78deg, #e5509acc 17.93%, #b02588cc 42.06%, #694dcbcc 73.89%);
+    color: #FFFFFF;
+    width: 30px;
+    height: 30px;
+    /* borderRadius: "50%", //circular option */
+    border-radius: 4px 4px 4px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.purpleBadge:hover {
+    background: linear-gradient(125.78deg, #694dcb 17.93%, #b02588 42.06%, #e5509a 73.89%);
+    color: lightgrey;
+    cursor: pointer;
 }
 
 .header {
