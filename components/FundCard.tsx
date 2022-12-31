@@ -67,12 +67,6 @@ export default function FundCard(props: propTypeFundCard) {
                                                     textDecoration: "underline",
                                                     color: "lightblue",
                                                 }}
-                                                onClick={() =>
-                                                    document.body.scrollIntoView({
-                                                        behavior: "smooth",
-                                                        block: "end",
-                                                    })
-                                                }
                                             >
                                                 Learn more
                                             </a>

@@ -65,20 +65,6 @@ export default function Header(props: { onChangeQuery?(arg0: string): void; main
                             </div>
                         </>
                     )}
-                    {/* <div className={styles.headerInner}>
-                        <Link legacyBehavior href="/discover">
-                            <a className={styles.headerItem}>Discover</a>
-                        </Link>
-                        <Link legacyBehavior href="/info">
-                            <a className={styles.headerItem}>How It Works</a>
-                        </Link>
-                        <Link legacyBehavior href="/myfunds">
-                            <a className={styles.headerItem}>My Fundraisers</a>
-                        </Link>
-                        <Link legacyBehavior href="/form">
-                            <a className={styles.newFundButton}>Create New Fund</a>
-                        </Link>
-                    </div> */}
                 </div>
             </div>
 

@@ -191,7 +191,8 @@ export default function Search(props: propTypeFunds) {
                     padding: "10px",
                 }}
             >
-                <h1
+                {/* Code below is title for category pages */}
+                {/* <h1
                     style={{
                         textAlign: "center",
                         color: "#141414",
@@ -199,7 +200,7 @@ export default function Search(props: propTypeFunds) {
                     }}
                 >
                     {categoryHeader.charAt(0).toUpperCase() + categoryHeader.slice(1)}
-                </h1>
+                </h1> */}
                 <br></br>
                 <ul className={styles.funds} id="funds">
                     {filteredData.slice(0 + (page - 1) * 10, page * 10).map((fund) => (
