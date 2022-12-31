@@ -74,7 +74,7 @@ export default function CustomizedAccordions() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            The owner of the project can call a maximum of 2 votes prior to the end of the milestone period. Each voting period is a minimum of a week to make sure donors and project owners can discuss and share their thoughts and progress and come to a decision. If the amount of 'Yes' votes is greater or equal to the amount of 'No' votes,
+            The owner of the project can call a maximum of 2 votes prior to the end of the milestone period. Each voting period is a minimum of a week to make sure donors and project owners can discuss and share their thoughts and progress and come to a decision. If the amount of &apos;Yes&apos; votes is greater or equal to the amount of &apos;No&apos; votes,
             the project met its milestone goals and gains access to the funds raised for that round. If an owner called for 2 votes and they both failed, the milestone did not meet its goal and the fundraiser has ended. If the owner has called for less than 2 votes prior to the end of the milestone period, then anyone can start a vote and the result of that vote is final. A successful vote immediately starts the next milestone round if it exists.
           </Typography>
         </AccordionDetails>
@@ -96,7 +96,7 @@ export default function CustomizedAccordions() {
         </AccordionSummary>
         <AccordionDetails>
           <Typography>
-            There are two different types of badges, representing the two different types of fundraisers that are available on our platform. The purple badge with the letter 'P' represents our 'Promise' milestone based fundraiser. The yellow badge with the letter 'Y' represents our secondary fundraising option for one time causes and stands for yield generating fundraisers. Yield generating fundraisers allow donors to donate straight to the fundraiser or through a yield generating protocol which allows the donor to donate the interest earned.
+            There are two different types of badges, representing the two different types of fundraisers that are available on our platform. The purple badge with the letter &apos;P&apos; represents our &apos;Promise&apos; milestone based fundraiser. The yellow badge with the letter &apos;Y&apos; represents our secondary fundraising option for one time causes and stands for yield generating fundraisers. Yield generating fundraisers allow donors to donate straight to the fundraiser or through a yield generating protocol which allows the donor to donate the interest earned.
           </Typography>
         </AccordionDetails>
       </Accordion>

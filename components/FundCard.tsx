@@ -61,7 +61,7 @@ export default function FundCard(props: propTypeFundCard) {
                                         <>
                                             Promise Fund: This fundraiser uses Promises unique
                                             milestone based fundraising functionality.{" "}
-                                            <a
+                                            <Link
                                                 href="/info"
                                                 style={{
                                                     textDecoration: "underline",
@@ -69,7 +69,7 @@ export default function FundCard(props: propTypeFundCard) {
                                                 }}
                                             >
                                                 Learn more
-                                            </a>
+                                            </Link>
                                         </>
                                     }
                                     placement="top"
