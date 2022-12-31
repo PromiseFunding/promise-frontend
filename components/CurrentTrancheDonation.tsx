@@ -7,7 +7,9 @@ import { BigNumber } from "ethers"
 import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
 import styles from "../styles/Home.module.css"
-
+import { ContractTransaction } from "ethers"
+import { database, storage } from "../firebase-config"
+import { update, set, ref as refDb, ref, onValue } from "firebase/database"
 
 //contract is already deployed... trying to look at features of contract
 export default function CurrentTrancheDonation(props: propType) {
@@ -22,6 +24,7 @@ export default function CurrentTrancheDonation(props: propType) {
     const milestone = tranche! + 1
     // const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
+    const chainId: string = parseInt(chainIdHex!).toString()
     const [amountFunded, setAmountFunded] = useState(0)
     const [val, setVal] = useState("")
 
@@ -45,7 +48,10 @@ export default function CurrentTrancheDonation(props: propType) {
         abi: abi,
         contractAddress: fundAddress!,
         functionName: "fund",
-        params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()), current: true },
+        params: {
+            amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()),
+            current: true,
+        },
     })
 
     async function updateUI() {
@@ -65,8 +71,14 @@ export default function CurrentTrancheDonation(props: propType) {
         }
     }, [isWeb3Enabled, fundAddress, account, totalRaised])
 
-    const handleSuccess = async function () {
-        alert("Friendly Reminder: By confirming the next MetaMask transaction you will be funding " + JSON.stringify(val + " " + coinName) + " to Milestone " + JSON.stringify(milestone))
+    const handleSuccess = async function (tx: ContractTransaction) {
+        //alert("Friendly Reminder: By confirming the next MetaMask transaction you will be funding " + JSON.stringify(val + " " + coinName) + " to Milestone " + JSON.stringify(milestone))
+        try {
+            await tx.wait(1)
+        } catch (error) {
+            console.log(error)
+            handleNewNotificationError()
+        }
         const fundTx: any = await fundCurrent()
         setVal("0")
         try {
@@ -74,6 +86,15 @@ export default function CurrentTrancheDonation(props: propType) {
             props.onChangeAmountFunded!()
             handleNewNotification()
             props.onGetFunderInfo!(account!, tranche!)
+            var donorRef = ref(database, chainId + "/users/" + account + "/donor/" + fundAddress)
+
+            onValue(donorRef, (snapshot) => {
+                if (!snapshot.exists()) {
+                    set(refDb(database, `${chainId}/users/${account}/donor/${fundAddress}`), {
+                        fundAddress: fundAddress,
+                    })
+                }
+            })
         } catch (error) {
             console.log(error)
             handleNewNotificationError()
@@ -90,10 +111,8 @@ export default function CurrentTrancheDonation(props: propType) {
                 Math.min(max as number, Number(Number(event.target.value).toFixed(decimals!)))
             )
             setVal(value.toString())
-        } else if ((event.target.value as unknown as number) < 0) {
-            setVal("0")
         } else {
-            setVal(event.target.value)
+            setVal("0")
         }
     }
 
@@ -141,7 +160,7 @@ export default function CurrentTrancheDonation(props: propType) {
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async function () {
                             await approve({
-                                onSuccess: (tx) => handleSuccess(),
+                                onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
                                 onError: (error) => console.log(error),
                             })
                         }}

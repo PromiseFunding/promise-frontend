@@ -3,18 +3,36 @@ import { SetStateAction, useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { propTypeFunds } from "../config/types"
 import ShowMoreLess from "./ShowMoreLess"
+import Pages from "./Pagination"
 import { ref, onValue, get } from "firebase/database"
 import { database } from "../firebase-config"
 import styles from "../styles/Home.module.css"
+import { useMoralis } from "react-moralis"
+
+type DictionaryNumber = {
+    [x: string]: number
+}
 
 export default function Search(props: propTypeFunds) {
     const [filteredData, setFilteredData] = useState<string[]>(props.fundAddressArray)
-    const [maxEntries, setMaxEntries] = useState(12)
+    //const [maxEntries, setMaxEntries] = useState(12)
     const [windowWidth, setWindowWidth] = useState(0)
+    const [amountPerFund, setAmountPerFund] = useState<DictionaryNumber>({})
     const [invisPadding, setInvisPadding] = useState(false)
+    const [page, setPage] = useState(1)
 
     const router = useRouter()
-    const category = router.query.category as string || ""
+    const category = (router.query.category as string) || ""
+    let categoryHeader = category + " Fundraisers"
+
+    if (category == "") {
+        categoryHeader = ""
+    }
+
+    const sortBy = (router.query.sortby as string) || ""
+
+    const { chainId: chainIdHex } = useMoralis()
+    const chainId: string = parseInt(chainIdHex!).toString()
 
     useWindowSize()
 
@@ -24,14 +42,13 @@ export default function Search(props: propTypeFunds) {
                 setWindowWidth(window.innerWidth)
             }
 
-            window.addEventListener("resize", handleResize);
+            window.addEventListener("resize", handleResize)
 
-            handleResize();
+            handleResize()
 
-            return () => window.removeEventListener("resize", handleResize);
-        }, []);
+            return () => window.removeEventListener("resize", handleResize)
+        }, [])
     }
-
 
     function inputHandler(query: string) {
         let lowerCase = query.toLowerCase()
@@ -39,13 +56,14 @@ export default function Search(props: propTypeFunds) {
         const newFilter = props.fundAddressArray.filter((fund) => {
             let holder = ""
             let categoryVal = ""
-            const categoryRef = ref(database, "funds/" + fund + "/category")
+            const categoryRef = ref(database, chainId + "/funds/" + fund + "/category")
 
             onValue(categoryRef, (snapshot) => {
                 categoryVal += snapshot.val()
             })
 
-            const categoryMatch = category == "" ? true : categoryVal.toLowerCase() == category.toLowerCase()
+            const categoryMatch =
+                category == "" ? true : categoryVal.toLowerCase() == category.toLowerCase()
 
             if (lowerCase.slice(0, 2) == "0x") {
                 return fund.toLowerCase().includes(lowerCase) && categoryMatch
@@ -54,11 +72,11 @@ export default function Search(props: propTypeFunds) {
             if (lowerCase === "" && categoryMatch) {
                 return true
             } else {
-                const titleRef = ref(database, "funds/" + fund + "/fundTitle")
+                const titleRef = ref(database, chainId + "/funds/" + fund + "/fundTitle")
                 onValue(titleRef, (snapshot) => {
                     holder += snapshot.val()
                 })
-                const descriptionRef = ref(database, "funds/" + fund + "/description")
+                const descriptionRef = ref(database, chainId + "/funds/" + fund + "/description")
                 onValue(descriptionRef, (snapshot) => {
                     holder += snapshot.val()
                 })
@@ -76,7 +94,7 @@ export default function Search(props: propTypeFunds) {
             return funds
         } else {
             for (const fund of funds) {
-                const categoryRef = ref(database, "funds/" + fund + "/category")
+                const categoryRef = ref(database, chainId + "/funds/" + fund + "/category")
                 const snapshot = await get(categoryRef)
                 const categoryVal = snapshot.val()
                 if (categoryVal && categoryVal.toLowerCase() == category.toLowerCase()) {
@@ -86,7 +104,6 @@ export default function Search(props: propTypeFunds) {
         }
 
         return newFilter
-
     }
 
     const updateCategories = async () => {
@@ -95,13 +112,56 @@ export default function Search(props: propTypeFunds) {
         })
     }
 
+    // const updateSorting = async () => {
+    //     if (sortBy == "top5") {
+    //         // var items = Object.keys(amountPerFund).map(function(key) {
+    //         //     return [key, amountPerFund[key]];
+    //         // })
+    //         // //console.log(items)
+    //         // items.sort(function(first, second) {
+    //         //     return Number(second[1]) - Number(first[1]);
+    //         // })
+    //         console.log(amountPerFund)
+    //         const sortedDictionaryPromise = new Promise((resolve) => {
+    //             const sortedDictionary = Object.entries(amountPerFund).sort((a, b) => {
+    //                 if (a[1] > b[1]) {
+    //                     return -1
+    //                 }
+    //                 if (a[1] < b[1]) {
+    //                     return 1
+    //                 }
+    //                 return 0
+    //             })
+    //             resolve(sortedDictionary)
+    //         })
+
+    //         let temp: string[]
+    //         sortedDictionaryPromise.then((sortedDictionary) => {
+    //             temp = (sortedDictionary as string[]).map((pair) => pair[0].toString())
+    //             setFilteredData(temp.slice(0,5))
+    //         })
+    //         //console.log(temp)
+
+    //         //console.log(Object.keys(items).slice(0,5))
+    //     } else {
+    //         updateCategories()
+    //     }
+    // }
+
     const calculatePaddingToggle = (width: number): boolean => {
-        const maxWidth = (filteredData.length * 250 + (filteredData.length - 1) * 35) + 20
+        const maxWidth = filteredData.length * 250 + (filteredData.length - 1) * 35 + 20
 
         if (width < maxWidth) {
-            return true;
+            return true
         }
-        return false;
+        return false
+    }
+
+    // truncate decimal before... minimum of 12 funds per page for now, but eventually use max(10, 3 rows * # of funds)
+    // this gives number of cards on each row so just multiply by three
+    // for width use windowWitdth value
+    const cardsInRow = (width: number): number => {
+        return (width - 20) / (250 + 35)
     }
 
     useEffect(() => {
@@ -110,39 +170,116 @@ export default function Search(props: propTypeFunds) {
 
     useEffect(() => {
         updateCategories()
-    }, [props.fundAddressArray, maxEntries, category])
+    }, [props.fundAddressArray, category])
+
+    // useEffect(() => {
+    //     updateSorting()
+    // }, [sortBy])
 
     useEffect(() => {
-        setMaxEntries(12)
+        setPage(1)
     }, [category])
 
     return (
         <>
-            <div style={{ justifyContent: "center", alignItems: "center", width: "100%", height: "100%", padding: "10px" }}>
+            <div
+                style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "100%",
+                    height: "100%",
+                    padding: "10px",
+                }}
+            >
+                {/* Code below is title for category pages */}
+                {/* <h1
+                    style={{
+                        textAlign: "center",
+                        color: "#141414",
+                        fontSize: "22px",
+                    }}
+                >
+                    {categoryHeader.charAt(0).toUpperCase() + categoryHeader.slice(1)}
+                </h1> */}
+                <br></br>
                 <ul className={styles.funds} id="funds">
-                    {filteredData.slice(0, maxEntries).map((fund) => (
+                    {filteredData.slice(0 + (page - 1) * 10, page * 10).map((fund) => (
                         <li key={fund} style={{ paddingTop: "25px", paddingBottom: "25px" }}>
-                            <FundCard fund={fund}></FundCard>
+                            {/* <FundCard
+                                fund={fund}
+                                onChangeAmount={(newAmount: SetStateAction<Number>) =>
+                                    setAmountPerFund({
+                                        ...amountPerFund,
+                                        [fund]: Number(newAmount),
+                                    })
+                                }
+                            ></FundCard> */}
+                            <FundCard
+                                fund={fund}
+                            ></FundCard>
                         </li>
                     ))}
-                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
-                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
-                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
-                    <div style={{ width: 250, height: 0, position: calculatePaddingToggle(windowWidth) ? "relative" : "absolute" }}></div>
+                    <div
+                        style={{
+                            width: 250,
+                            height: 0,
+                            position: calculatePaddingToggle(windowWidth)
+                                ? "relative"
+                                : "absolute",
+                        }}
+                    ></div>
+                    <div
+                        style={{
+                            width: 250,
+                            height: 0,
+                            position: calculatePaddingToggle(windowWidth)
+                                ? "relative"
+                                : "absolute",
+                        }}
+                    ></div>
+                    <div
+                        style={{
+                            width: 250,
+                            height: 0,
+                            position: calculatePaddingToggle(windowWidth)
+                                ? "relative"
+                                : "absolute",
+                        }}
+                    ></div>
+                    <div
+                        style={{
+                            width: 250,
+                            height: 0,
+                            position: calculatePaddingToggle(windowWidth)
+                                ? "relative"
+                                : "absolute",
+                        }}
+                    ></div>
                 </ul>
+                {filteredData.length != 0 ? (
+                    <Pages
+                        amount={filteredData.length}
+                        onChangePage={(newAmount: SetStateAction<Number>) =>
+                            setPage(Number(newAmount))
+                        }
+                        category={category}
+                    />
+                ) : (
+                    <></>
+                )}
             </div>
-            <div>
+            {/* <div>
                 <br></br>
                 {filteredData.length > maxEntries ? (
 
                     <ShowMoreLess
                         amount={maxEntries}
-                        onChangeAmount={(newAmount: SetStateAction<Number>) =>
+                        onChangePage={(newAmount: SetStateAction<Number>) =>
                             setMaxEntries(Number(newAmount))
                         }
                     />) : (<div></div>
                 )}
-            </div>
+            </div> */}
         </>
     )
 }

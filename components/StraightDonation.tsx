@@ -5,7 +5,10 @@ import { SetStateAction, useState, useEffect } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { BigNumber } from "ethers"
 import { propType } from "../config/types"
+import { ContractTransaction } from "ethers"
 import styles from "../styles/Home.module.css"
+import { update, set, ref as refDb, ref, onValue } from "firebase/database"
+import { database, storage } from "../firebase-config"
 
 //contract is already deployed... trying to look at features of contract
 export default function StraightDonation(props: propType) {
@@ -21,6 +24,8 @@ export default function StraightDonation(props: propType) {
 
     // const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
+    const chainId: string = parseInt(chainIdHex!).toString()
+
     const [amountFunded, setAmountFunded] = useState<number>()
     const [val, setVal] = useState("")
     const dispatch = useNotification()
@@ -43,7 +48,10 @@ export default function StraightDonation(props: propType) {
         abi: abi,
         contractAddress: fundAddress!,
         functionName: "fund",
-        params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()), current: false },
+        params: {
+            amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()),
+            current: false,
+        },
     })
 
     async function updateUI() {
@@ -63,22 +71,27 @@ export default function StraightDonation(props: propType) {
     }, [isWeb3Enabled, fundAddress, account, totalRaised])
 
     let alertMessage = ""
-    const handleSuccess = async function () {
-        if (state == 4) {
-            alertMessage = "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
-                JSON.stringify(val + " " + coinName) +
-                " to the seed round and it will go straight to the fundraiser."
+    const handleSuccess = async function (tx: ContractTransaction) {
+        // if (state == 4) {
+        //     alertMessage =
+        //         "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
+        //         JSON.stringify(val + " " + coinName) +
+        //         " to the seed round and it will go straight to the fundraiser."
+        // } else {
+        //     alertMessage =
+        //         "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
+        //         JSON.stringify(val + " " + coinName) +
+        //         " split evenly among the remaining Milestones. We are currently in Milestone " +
+        //         JSON.stringify(milestone) +
+        //         "."
+        // }
+        // alert(alertMessage)
+        try {
+            await tx.wait(1)
+        } catch (error) {
+            console.log(error)
+            handleNewNotificationError()
         }
-        else {
-            alertMessage = "Friendly Reminder: By confirming the next MetaMask transaction you will be funding " +
-                JSON.stringify(val + " " + coinName) +
-                " split evenly among the remaining Milestones. We are currently in Milestone " +
-                JSON.stringify(milestone) +
-                "."
-        }
-        alert(
-            alertMessage
-        )
         const fundTx: any = await fund()
         setVal("0")
         try {
@@ -86,6 +99,16 @@ export default function StraightDonation(props: propType) {
             props.onChangeAmountFunded!()
             handleNewNotification()
             props.onGetFunderInfo!(account!, tranche!)
+
+            var donorRef = ref(database, chainId + "/users/" + account + "/donor/" + fundAddress)
+
+            onValue(donorRef, (snapshot) => {
+                if (!snapshot.exists()) {
+                    set(refDb(database, `${chainId}/users/${account}/donor/${fundAddress}`), {
+                        fundAddress: fundAddress,
+                    })
+                }
+            })
         } catch (error) {
             console.log(error)
             handleNewNotificationError()
@@ -102,10 +125,8 @@ export default function StraightDonation(props: propType) {
                 Math.min(max as number, Number(Number(event.target.value).toFixed(decimals!)))
             )
             setVal(value.toString())
-        } else if ((event.target.value as unknown as number) < 0) {
-            setVal("0")
         } else {
-            setVal(event.target.value)
+            setVal("0")
         }
     }
 
@@ -131,12 +152,12 @@ export default function StraightDonation(props: propType) {
         <div className="p-5 bg-slate-800 text-slate-200">
             <div className={styles.tooltip}>
                 {state == 4 ? (
+                    <h1 className="text-xl font-bold">Pre Milestone Round Donation</h1>
+                ) : (
                     <h1 className="text-xl font-bold">
-                        Pre Milestone Round Donation
+                        Donation Split Equally Among Remaining Milestones
                     </h1>
-                ) : (<h1 className="text-xl font-bold">
-                    Donation Split Equally Among Remaining Milestones
-                </h1>)}
+                )}
                 {/* <span className={styles.tooltiptext}>You will be donating x amount in each remaining milestone</span>
                 <br></br> */}
                 <br></br>
@@ -160,7 +181,7 @@ export default function StraightDonation(props: propType) {
                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                         onClick={async function () {
                             await approve({
-                                onSuccess: (tx) => handleSuccess(),
+                                onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
                                 onError: (error) => console.log(error),
                             })
                         }}
@@ -178,9 +199,11 @@ export default function StraightDonation(props: propType) {
                     </h2>
                     {state == 0 ? (
                         <h1>
-                            Total Funds Donated: {amountFunded} {coinName}</h1>
-                    ) : (<></>)
-                    }
+                            Total Funds Donated: {amountFunded} {coinName}
+                        </h1>
+                    ) : (
+                        <></>
+                    )}
                     {/* Total Funds In Escrow: {amountFunded} {coinName} */}
                 </div>
             ) : (

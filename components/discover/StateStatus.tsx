@@ -2,7 +2,7 @@ import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgr
 import styles from "../../styles/Home.module.css"
 import { styled } from '@mui/material/styles';
 import { useMoralis, useWeb3Contract } from "react-moralis"
-import { milestone, propType, milestoneSummary } from '../../config/types';
+import { milestone, propType, milestoneSummary, propTypeFundCard } from '../../config/types';
 import { useState, useEffect } from 'react';
 import { abi } from "../../constants"
 import { BigNumber } from "ethers"
@@ -11,12 +11,12 @@ import { ref, get } from "firebase/database"
 import { database } from "../../firebase-config"
 import { states } from "../../config/helper-config"
 
-export default function StateStatus(props: propType) {
-    const fundAddress = props.fundAddress
+export default function StateStatus(props: propTypeFundCard) {
+    const fundAddress = props.fund
 
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
     const chainIdNum = parseInt(chainIdHex!)
-
+    const chainId: string = parseInt(chainIdHex!).toString()
     const [percent, setPercent] = useState(0)
     const [tranche, setTranche] = useState(0)
     const [state, setState] = useState(0)
@@ -27,7 +27,7 @@ export default function StateStatus(props: propType) {
     const [milestoneName, setMilestoneName] = useState("")
 
     const getMilestoneName = async () => {
-        const milestonesRef = ref(database, "funds/" + fundAddress + "/milestones/" + tranche + "/name")
+        const milestonesRef = ref(database, chainId + "/funds/" + fundAddress + "/milestones/" + tranche + "/name")
         const snapshot = await get(milestonesRef)
         setMilestoneName(snapshot.val())
     }
@@ -76,6 +76,7 @@ export default function StateStatus(props: propType) {
         setAsset(coinName)
         setAmountRaisedMilestone(+(amountRaisedFromCall!.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
         setAmountRaisedTotal(+(amountRaisedTotalFromCall!.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
+        // props.onChangeAmount!(+(amountRaisedTotalFromCall!.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
         setAmountRaisedPre(+(amountRaisedPreFromCall!.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
     }
 

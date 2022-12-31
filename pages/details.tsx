@@ -31,7 +31,10 @@ const Details: NextPage = () => {
     const router = useRouter()
     const fundAddress = router.query.fund as string
 
-    const fundRef = ref(database, "funds/" + fundAddress)
+    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
+    const chainId: string = parseInt(chainIdHex!).toString()
+
+    const fundRef = ref(database, chainId + "/funds/" + fundAddress)
     const [data, setData] = useState<databaseFundObject>()
     const [assetAddress, setAssetAddress] = useState("")
     const [userAddress, setAddress] = useState("0")
@@ -52,8 +55,8 @@ const Details: NextPage = () => {
     const [levelParam, setLevelParam] = useState(0)
 
     const addresses: contractAddressesInterface = contractAddresses
-    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+
+
 
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)

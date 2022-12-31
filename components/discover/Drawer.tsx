@@ -30,10 +30,10 @@ export default function TemporaryDrawer() {
             onKeyDown={toggleDrawer(anchor, false)}
         >
             <div className={styles.drawerList}>
-                <CategorySelector onChangeCategory={() => {
+                {/* <CategorySelector onChangeCategory={() => {
                     toggleDrawer(anchor, false)
                     setState({ ...state, ["left"]: false })
-                }}></CategorySelector>
+                }}></CategorySelector> */}
                 <Link legacyBehavior href="/discover">
                     <a className={styles.drawerItem} onClick={toggleDrawer(anchor, false)}>
                         Discover
@@ -43,6 +43,12 @@ export default function TemporaryDrawer() {
                 <Link legacyBehavior href="/info">
                     <a className={styles.drawerItem} onClick={toggleDrawer(anchor, false)}>
                         How It Works
+                    </a>
+                </Link>
+
+                <Link legacyBehavior href="/myfunds">
+                    <a className={styles.drawerItem} onClick={toggleDrawer(anchor, false)}>
+                        My Fundraisers
                     </a>
                 </Link>
 

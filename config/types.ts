@@ -44,14 +44,21 @@ export interface propType {
 
 
 export interface propTypeEntryNumber {
-    onChangeAmount(arg0: Number): void
-    amount: Number
+    onChangePage?(arg0: number): void
+    amount?: number
+    category?: string
 }
 
 export interface propTypeFunds {
     fundAddressArray: string[]
     query?: string
-    children: React.ReactNode;
+    children?: React.ReactNode;
+}
+
+export interface propTypeFundCard {
+    fund: string
+    onChangeAmount?(arg0: number): void
+    onChangeRound?(arg0: void): void
 }
 
 export interface milestone {

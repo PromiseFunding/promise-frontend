@@ -4,6 +4,9 @@
 
 @layer base {
     body {
-        background-color: #1a202f;
+        /* background-color: #1a202f; */
+        background-color: #FFFFFF;
+        /* background-color: #fffafa; */
+        /* rgb(226 232 240); */
     }
 }

@@ -2,11 +2,11 @@ import { ConnectButton } from "web3uikit"
 import Image from "next/image"
 import Link from "next/link"
 import CategorySelector from "./CategorySelector"
-import SearchBar from "material-ui-search-bar";
+import SearchBar from "material-ui-search-bar"
 import styles from "../styles/Home.module.css"
 import Drawer from "../components/discover/Drawer"
 
-export default function Header(props: { onChangeQuery?(arg0: string): void, main: boolean }) {
+export default function Header(props: { onChangeQuery?(arg0: string): void; main: boolean }) {
     return (
         <nav className={styles.header}>
             <div className={styles.drawer}>
@@ -20,39 +20,59 @@ export default function Header(props: { onChangeQuery?(arg0: string): void, main
                 style={{ marginRight: "20px" }}
             />
             <div className={styles.headerMain}>
-                <div className="text-lg lg:flex-grow flex flex-row  flex-nowrap ">
-                    {props.main ? (<SearchBar className={styles.searchbar} onChange={(query) => {
-                        props.onChangeQuery!(query)
-                    }}></SearchBar>) : (<></>)}
-
-
-                    <div className={styles.headerInner}>
-                        <CategorySelector></CategorySelector>
-
-                        <Link legacyBehavior href="/discover">
-                            <a className={styles.headerItem}>
-                                Discover
-                            </a>
-                        </Link>
-
-                        <Link legacyBehavior href="/info">
-                            <a className={styles.headerItem}>
-                                How It Works
-                            </a>
-                        </Link>
-
-                        <Link legacyBehavior href="/form" >
-                            <a className={styles.newFundButton}>
-                                Create New Fund
-                            </a>
-                        </Link>
-                    </div>
+                <div className="text-lg lg:flex-grow flex flex-row flex-nowrap ">
+                    {props.main ? (
+                        <>
+                            <SearchBar
+                                style={{ boxShadow: "0px 0px 2px 0.5px rgba(0,0,0,0.25)" }}
+                                className={styles.searchbar}
+                                onChange={(query) => {
+                                    props.onChangeQuery!(query)
+                                }}
+                            ></SearchBar>
+                            <div className={styles.headerInner}>
+                                <div className={styles.headerFix}>
+                                    <Link legacyBehavior href="/discover">
+                                        <a className={styles.headerItem}>Discover</a>
+                                    </Link>
+                                    <Link legacyBehavior href="/info">
+                                        <a className={styles.headerItem}>How It Works</a>
+                                    </Link>
+                                    <Link legacyBehavior href="/myfunds">
+                                        <a className={styles.headerItem}>My Fundraisers</a>
+                                    </Link>
+                                    <Link legacyBehavior href="/form">
+                                        <a className={styles.newFundButton}>Create New Fund</a>
+                                    </Link>
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div className={styles.headerInner}>
+                                <Link legacyBehavior href="/discover">
+                                    <a className={styles.headerItem}>Discover</a>
+                                </Link>
+                                <Link legacyBehavior href="/info">
+                                    <a className={styles.headerItem}>How It Works</a>
+                                </Link>
+                                <Link legacyBehavior href="/myfunds">
+                                    <a className={styles.headerItem}>My Fundraisers</a>
+                                </Link>
+                                <Link legacyBehavior href="/form">
+                                    <a className={styles.newFundButton}>Create New Fund</a>
+                                </Link>
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
 
             <div className="ml-auto">
-                <ConnectButton moralisAuth={true} />
+                <ConnectButton
+                    moralisAuth={true}
+                />
             </div>
-        </nav >
+        </nav>
     )
 }

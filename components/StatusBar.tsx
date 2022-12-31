@@ -30,7 +30,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
 
     const [activeStep, setActiveStep] = useState(0);
     const [milestonesArray, setMilestonesArray] = useState<milestone[]>([])
-    const { isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
+    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const [amountFunded, setAmountFunded] = useState(0)
     const [amountActiveRaised, setAmountRaised] = useState(0)
     const [amountTotalRaised, setAmountTotalRaised] = useState(0)
@@ -38,6 +38,8 @@ export default function HorizontalNonLinearStepper(props: propType) {
     const [withdrewFunds, setFunderWithdraw] = useState(false)
     const [amountPreRaised, setAmountPreRaised] = useState(0)
     const [durationPreRound, setDurationPre] = useState(0)
+
+    const chainId: string = parseInt(chainIdHex!).toString()
 
     const { runContractFunction: getFunderSummary } = useWeb3Contract({
         abi: abi,
@@ -47,7 +49,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
     })
 
     const getMilestones = async () => {
-        const milestonesRef = ref(database, "funds/" + fundAddress + "/milestones")
+        const milestonesRef = ref(database, chainId + "/funds/" + fundAddress + "/milestones")
         const snapshot = await get(milestonesRef)
         setMilestonesArray(snapshot.val())
     }

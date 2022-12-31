@@ -53,7 +53,7 @@ export default function StartVote(props: propType) {
         if (isWeb3Enabled && fundAddress) {
             props.onGetFunderInfo!(account!, tranche!)
         }
-    }, [isWeb3Enabled, fundAddress])
+    }, [isWeb3Enabled, fundAddress, account])
 
 
     const handleSuccess = async function (tx: ContractTransaction) {

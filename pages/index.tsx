@@ -7,15 +7,57 @@ import React from "react"
 import Features from "../components/landingPage/Features"
 import HowItWorks from "../components/landingPage/HowItWorks"
 import Footer from "../components/landingPage/Footer"
+import Particles from "react-tsparticles"
+import { loadFull } from "tsparticles"
+import { useCallback } from "react"
+import { Engine } from "tsparticles-engine"
 
 const Discover: NextPage = () => {
     function handleScroll(section: string) {
         const element = document.getElementById(section);
         element!.scrollIntoView({ behavior: "smooth", inline: "nearest" });
     }
+    const options = {
+        // background: {
+        //     color: "#fff",
+        // },
+        particles: {
+            shape: {
+                type: "circle",
+            },
+            number: {
+                value: 7,
+            },
+            color: {
+                // value: "random",
+                //value: ["#0A1A6A", "#A42525"]
+                value: "#A42525",
+            },
+            opacity: {
+                value: 0.3,
+            },
+            size: {
+                value: { min: 30, max: 50 },
+            },
+            move: {
+                enable: true,
+                speed: 0.25,
+                random: false,
+            },
+            bounds: {
+                top: 500,
+            },
+        },
+    }
+
+    const particlesInit = useCallback(async (engine: Engine) => {
+        await loadFull(engine)
+    }, [])
+
 
     return (
-        <div >
+        <div>
+            {/* <Particles options={options} init={particlesInit} style={{ zIndex: -1 }} /> */}
             <Head>
                 <title>Promise</title>
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
@@ -48,11 +90,11 @@ const Discover: NextPage = () => {
                         handleScroll("about")
                     }}>About</button>
                     <button type="button" className={styles.launchPageHeaderItem} onClick={(e) => {
-                        handleScroll("features")
-                    }}>Features</button>
-                    <button type="button" className={styles.launchPageHeaderItem} onClick={(e) => {
                         handleScroll("how-it-works")
                     }}>How It Works</button>
+                    <button type="button" className={styles.launchPageHeaderItem} onClick={(e) => {
+                        handleScroll("features")
+                    }}>Features</button>
                     <div className={styles.launchPageHeaderItem}>Contact</div>
                     <Link className={styles.launchPageHeaderItem} href="https://github.com/PromiseFunding">GitHub
                     </Link>

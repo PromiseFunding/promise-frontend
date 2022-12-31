@@ -5,40 +5,39 @@ import { SetStateAction, useEffect, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { tokenConfig } from "../config/token-config"
 import { contractAddressesInterface } from "../config/types"
-import { set, ref as refDb } from "firebase/database"
+import { update, set, ref as refDb } from "firebase/database"
 import { ref as refStore, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { database, storage } from "../firebase-config"
 import { milestone } from "../config/types"
 import { BigNumber } from "ethers"
 import styles from "../styles/Home.module.css"
-import TextField from '@mui/material/TextField'
-import FormHelperText from '@mui/material/FormHelperText'
-import FormControl from '@mui/material/FormControl'
-import Box from '@mui/material/Box'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import Select from '@mui/material/Select'
+import TextField from "@mui/material/TextField"
+import FormHelperText from "@mui/material/FormHelperText"
+import FormControl from "@mui/material/FormControl"
+import Box from "@mui/material/Box"
+import InputLabel from "@mui/material/InputLabel"
+import MenuItem from "@mui/material/MenuItem"
+import Select from "@mui/material/Select"
 import Image from "next/image"
-import DeleteIcon from '@material-ui/icons/Delete'
-import Modal from '@mui/material/Modal';
-import CircularProgress from '@mui/material/CircularProgress';
-import { useRouter } from 'next/router'
+import DeleteIcon from "@material-ui/icons/Delete"
+import Modal from "@mui/material/Modal"
+import CircularProgress from "@mui/material/CircularProgress"
+import { useRouter } from "next/router"
 
 const categories = ["--", "Tech", "Film", "Product", "Gaming"]
 
 const modalStyle = {
-    position: 'absolute' as 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
     width: "80%",
     height: "50%",
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 3,
-    borderRadius: "25px"
+    borderRadius: "25px",
 }
-
 
 //contract is already deployed... trying to look at features of contract
 export default function NewFund() {
@@ -48,7 +47,9 @@ export default function NewFund() {
 
     const yieldAddress =
         chainId in addresses
-            ? addresses[chainId]["PromiseFundFactory"][addresses[chainId]["PromiseFundFactory"].length - 1]
+            ? addresses[chainId]["PromiseFundFactory"][
+                  addresses[chainId]["PromiseFundFactory"].length - 1
+              ]
             : null
     const chainIdNum = parseInt(chainIdHex!)
 
@@ -57,12 +58,16 @@ export default function NewFund() {
     const [description, setDescription] = useState("")
     const [preFundDuration, setPreFundDuration] = useState("0")
     const [category, setCategory] = useState("--")
-    const [assetAddress, setAssetAddress] = useState(chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].assetAddress : null)
-    const [milestonesArray, setMilestonesArray] = useState<milestone[]>([{
-        "name": "",
-        "description": "",
-        "duration": "0"
-    }])
+    const [assetAddress, setAssetAddress] = useState(
+        chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].assetAddress : null
+    )
+    const [milestonesArray, setMilestonesArray] = useState<milestone[]>([
+        {
+            name: "",
+            description: "",
+            duration: "0",
+        },
+    ])
     const [open, setOpen] = useState(false)
     const [done, setDone] = useState(false)
 
@@ -81,13 +86,13 @@ export default function NewFund() {
         functionName: "createPromiseFund",
         params: {
             assetAddress: assetAddress,
-            milestoneDuration: milestonesArray.map(a => a.duration),
-            preFundingDuration: BigNumber.from(preFundDuration)
+            milestoneDuration: milestonesArray.map((a) => a.duration),
+            preFundingDuration: BigNumber.from(preFundDuration),
         },
     })
 
     function timeout(delay: number) {
-        return new Promise(res => setTimeout(res, delay));
+        return new Promise((res) => setTimeout(res, delay))
     }
 
     useEffect(() => {
@@ -132,7 +137,7 @@ export default function NewFund() {
             return
         }
         if (preFundDuration == "" || preFundDuration == "0") {
-            handleGenericAlert("Please fill all milestone durations.")
+            handleGenericAlert("Please fill the seed round duration.")
             return
         }
         const createTx: any = await createPromiseFund({
@@ -156,16 +161,20 @@ export default function NewFund() {
         const fundAddress = txReceipt.events[2].args.fundAddress
         setDone(true)
 
-        const iconRef = refStore(storage, `/files/${fundAddress}/${crypto.randomUUID()}${file!.name}`)
+        const iconRef = refStore(
+            storage,
+            `/files/${chainId}/${fundAddress}/${crypto.randomUUID()}${file!.name}`
+        )
         const uploadTask = uploadBytesResumable(iconRef, file as Blob)
 
+        // upload to fund folder
         uploadTask.on(
             "state_changed",
-            (snapshot) => { },
+            (snapshot) => {},
             (err) => console.log(err),
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                    set(refDb(database, `funds/${fundAddress}`), {
+                    set(refDb(database, `${chainId}/funds/${fundAddress}`), {
                         fundTitle: title,
                         imageURL: url,
                         description: description,
@@ -174,12 +183,13 @@ export default function NewFund() {
                         asset: assetValue,
                     })
                 })
+
+                set(refDb(database, `${chainId}/users/${account}/owner/${fundAddress}`), {fundAddress: fundAddress})
             }
         )
-        await timeout(1000); //for 1 sec delay
+        await timeout(1000) //for 1 sec delay
 
         router.push(`/details/?fund=${fundAddress}`)
-
     }
 
     const handleChangeDetails = () => {
@@ -218,11 +228,14 @@ export default function NewFund() {
 
     const newMilestone = () => {
         if (milestonesArray.length < 5) {
-            setMilestonesArray(milestonesArray => [...milestonesArray, {
-                "name": "",
-                "description": "",
-                "duration": "0"
-            }])
+            setMilestonesArray((milestonesArray) => [
+                ...milestonesArray,
+                {
+                    name: "",
+                    description: "",
+                    duration: "0",
+                },
+            ])
         } else {
             handleGenericAlert("The maximum number of milestones is 5")
         }
@@ -244,7 +257,10 @@ export default function NewFund() {
         setCategory(event.target.value)
     }
 
-    function handleChangeMilestoneName(event: { target: { value: SetStateAction<string> } }, index: number) {
+    function handleChangeMilestoneName(
+        event: { target: { value: SetStateAction<string> } },
+        index: number
+    ) {
         let items = [...milestonesArray]
         let item = { ...items[index] }
         item.name = event.target.value as string
@@ -252,7 +268,10 @@ export default function NewFund() {
         setMilestonesArray(items)
     }
 
-    function handleChangeMilestoneDescription(event: { target: { value: SetStateAction<string> } }, index: number) {
+    function handleChangeMilestoneDescription(
+        event: { target: { value: SetStateAction<string> } },
+        index: number
+    ) {
         let items = [...milestonesArray]
         let item = { ...items[index] }
         item.description = event.target.value as string
@@ -260,7 +279,10 @@ export default function NewFund() {
         setMilestonesArray(items)
     }
 
-    const handleChangeDuration = (event: { target: { value: SetStateAction<string> } }, index: number) => {
+    const handleChangeDuration = (
+        event: { target: { value: SetStateAction<string> } },
+        index: number
+    ) => {
         //max for now is 120 days
         const max = 10368000
         let items = [...milestonesArray]
@@ -272,7 +294,7 @@ export default function NewFund() {
             )
             item.duration = value.toString()
         } else {
-            item.duration = ""
+            item.duration = "0"
         }
         items[index] = item
         setMilestonesArray(items)
@@ -309,209 +331,301 @@ export default function NewFund() {
             >
                 <Box sx={modalStyle}>
                     {!done ? (
-                        <div style={{ display: "flex", flexDirection: "column", height: "100%", alignItems: "center" }}>
-                            <h1 style={{ fontSize: "50px", textAlign: "center", fontWeight: "700" }}>New Fundraiser Loading...</h1>
-                            <Box style={{ display: 'flex', width: "300px", height: "300px", justifyContent: "center", }}>
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                height: "100%",
+                                alignItems: "center",
+                            }}
+                        >
+                            <h1
+                                style={{
+                                    fontSize: "50px",
+                                    textAlign: "center",
+                                    fontWeight: "700",
+                                }}
+                            >
+                                New Fundraiser Loading...
+                            </h1>
+                            <Box
+                                style={{
+                                    display: "flex",
+                                    width: "300px",
+                                    height: "300px",
+                                    justifyContent: "center",
+                                }}
+                            >
                                 <CircularProgress style={{ marginTop: "50px" }} size={150} />
                             </Box>
-                        </div>) : (
-                        <div style={{ display: "flex", flexDirection: "column", height: "100%", alignItems: "center", zIndex: "25" }}>
-                            <h1 style={{ fontSize: "50px", textAlign: "center", fontWeight: "700" }}>Fundraiser Created!</h1>
+                        </div>
+                    ) : (
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                height: "100%",
+                                alignItems: "center",
+                                zIndex: "25",
+                            }}
+                        >
+                            <h1
+                                style={{
+                                    fontSize: "50px",
+                                    textAlign: "center",
+                                    fontWeight: "700",
+                                }}
+                            >
+                                Fundraiser Created!
+                            </h1>
 
                             <svg className={styles.animatedCheck} viewBox="0 0 24 24">
                                 <path d="M4.1 12.7L9 17.6 20.3 6.3" fill="none" />
                             </svg>
-                        </div>)}
+                        </div>
+                    )}
                 </Box>
             </Modal>
             <div className={styles.createNewFund}>
-                <h1 style={{ position: "relative", display: "table-cell", verticalAlign: "middle", fontWeight: "700" }}>Create A New Fund</h1>
+                <h1
+                    style={{
+                        position: "relative",
+                        display: "table-cell",
+                        verticalAlign: "middle",
+                        fontWeight: "700",
+                    }}
+                >
+                    Create A New Fund
+                </h1>
             </div>
-            {
-                isWeb3Enabled && yieldAddress ? (
-
-                    <Box
-                    >
-                        <div className={styles.newFundForm}>
-
-                            <div className={styles.formSectionOuter}>
-                                <div className={styles.formSection}>
-                                    <TextField
-                                        id="outlined-basic"
-                                        label="Fund Title"
-                                        variant="filled"
-                                        onChange={handleChangeTitle}
-                                        value={title}
-                                        helperText="Input a title for your fund"
-                                    />
-                                    <FormControl variant="filled">
-                                        <InputLabel>Category</InputLabel>
-
-                                        <Select
-                                            value={category}
-                                            label="Category"
-                                            onChange={handleChangeCategory}
-                                        >
-                                            <MenuItem value="--">
-                                                <em>None</em>
-                                            </MenuItem>
-                                            <MenuItem value={"Tech"}>Tech</MenuItem>
-                                            <MenuItem value={"Film"}>Film</MenuItem>
-                                            <MenuItem value={"Product"}>Product</MenuItem>
-                                            <MenuItem value={"Gaming"}>Gaming</MenuItem>
-                                        </Select>
-                                        <FormHelperText>Select Category</FormHelperText>
-                                    </FormControl>
-                                    <FormControl variant="filled">
-                                        <InputLabel>Asset</InputLabel>
-                                        <Select
-                                            value={assetValue}
-                                            label="Category"
-                                            onChange={handleChangeAsset}
-                                        >
-                                            <MenuItem value={"USDC"}>USDC</MenuItem>
-                                            <MenuItem value={"USDT"}>USDT</MenuItem>
-                                            <MenuItem value={"DAI"}>DAI</MenuItem>
-                                            <MenuItem value={"WETH"}>WETH</MenuItem>
-                                        </Select>
-                                        <FormHelperText>Fund&apos;s accepted asset</FormHelperText>
-                                    </FormControl>
-                                    <TextField
-                                        type="number"
-                                        name="duration"
-                                        label="Seed Round Duration (seconds)"
-                                        variant="filled"
-                                        value={preFundDuration}
-                                        onChange={(e) => {
-                                            handleChangePreFundDuration(e)
-                                        }}
-                                        style={{ width: "30%" }}
-                                        helperText="Duration of Seed Round"
-                                    />
-                                </div>
+            {isWeb3Enabled && yieldAddress ? (
+                <Box>
+                    <div className={styles.newFundForm}>
+                        <div className={styles.formSectionOuter}>
+                            <div className={styles.formSection}>
                                 <TextField
-                                    id="outlined-multiline-flexible"
-                                    label="Project Description"
-                                    multiline
-                                    rows={10}
-                                    onChange={handleChangeDescription}
-                                    style={{ paddingBottom: "20px" }}
+                                    id="outlined-basic"
+                                    label="Fund Title"
                                     variant="filled"
+                                    onChange={handleChangeTitle}
+                                    value={title}
+                                    helperText="Input a title for your fund"
+                                />
+                                <FormControl variant="filled">
+                                    <InputLabel>Category</InputLabel>
+
+                                    <Select
+                                        value={category}
+                                        label="Category"
+                                        onChange={handleChangeCategory}
+                                    >
+                                        <MenuItem value="--">
+                                            <em>None</em>
+                                        </MenuItem>
+                                        <MenuItem value={"Tech"}>Tech</MenuItem>
+                                        <MenuItem value={"Film"}>Film</MenuItem>
+                                        <MenuItem value={"Product"}>Product</MenuItem>
+                                        <MenuItem value={"Gaming"}>Gaming</MenuItem>
+                                    </Select>
+                                    <FormHelperText>Select Category</FormHelperText>
+                                </FormControl>
+                                <FormControl variant="filled">
+                                    <InputLabel>Asset</InputLabel>
+                                    <Select
+                                        value={assetValue}
+                                        label="Category"
+                                        onChange={handleChangeAsset}
+                                    >
+                                        <MenuItem value={"USDC"}>USDC</MenuItem>
+                                        <MenuItem value={"USDT"}>USDT</MenuItem>
+                                        <MenuItem value={"DAI"}>DAI</MenuItem>
+                                        <MenuItem value={"WETH"}>WETH</MenuItem>
+                                    </Select>
+                                    <FormHelperText>Fund&apos;s accepted asset</FormHelperText>
+                                </FormControl>
+                                <TextField
+                                    type="number"
+                                    name="duration"
+                                    label="Seed Round Duration (seconds)"
+                                    variant="filled"
+                                    value={preFundDuration}
+                                    onChange={(e) => {
+                                        handleChangePreFundDuration(e)
+                                    }}
+                                    style={{ width: "30%" }}
+                                    helperText="Duration of Seed Round"
                                 />
                             </div>
+                            <TextField
+                                id="outlined-multiline-flexible"
+                                label="Project Description"
+                                multiline
+                                rows={10}
+                                onChange={handleChangeDescription}
+                                style={{ paddingBottom: "20px" }}
+                                variant="filled"
+                            />
+                        </div>
 
-
-                            <div className={styles.formSectionOuter}>
-                                <div className={styles.formSection}>
-                                    <div style={{ display: "flex", flexDirection: "column", gap: "14px", width: "100%" }}>
-                                        <ul>
-                                            {milestonesArray.map((curr, index) => (
-                                                <li key={index}>
-                                                    <div style={{ display: "flex", flexDirection: "column", gap: "14px", paddingBottom: "20px" }}>
-                                                        <div style={{ display: "flex", flexDirection: "row" }}>
-                                                            <TextField
-                                                                id="outlined-basic"
-                                                                label={`Milestone ${index + 1}`}
-                                                                onChange={(e) => {
-                                                                    handleChangeMilestoneName(e, index)
+                        <div className={styles.formSectionOuter}>
+                            <div className={styles.formSection}>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        gap: "14px",
+                                        width: "100%",
+                                    }}
+                                >
+                                    <ul>
+                                        {milestonesArray.map((curr, index) => (
+                                            <li key={index}>
+                                                <div
+                                                    style={{
+                                                        display: "flex",
+                                                        flexDirection: "column",
+                                                        gap: "14px",
+                                                        paddingBottom: "20px",
+                                                    }}
+                                                >
+                                                    <div
+                                                        style={{
+                                                            display: "flex",
+                                                            flexDirection: "row",
+                                                        }}
+                                                    >
+                                                        <TextField
+                                                            id="outlined-basic"
+                                                            label={`Milestone ${index + 1}`}
+                                                            onChange={(e) => {
+                                                                handleChangeMilestoneName(e, index)
+                                                            }}
+                                                            value={milestonesArray[index].name}
+                                                            helperText="Input a title for the milestone"
+                                                            variant="filled"
+                                                            style={{ width: "50%" }}
+                                                        />
+                                                        <TextField
+                                                            type="number"
+                                                            name="duration"
+                                                            label="Milestone Duration"
+                                                            variant="filled"
+                                                            value={milestonesArray[index].duration}
+                                                            onChange={(e) => {
+                                                                handleChangeDuration(e, index)
+                                                            }}
+                                                            style={{
+                                                                width: "50%",
+                                                                paddingLeft: "10px",
+                                                            }}
+                                                            helperText="Duration of Milestones (seconds)"
+                                                        />
+                                                        {milestonesArray.length > 1 ? (
+                                                            <div
+                                                                style={{
+                                                                    paddingLeft: "30px",
+                                                                    paddingTop: "15px",
                                                                 }}
-                                                                value={milestonesArray[index].name}
-                                                                helperText="Input a title for the milestone"
-                                                                variant="filled"
-                                                                style={{ width: "50%" }}
-                                                            />
-                                                            <TextField
-                                                                type="number"
-                                                                name="duration"
-                                                                label="Milestone Duration"
-                                                                variant="filled"
-                                                                value={milestonesArray[index].duration}
-                                                                onChange={(e) => {
-                                                                    handleChangeDuration(e, index)
-                                                                }}
-                                                                style={{ width: "50%", paddingLeft: "10px" }}
-                                                                helperText="Duration of Milestones (seconds)"
-                                                            />
-                                                            {milestonesArray.length > 1 ? (
-                                                                <div style={{ paddingLeft: "30px", paddingTop: "15px" }}>
-                                                                    <DeleteIcon
-                                                                        className={styles.deleteIcon}
-                                                                        onClick={(e) => {
-                                                                            handleDeleteMilestone(index)
-                                                                        }} />
-                                                                </div>) : (<></>)}
-
-
-                                                        </div>
-                                                        <div style={{ paddingTop: "20px" }} >
-                                                            <TextField
-                                                                id="outlined-multiline-flexible"
-                                                                label="Milestone Description"
-                                                                multiline
-                                                                rows={10}
-                                                                onChange={(e) => {
-                                                                    handleChangeMilestoneDescription(e, index)
-                                                                }}
-                                                                variant="filled"
-                                                                style={{ width: "100%" }}
-                                                            />
-                                                        </div>
+                                                            >
+                                                                <DeleteIcon
+                                                                    className={styles.deleteIcon}
+                                                                    onClick={(e) => {
+                                                                        handleDeleteMilestone(
+                                                                            index
+                                                                        )
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        ) : (
+                                                            <></>
+                                                        )}
                                                     </div>
-
-
-                                                </li>
-                                            ))}
-                                        </ul>
-                                        <button
-                                            className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded ml-auto"
-                                            onClick={async function () {
-                                                newMilestone()
-                                            }}
-                                        >
-                                            <div>Add Milestone</div>
-                                        </button>
-                                    </div>
+                                                    <div style={{ paddingTop: "20px" }}>
+                                                        <TextField
+                                                            id="outlined-multiline-flexible"
+                                                            label="Milestone Description"
+                                                            multiline
+                                                            rows={10}
+                                                            onChange={(e) => {
+                                                                handleChangeMilestoneDescription(
+                                                                    e,
+                                                                    index
+                                                                )
+                                                            }}
+                                                            variant="filled"
+                                                            style={{ width: "100%" }}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <button
+                                        className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded ml-auto"
+                                        onClick={async function () {
+                                            newMilestone()
+                                        }}
+                                    >
+                                        <div>Add Milestone</div>
+                                    </button>
                                 </div>
                             </div>
+                        </div>
 
-                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", alignContent: "center", gap: "50px" }}>
-                                <div style={{ display: "flex", gap: "20px", paddingTop: "20px" }}>
-                                    <h1 style={{ fontSize: "26px", paddingLeft: "80px" }}>Select an image:</h1>
-                                    <input type="file" accept="image/*" onChange={handleChangeImage} style={{ paddingTop: "7px" }} />
+                        <div
+                            style={{
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                alignContent: "center",
+                                gap: "50px",
+                            }}
+                        >
+                            <div style={{ display: "flex", gap: "20px", paddingTop: "20px" }}>
+                                <h1 style={{ fontSize: "26px", paddingLeft: "80px" }}>
+                                    Select an image:
+                                </h1>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={handleChangeImage}
+                                    style={{ paddingTop: "7px" }}
+                                />
+                            </div>
+                            {file ? (
+                                <div>
+                                    <Image
+                                        src={URL.createObjectURL(file)}
+                                        alt="Fund Picture"
+                                        width={500}
+                                        height={500}
+                                    />
                                 </div>
-                                {file ? (
-                                    <div >
-                                        <Image
-                                            src={URL.createObjectURL(file)}
-                                            alt="Fund Picture"
-                                            width={500}
-                                            height={500}
-                                        />
-                                    </div>
-                                ) : (<div>
+                            ) : (
+                                <div>
                                     <Image
                                         src={"/icons/image-preview.png"}
                                         alt="Fund Picture"
                                         width={500}
                                         height={500}
                                     />
-                                </div>)}
+                                </div>
+                            )}
 
-                                <button
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold text-5xl py-5 px-8 rounded-lg mb-10"
-                                    onClick={async function () {
-                                        handleNewFundraiser()
-                                    }}
-                                >
-                                    <div>Create New Fundraiser</div>
-                                </button>
-                            </div>
+                            <button
+                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold text-5xl py-5 px-8 rounded-lg mb-10"
+                                onClick={async function () {
+                                    handleNewFundraiser()
+                                }}
+                            >
+                                <div>Create New Fundraiser</div>
+                            </button>
                         </div>
-                    </Box >
-                ) : (
-                    <div>No Create Yield Address Detected</div>
-                )
-            }
-        </div >
+                    </div>
+                </Box>
+            ) : (
+                <div>No Create Yield Address Detected</div>
+            )}
+        </div>
     )
 }

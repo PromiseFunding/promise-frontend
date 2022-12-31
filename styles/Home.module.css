@@ -61,13 +61,23 @@
     background-color: #1a202f;
 }
 
+.headerFix {
+    padding-top: 10px;
+}
+
+.faqAccordion {
+    margin-left: 12%;
+    margin-right: 12%;
+}
+
 .headerItem {
-    font-size: 15px;
-    color: rgb(226 232 240);
+    font-size: 16px;
+    color: rgb(20, 20, 20);
     margin-left: 30px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding: 5px;
 }
 
 .drawerItem {
@@ -85,11 +95,11 @@
     position: relative;
     display: inline-block;
     text-align: left;
-    font-size: 15px;
+    font-size: 20px;
     color: rgb(226 232 240);
     margin-top: auto;
     margin-bottom: auto;
-    margin-left: 30px;
+    margin-left: 40px;
     white-space: nowrap;
     text-overflow: ellipsis;
 }
@@ -97,7 +107,7 @@
 .newFundButton {
     padding: 10px;
     font-size: 15px;
-    color: rgb(226 232 240);
+    color: rgb(255, 255, 255);
     background: linear-gradient(125.78deg, #e5509acc 17.93%, #b02588cc 42.06%, #694dcbcc 73.89%);
     border-radius: 10px;
     margin-top: auto;
@@ -109,7 +119,35 @@
 }
 
 .newFundButton:hover {
-    color: "white";
+    /* color: rgb(45, 65, 166); */
+    /* color: rgb(135, 33, 94); */
+    /* color:rgb(164, 37, 37) */
+    background: linear-gradient(125.78deg, #694dcb 17.93%, #b02588 42.06%, #e5509a 73.89%);
+    color: lightgrey;
+    cursor: pointer;
+}
+
+.purpleBadge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    /* background-color: #9C27B0; */
+    background: linear-gradient(125.78deg, #e5509acc 17.93%, #b02588cc 42.06%, #694dcbcc 73.89%);
+    color: #FFFFFF;
+    width: 30px;
+    height: 30px;
+    /* borderRadius: "50%", //circular option */
+    border-radius: 4px 4px 4px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.purpleBadge:hover {
+    background: linear-gradient(125.78deg, #694dcb 17.93%, #b02588 42.06%, #e5509a 73.89%);
+    color: lightgrey;
+    cursor: pointer;
 }
 
 .header {
@@ -130,12 +168,18 @@
 }
 
 .headerItem:hover {
-    color: white;
+    color: rgb(45, 65, 166);
+    background-color: #f0f2f6;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 5px;
+    padding-left: 5px;
+    border-radius: 10px 10px 10px 10px;
 }
 
 .drawerItem:hover {
-    color: white;
-    background-color: #1a202f;
+    color: rgb(45, 65, 166);
+    background-color: #f0f2f6;
 }
 
 .searchbar {
@@ -143,6 +187,7 @@
     margin-top: auto;
     margin-bottom: auto;
     font-size: 10px;
+    caret-color: rgb(45, 65, 166);
 }
 
 .heading {
@@ -169,10 +214,23 @@
     display: table;
     margin: auto;
     width: 100%;
-    height: 40vh;
-    font-size: 60px;
+    height: 35vh;
+    font-size: 55px;
     background-size: 100% 100%;
     background-image: url("../public/background-images/funds-we-love-banner.jpeg");
+}
+
+.yourFunds {
+    position: relative;
+    color: white;
+    text-align: center;
+    display: table;
+    margin: auto;
+    width: 100%;
+    height: 35vh;
+    font-size: 55px;
+    background-size: 100% 100%;
+    background-image: url("../public/background-images/your-funds-banner.jpeg");
 }
 
 .createNewFund {
@@ -182,8 +240,8 @@
     vertical-align: middle;
     width: 100%;
     display: table;
-    height: 40vh;
-    font-size: 50px;
+    height: 35vh;
+    font-size: 55px;
     background-size: 100% 100%;
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
@@ -257,7 +315,7 @@
     flex-direction: row;
     justify-content: center;
     width: 100%;
-    margin-top: 50px;
+    margin-top: 20px;
 }
 
 .featuresBlockInner {
@@ -270,7 +328,7 @@
     width: 300px;
     height: 400px;
     font-size: 30px;
-    background-color: #1a202f;
+    background-color: #ffffff;
     padding-top: 20px;
     transition: box-shadow 0.3s;
     z-index: 0;
@@ -281,7 +339,7 @@
     background: rgb(226, 56, 56);
     background: linear-gradient(125.78deg, #e5509a 17.93%, #b02588 42.06%, #694dcb 73.89%);
     border: 1rem solid;
-    color: #1a202f;
+    color: #ffffff;
     border: black 2px;
 }
 
@@ -296,6 +354,7 @@
     font-size: 15px;
     margin-left: 30px;
     margin-right: 30px;
+    color: rgb(20, 20, 20);
 }
 
 .launchAppInner {
@@ -365,7 +424,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    color: white;
+    color: rgb(20, 20, 20);
     margin-top: 100px;
     text-align: center;
     margin-bottom: 50px;
@@ -394,7 +453,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
-    height: 750px;
+    height: 775px;
     font-size: 60px;
     background-size: 100% 100%;
     background-image: url("../public/background-images/landing-page-how-it-works.jpeg");
@@ -446,7 +505,7 @@
     margin-bottom: auto;
     width: 50%;
     margin-left: auto;
-    color: white;
+    color: rgb(20, 20, 20);
 }
 
 .updates {
@@ -717,8 +776,18 @@
 }
 
 .menuBar {
-    color: white;
-    font-size: 20px;
+    color: rgb(20, 20, 20);
+    font-size: 30px;
+}
+
+.menuBar:hover {
+    color: rgb(45, 65, 166);
+    background-color: #f0f2f6;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-right: 5px;
+    padding-left: 5px;
+    border-radius: 10px 10px 10px 10px;
 }
 
 .drawer {
@@ -730,6 +799,14 @@
     .grid {
         width: 100%;
         flex-direction: column;
+    }
+    .headerInner {
+        display: none;
+        position: static;
+    }
+    .drawer {
+        position: relative;
+        display: grid;
     }
     .featuresBlock {
         flex-direction: column;
@@ -746,14 +823,6 @@
     }
     .howItWorksLanding {
         height: 1200px;
-    }
-    .drawer {
-        position: relative;
-        display: grid;
-    }
-    .headerInner {
-        display: none;
-        position: static;
     }
     .searchbar {
         width: 20vw;

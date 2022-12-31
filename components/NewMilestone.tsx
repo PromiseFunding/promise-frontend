@@ -18,8 +18,8 @@ export default function NewMilestone(props: propType) {
     const fundAddress = props.fundAddress
 
     const addresses: contractAddressesInterface = contractAddresses
-    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-
+    const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
+    const chainId: string = parseInt(chainIdHex!).toString()
     const [numberofMilestones, setNumberofMilestones] = useState(5)
     const [milestoneDuration, setMilestoneDuration] = useState("")
     const [description, setDescription] = useState("")
@@ -39,7 +39,7 @@ export default function NewMilestone(props: propType) {
     })
 
     const updateMilestoneLength = async () => {
-        const milestoneRef = refDb(database, "funds/" + fundAddress + "/milestones")
+        const milestoneRef = refDb(database, chainId + "/funds/" + fundAddress + "/milestones")
         const snapshot = await get(milestoneRef)
         const milestoneVal = snapshot.val()
         setNumberofMilestones(milestoneVal.length)
@@ -95,7 +95,7 @@ export default function NewMilestone(props: propType) {
 
         handleNewNotification()
 
-        set(refDb(database, `funds/${fundAddress}/milestones/${numberofMilestones}`), {
+        set(refDb(database, `${chainId}/funds/${fundAddress}/milestones/${numberofMilestones}`), {
             name: name,
             description: description,
             duration: milestoneDuration,

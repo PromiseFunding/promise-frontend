@@ -8,7 +8,7 @@ export default function HowItWorks() {
 
 
             <div className={styles.howItWorksLanding} id="how-it-works">
-                <div style={{ color: "white", fontSize: "40px", fontWeight: "700", marginTop: "20px" }}>
+                <div style={{ color: "white", fontSize: "50px", fontWeight: "700", marginTop: "20px" }}>
                     How It Works
                 </div>
                 <div className={styles.howItWorksLandingOuter}>
@@ -16,7 +16,7 @@ export default function HowItWorks() {
                         <div className={styles.howItWorksPanel}>
                             <h1>Start</h1>
                             <FontAwesomeIcon className={styles.howItWorksIcon} icon={["fas", "lightbulb"]} transform="shrink-4" />
-                            <h2 style={{ fontSize: "20px", marginTop: "30px", fontWeight: "400" }}>Start with an idea. It can be anything: A new DeFi protocol, an artistic project, or a new type of physical product. Set goals and timelines for future milestones.</h2>
+                            <h2 style={{ fontSize: "20px", marginTop: "30px", fontWeight: "400"  }}>Start with an idea. It can be anything: A new DeFi protocol, an artistic project, or a new type of physical product. Set goals and timelines for future milestones.</h2>
                         </div>
                         <div className={styles.howItWorksPanel}>
                             <h1>Seed</h1>
@@ -28,7 +28,7 @@ export default function HowItWorks() {
                         <div className={styles.howItWorksPanel}>
                             <h1>Progress</h1>
                             <FontAwesomeIcon className={styles.howItWorksIcon} icon={["fas", "list-check"]} size="6x" transform="shrink-4" />
-                            <h2 style={{ fontSize: "20px", marginTop: "30px", fontWeight: "400" }}>With the initial capital, fundraisers can start progressing towards their goals. Funders hold votes after each milestone to ensure the fundraiser is keeping their promises. </h2>
+                            <h2 style={{ fontSize: "20px", marginTop: "30px", fontWeight: "400" }}>Funders hold votes after each milestone to ensure the fundraiser is keeping their promises. The outcome of the vote determines if the funds from the milestone are given to the project or back to the funders.</h2>
                         </div>
                         <div className={styles.howItWorksPanel}>
                             <h1>Finish</h1>
