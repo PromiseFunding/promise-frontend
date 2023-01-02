@@ -38,6 +38,12 @@
     color: black;
 }
 
+.milestoneSelector {
+    padding-top: 0px;
+    padding: 20px;
+    height: 100%;
+}
+
 .main {
     min-height: 100vh;
     padding: 4rem 0;

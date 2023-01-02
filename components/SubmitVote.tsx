@@ -48,7 +48,8 @@ export default function SubmitVote(props: propType) {
 
     useEffect(() => {
         if (isWeb3Enabled && fundAddress) {
-            props.onGetFunderInfo!(account!, tranche!)
+            props.onGetFunderInfo!()
+
         }
     }, [isWeb3Enabled, fundAddress, account])
 
@@ -56,7 +57,8 @@ export default function SubmitVote(props: propType) {
         try {
             await tx.wait(1)
             handleNewNotification()
-            props.onGetFunderInfo!(account!, tranche!)
+            props.onGetFunderInfo!()
+
         } catch (error) {
             console.log(error)
             handleNewNotification1()

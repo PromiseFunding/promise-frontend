@@ -67,7 +67,8 @@ export default function CurrentTrancheDonation(props: propType) {
 
     useEffect(() => {
         if (isWeb3Enabled && fundAddress) {
-            props.onGetFunderInfo!(account!, tranche!)
+            props.onGetFunderInfo!()
+
         }
     }, [isWeb3Enabled, fundAddress, account, totalRaised])
 
@@ -85,7 +86,7 @@ export default function CurrentTrancheDonation(props: propType) {
             await fundTx.wait(1)
             props.onChangeAmountFunded!()
             handleNewNotification()
-            props.onGetFunderInfo!(account!, tranche!)
+            props.onGetFunderInfo!()
             var donorRef = ref(database, chainId + "/users/" + account + "/donor/" + fundAddress)
 
             onValue(donorRef, (snapshot) => {

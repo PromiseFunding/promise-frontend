@@ -16,7 +16,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-
+import { formatDuration } from '../../utils/utils'
 
 const modalStyle = {
     position: 'absolute' as 'absolute',
@@ -110,20 +110,6 @@ export default function Updates(props: propType) {
             position: "topR",
         })
     }
-
-    const formatDuration = (ms: number) => {
-        if (ms < 0) ms = -ms;
-        const time = {
-            day: Math.floor(ms / 86400000),
-            hour: Math.floor(ms / 3600000) % 24,
-            minute: Math.floor(ms / 60000) % 60,
-            second: Math.floor(ms / 1000) % 60,
-        };
-        return Object.entries(time)
-            .filter(val => val[1] !== 0)
-            .map(val => val[1] + ' ' + (val[1] !== 1 ? val[0] + 's' : val[0]))
-            .join(', ');
-    };
 
     const handleChange =
         (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
