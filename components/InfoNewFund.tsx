@@ -4,8 +4,12 @@ import styles from "../styles/Home.module.css"
 import Header from "../components/Header"
 import NewFund from "../components/Newfund"
 import Link from "next/link"
+import { propInfoFund } from "../config/types"
+import Button from "@mui/material/Button"
+import { MouseEventHandler } from "react"
 
-export default function InfoForm() {
+
+export default function InfoForm(props: propInfoFund) {
 
     return (
         <div className={styles.container}>
@@ -184,6 +188,9 @@ export default function InfoForm() {
                         We believe that the &apos;Promise Fund&apos; is best suited for projects or products as it inherently builds a community and reputation. We also believe that the &apos;Yield Fund&apos; is best
                         suited for one time use cases or causes and charitable donations. Ultimately, however, the decision is up to you! Pick the fundraiser that you want to start, fill out the details very carefully and thoughtfully, and get started!
                     </h1>
+                </div>
+                <div>
+                    <Button className={styles.buttonStyle} onClick={props.onClickOK()!} style={{ ['--override-color' as any]: "green" }}>OK</Button>
                 </div>
             </div>
         </div>

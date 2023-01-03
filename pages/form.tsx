@@ -51,7 +51,13 @@ const Form: NextPage = () => {
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
-                    <Box sx={modalStyle}><InfoNewFund></InfoNewFund></Box>
+                    <Box sx={modalStyle}>
+                        <InfoNewFund
+                            onClickOK={() => {
+                                handleClose()
+                            }}
+                        ></InfoNewFund>
+                    </Box>
                 </Modal>
             </div>
         </div>

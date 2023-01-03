@@ -22,6 +22,10 @@ export interface updates {
 
 }
 
+export interface propInfoFund {
+    onClickOK(): void
+}
+
 export interface propType {
     fundAddress: string
     assetAddress?: string
