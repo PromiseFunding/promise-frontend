@@ -112,6 +112,9 @@ export default function MyFundraisers() {
                 {/* Owned Funds */}
                 {ownerData.length > 0 ? (
                     <>
+                        <h1 className="text-4xl font-bold text-black-header text-center">
+                            Fundraisers You Own
+                        </h1>
                         {!calculatePaddingToggleOwner(windowWidth) ? (
                             <Box my={2} display="flex" justifyContent="center">
                                 {ownerData.map((fund) => (

@@ -18,46 +18,8 @@ import { Engine } from "tsparticles-engine"
 const MyFunds: NextPage = () => {
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
 
-    const options = {
-        // background: {
-        //     color: "#fff",
-        // },
-        particles: {
-            shape: {
-                type: "circle",
-            },
-            number: {
-                value: 7,
-            },
-            color: {
-                // value: "random",
-                //value: ["#0A1A6A", "#A42525"]
-                value: "#A42525",
-            },
-            opacity: {
-                value: 0.3,
-            },
-            size: {
-                value: { min: 30, max: 50 },
-            },
-            move: {
-                enable: true,
-                speed: 0.25,
-                random: false,
-            },
-            bounds: {
-                top: 500,
-            },
-        },
-    }
-
-    const particlesInit = useCallback(async (engine: Engine) => {
-        await loadFull(engine)
-    }, [])
-
     return (
         <div>
-            {/* <Particles options={options} init={particlesInit} style={{ zIndex: -1 }} /> */}
             <Head>
                 <title>Promise</title>
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
