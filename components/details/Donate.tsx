@@ -112,7 +112,6 @@ export default function Donate(props: propType) {
         }
         if (isWeb3Enabled && fundAddress) {
             props.onGetFunderInfo!()
-            console.log('test')
         }
     }, [isWeb3Enabled, fundAddress, account])
 
@@ -184,22 +183,28 @@ export default function Donate(props: propType) {
                     <div className={styles.modalForm}>
                         <div>
                             {state != 4 ? (
-                                <FormControl variant="filled">
-                                    <InputLabel>Donation Type</InputLabel>
-
-                                    <Select
-                                        value={donateType}
-                                        label="Category"
-                                        onChange={handleChangeType}
+                                <div>
+                                    <FormControl variant="filled" sx={{ backgroundColor: "rgb(241 245 249)", borderRadius: "10px", width: "100%" }}
                                     >
-                                        <MenuItem value={"spread"}>Spread</MenuItem>
-                                        <MenuItem value={"direct"}>Direct</MenuItem>
-                                    </Select>
-                                    <div style={{ textAlign: "center" }}>
-                                        <FontAwesomeIcon className={styles.donateIcon} icon={["fas", (donateType == "spread" ? "calendar-days" : "bullseye")]} mask={["fas", "square-full"]} size="6x" transform="shrink-4" />
-                                    </div>
-                                    <FormHelperText style={{ textAlign: "center" }}>{donateType == "spread" ? (<>A spread donation will divide the donation amount equally among the remaining milestone periods.</>) : (<>A direct donation donates only to the current milestone period.</>)}</FormHelperText>
-                                </FormControl>
+                                        <InputLabel>Donation Type</InputLabel>
+
+                                        <Select
+                                            value={donateType}
+                                            label="Category"
+                                            onChange={handleChangeType}
+
+                                        >
+                                            <MenuItem value={"spread"}>Spread</MenuItem>
+                                            <MenuItem value={"direct"}>Direct</MenuItem>
+                                        </Select>
+                                    </FormControl>
+                                    <FormControl>
+                                        <div style={{ textAlign: "center" }}>
+                                            <FontAwesomeIcon className={styles.donateIcon} icon={["fas", (donateType == "spread" ? "calendar-days" : "bullseye")]} mask={["fas", "square-full"]} size="6x" transform="shrink-4" />
+                                        </div>
+                                        <FormHelperText style={{ textAlign: "center" }}>{donateType == "spread" ? (<>A spread donation will divide the donation amount equally among the remaining milestone periods.</>) : (<>A direct donation donates only to the current milestone period.</>)}</FormHelperText>
+                                    </FormControl>
+                                </div>
                             ) : (
                                 <FormControl>
                                     <h1 style={{ fontSize: "30px", fontWeight: "500", textAlign: "center" }}>Seed Donation</h1>
@@ -239,10 +244,11 @@ export default function Donate(props: propType) {
                 Donate
             </Button>
 
-            {disabled() ? (
-                <div className={styles.disabledText} style={{ "--visibility": (disabled() ? 'visible' : 'hidden'), "--position": (disabled() ? 'relative' : 'absolute') } as React.CSSProperties}>
-                    {disabledMessage()}
-                </div>) : (<div></div>)
+            {
+                disabled() ? (
+                    <div className={styles.disabledText} style={{ "--visibility": (disabled() ? 'visible' : 'hidden'), "--position": (disabled() ? 'relative' : 'absolute') } as React.CSSProperties}>
+                        {disabledMessage()}
+                    </div>) : (<div></div>)
             }
         </div >
     )

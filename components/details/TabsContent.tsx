@@ -70,7 +70,6 @@ export default function TabsContent(props: propType) {
                     milestoneSummary={props.milestoneSummary}
                     onChangeState={() => {
                         props.onChangeState!()
-                        console.log("AY BRUH2")
                     }} />
             </TabPanel>
             <TabPanel value={value} index={1}>
