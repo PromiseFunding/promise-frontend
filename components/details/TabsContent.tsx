@@ -3,8 +3,9 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import StatusBar from "../../components/StatusBar"
+import StatusBar from "./StatusBar"
 import { propType } from "../../config/types"
+import Updates from "./Updates"
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -50,7 +51,7 @@ export default function TabsContent(props: propType) {
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                     <Tab sx={{ width: "25%" }} label="Milestones" {...a11yProps(0)} />
                     <Tab sx={{ width: "25%" }} label="Updates" {...a11yProps(1)} />
-                    <Tab sx={{ width: "25%" }} label="Media" {...a11yProps(2)} />
+                    <Tab sx={{ width: "25%" }} label="Overview" {...a11yProps(2)} />
                     <Tab sx={{ width: "25%" }} label="Donate" {...a11yProps(3)} />
 
                 </Tabs>
@@ -66,10 +67,17 @@ export default function TabsContent(props: propType) {
                     currState={props.currState}
                     totalRaised={props.totalRaised}
                     coinName={props.coinName}
-                    milestoneSummary={props.milestoneSummary} />
+                    milestoneSummary={props.milestoneSummary}
+                    onChangeState={() => {
+                        props.onChangeState!()
+                        console.log("AY BRUH2")
+                    }} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-                Item Two
+                <Updates
+                    fundAddress={props.fundAddress}
+                    ownerFund={props.ownerFund}
+                ></Updates>
             </TabPanel>
             <TabPanel value={value} index={2}>
                 Item Three

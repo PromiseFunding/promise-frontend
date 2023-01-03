@@ -24,8 +24,10 @@ import WithdrawExpired from "../components/details/WithdrawExpired"
 const Details: NextPage = () => {
     const router = useRouter()
     const fundAddress = router.query.fund as string
+    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
+    const chainId: string = parseInt(chainIdHex!).toString()
 
-    const fundRef = ref(database, "funds/" + fundAddress)
+    const fundRef = ref(database, chainId + "/funds/" + fundAddress)
     const [data, setData] = useState<databaseFundObject>()
     const [assetAddress, setAssetAddress] = useState("")
     const [owner, setOwner] = useState("")
@@ -46,8 +48,6 @@ const Details: NextPage = () => {
     const [userAddress, setUserAddress] = useState("")
 
     const addresses: contractAddressesInterface = contractAddresses
-    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
 
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)
@@ -92,7 +92,6 @@ const Details: NextPage = () => {
 
     async function updateUI() {
         const milestoneInfo = await getMilestoneSummary() as milestoneSummary
-        console.log('update UI')
         const assetAddressFromCall = milestoneInfo.assetAddress
         const ownerFromCall = milestoneInfo.owner
         const stateFromCall = milestoneInfo.state
@@ -140,7 +139,7 @@ const Details: NextPage = () => {
         onValue(fundRef, (snapshot) => {
             setData(snapshot.val())
         })
-    }, [fundAddress])
+    }, [fundAddress, chainId])
 
     const donateVisible = (): boolean => {
         // when voting donating shouldn't be visible
@@ -166,7 +165,6 @@ const Details: NextPage = () => {
     return (
         <div>
             <Header main={false}></Header>
-
             {data && milestoneSummary && funderSummary ? (
                 <div className={styles.detailsMain}>
                     <Head>
@@ -258,6 +256,10 @@ const Details: NextPage = () => {
                             totalRaised={totalFunds}
                             coinName={coinName}
                             milestoneSummary={milestoneSummary}
+                            onChangeState={() => {
+                                console.log("AY BRUH")
+                                updateUI()
+                            }}
                         ></TabsContent>
                     </div>
                 </div>

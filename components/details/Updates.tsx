@@ -25,7 +25,7 @@ const modalStyle = {
     transform: 'translate(-50%, -50%)',
     width: "80%",
     bgcolor: 'background.paper',
-    border: '2px solid #000',
+    borderRadius: "10px",
     boxShadow: 24,
     p: 3,
 }
@@ -147,7 +147,7 @@ export default function Updates(props: propType) {
                                 <Typography sx={{ width: '33%', flexShrink: 0 }}>
                                     {updateVal.subject.toString()}
                                 </Typography>
-                                <Typography sx={{ color: 'text.secondary' }}>{formatDuration(Date.now() - (updateVal.timestamp as unknown as number))} ago</Typography>
+                                <Typography sx={{ color: 'text.secondary' }}>{formatDuration((Date.now() - (updateVal.timestamp as unknown as number)) / 1000)} ago</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Typography>
@@ -176,6 +176,7 @@ export default function Updates(props: propType) {
                             onClose={handleClose}
                             aria-labelledby="modal-modal-title"
                             aria-describedby="modal-modal-description"
+
                         >
                             <Box sx={modalStyle}>
                                 <div className={styles.modalMain}>

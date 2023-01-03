@@ -11,7 +11,7 @@ import PoolInfo from "../components/PoolInfo"
 import StraightDonation from "../components/StraightDonation"
 import SubmitVote from "../components/SubmitVote"
 import EndVote from "../components/EndVote"
-import StatusBar from "../components/StatusBar"
+import StatusBar from "../components/details/StatusBar"
 import CommunityForum from "../components/details/CommunityForum"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
@@ -55,8 +55,6 @@ const DetailsOld: NextPage = () => {
     const [levelParam, setLevelParam] = useState(0)
 
     const addresses: contractAddressesInterface = contractAddresses
-
-
 
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)
