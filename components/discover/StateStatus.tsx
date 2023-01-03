@@ -11,11 +11,10 @@ import { ref, get } from "firebase/database"
 import { database } from "../../firebase-config"
 import { states } from "../../config/helper-config"
 import { formatDuration, convertSeconds } from '../../utils/utils';
-import { H1Styled } from 'web3uikit';
 
 export default function StateStatus(props: propType) {
     const fundAddress = props.fundAddress
-    const milestoneInfo = props.milestoneSummary!
+    const [milestoneInfo, setMilestoneInfo] = useState(props.milestoneSummary!)
     const funderSummary = props.funderSummary
     const format = props.format
     const decimals = props.decimals
@@ -47,6 +46,16 @@ export default function StateStatus(props: propType) {
         setMilestoneName(snapshot.val())
     }
 
+    const {
+        runContractFunction: getMilestoneSummary,
+    } = useWeb3Contract({
+        abi: abi,
+        contractAddress: fundAddress!,
+        functionName: "getMilestoneSummary",
+        params: {},
+    })
+
+
     async function updateUI() {
         const tranchesFromCall = milestoneInfo.milestones
         const currentTrancheFromCall = milestoneInfo.currentTranche
@@ -69,7 +78,6 @@ export default function StateStatus(props: propType) {
         const amountRaisedTotalFromCall = milestoneInfo.lifeTimeRaised
         const amountRaisedPreFromCall = milestoneInfo.preTotalFunds
         const assetAddressFromCall = milestoneInfo.assetAddress
-        const amountFundedFromCall = funderSummary!.fundAmount.toNumber()
         const coinName = getAssetName(assetAddressFromCall!)
         const votesTriedFromCall = milestoneInfo.votesTried
         setOwner(milestoneInfo.owner.toLowerCase())
@@ -81,8 +89,11 @@ export default function StateStatus(props: propType) {
         setPreFundingEnd(milestoneInfo.preFundingEnd.toNumber())
         setRoundEnd(milestoneInfo.roundEnd.toNumber())
         setTimeLeftVoting(milestoneInfo.timeLeftVoting.toNumber())
-        setWithdrawableAmount(amountFundedFromCall / 10 ** decimals!)
         setVotesTried(votesTriedFromCall.toNumber())
+        if (format != "discover") {
+            const amountFundedFromCall = funderSummary!.fundAmount.toNumber()
+            setWithdrawableAmount(amountFundedFromCall / 10 ** decimals!)
+        }
     }
 
     const getAssetName = (address: string) => {
@@ -95,9 +106,17 @@ export default function StateStatus(props: propType) {
     }
 
     useEffect(() => {
-        if (isWeb3Enabled && fundAddress && milestoneInfo && funderSummary) {
+        async function fetchData() {
+            if (format == 'discover') {
+                setMilestoneInfo(await getMilestoneSummary() as milestoneSummary)
+            }
+        }
+
+        if (isWeb3Enabled && fundAddress && milestoneInfo) {
             updateUI()
         }
+        fetchData()
+
     }, [isWeb3Enabled, fundAddress, milestoneInfo, funderSummary])
 
     useEffect(() => {

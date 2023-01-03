@@ -23,10 +23,6 @@ export default function FundCard(props: propTypeFundCard) {
     // const [amountPerFund, setAmountPerFund] = useState(0)
     const [data, setData] = useState<databaseFundObject>()
 
-    // useEffect(() => {
-    //     props.onChangeAmount!(amountPerFund!)
-    // }, [amountPerFund])
-
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
             setData(snapshot.val())

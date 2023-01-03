@@ -173,6 +173,40 @@
     align-items: center;
 }
 
+.milestoneSelector {
+    padding-top: 0px;
+    padding: 20px;
+    height: 100%;
+}
+
+.milestoneTitle {
+    font-size: 50px;
+    text-align: center;
+    font-weight: 500;
+}
+
+.textarea {
+    white-space: pre-wrap;
+    color: black;
+    width: 50%;
+    font-size: 20px;
+}
+
+.newFund {
+    color: black;
+    background-color: #fafafa;
+    border-radius: 10px;
+}
+
+.formSection {
+    display: flex;
+    flex-direction: row;
+    padding-top: 50px;
+    gap: 10px;
+    padding-bottom: 15px;
+    width: 100%;
+}
+
 @media (max-width: 1200px) {
     .detailsMain {
         padding-left: 86px;

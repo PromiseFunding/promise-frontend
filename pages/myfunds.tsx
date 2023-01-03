@@ -72,7 +72,7 @@ const MyFunds: NextPage = () => {
                         verticalAlign: "middle",
                     }}
                 >
-                    Your Fundraisers
+                    My Fundraisers
                 </h1>
             </div>
             <br></br>
