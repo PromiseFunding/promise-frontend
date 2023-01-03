@@ -24,6 +24,10 @@ export interface propInfoFund {
     onClickOK?(arg0: void): void
 }
 
+export interface propInfoFund {
+    onClickOK(): void
+}
+
 export interface propType {
     fundAddress: string
     assetAddress?: string
