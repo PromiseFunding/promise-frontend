@@ -14,7 +14,7 @@ import { formatDuration, convertSeconds } from '../../utils/utils';
 
 export default function StateStatus(props: propType) {
     const fundAddress = props.fundAddress
-    const [milestoneInfo, setMilestoneInfo] = useState(props.milestoneSummary!)
+    const milestoneSummary = props.milestoneSummary
     const funderSummary = props.funderSummary
     const format = props.format
     const decimals = props.decimals
@@ -55,8 +55,9 @@ export default function StateStatus(props: propType) {
         params: {},
     })
 
-
     async function updateUI() {
+        const milestoneInfo = (milestoneSummary ? milestoneSummary : await getMilestoneSummary()) as milestoneSummary
+
         const tranchesFromCall = milestoneInfo.milestones
         const currentTrancheFromCall = milestoneInfo.currentTranche
         setTranche(currentTrancheFromCall!)
@@ -106,18 +107,11 @@ export default function StateStatus(props: propType) {
     }
 
     useEffect(() => {
-        async function fetchData() {
-            if (format == 'discover') {
-                setMilestoneInfo(await getMilestoneSummary() as milestoneSummary)
-            }
-        }
-
-        if (isWeb3Enabled && fundAddress && milestoneInfo) {
+        if (isWeb3Enabled && fundAddress) {
             updateUI()
         }
-        fetchData()
 
-    }, [isWeb3Enabled, fundAddress, milestoneInfo, funderSummary])
+    }, [isWeb3Enabled, fundAddress, milestoneSummary, funderSummary])
 
     useEffect(() => {
         if (account) {
@@ -208,28 +202,25 @@ export default function StateStatus(props: propType) {
                                         <div>
                                             {state == 2 ? (
                                                 <div>
-                                                    {milestoneInfo.withdrawExpired && userAddress != owner.toLowerCase() ? (
+                                                    {milestoneSummary!.withdrawExpired && userAddress != owner.toLowerCase() ? (
                                                         <h1 style={{ fontWeight: "500", color: "red" }}>
                                                             The Creator has not withdrawn the funds in the 30 day period. Anyone may now terminate the fundraiser to release the remaining funds back to the fundraisers.
                                                         </h1>) : (
                                                         <div>
-                                                            {milestoneInfo.milestones[milestoneInfo.currentTranche].activeRaised!.toNumber() ? (
+                                                            {milestoneSummary!.milestones[milestoneSummary!.currentTranche].activeRaised!.toNumber() ? (
                                                                 <div>
                                                                     {userAddress == owner.toLowerCase() ?
-                                                                        (milestoneInfo.currentTranche + 1 != milestoneInfo.milestones.length ? "Milestone vote successful! You may now withdraw the funds raised in this milestone. The next milestone will start immediately upon withdrawal." : "Milestone vote successful! You may now withdraw the final funds raised in this fundraiser. If you wish, you may add another milestone to continue the fundraiser.")
-                                                                        : (milestoneInfo.currentTranche + 1 != milestoneInfo.milestones.length ? "Milestone vote successful. The next Milestone will start after the creator withdraws the funds raised." : "Milestone vote successful. The creator may now withdraw the final funds raised for the fundraiser. ")}</div>
+                                                                        (milestoneSummary!.currentTranche + 1 != milestoneSummary!.milestones.length ? "Milestone vote successful! You may now withdraw the funds raised in this milestone. The next milestone will start immediately upon withdrawal." : "Milestone vote successful! You may now withdraw the final funds raised in this fundraiser. If you wish, you may add another milestone to continue the fundraiser.")
+                                                                        : (milestoneSummary!.currentTranche + 1 != milestoneSummary!.milestones.length ? "Milestone vote successful. The next Milestone will start after the creator withdraws the funds raised." : "Milestone vote successful. The creator may now withdraw the final funds raised for the fundraiser. ")}</div>
                                                             ) : (<h1>All funds have been withdrawn, the fundraiser is complete.</h1>)
 
                                                             }</div>)}
-
-
-
                                                 </div>) : (
                                                 <div>
                                                     {votesTried < 1 ? (
                                                         <div>
                                                             <div style={{ marginTop: "10px", marginBottom: "10px", textAlign: "center" }}>
-                                                                Milestone {tranche + 1} of {milestoneInfo.milestones.length}: <b>{milestoneName}</b>
+                                                                Milestone {tranche + 1} of {milestoneSummary!.milestones.length}: <b>{milestoneName}</b>
                                                                 <BorderLinearProgress sx={{ height: "20px", borderRadius: "30px" }} variant="determinate" value={percent} />
                                                                 <div style={{ fontSize: "10px" }}>milestone progress</div>
                                                             </div>

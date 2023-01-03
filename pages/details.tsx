@@ -257,7 +257,6 @@ const Details: NextPage = () => {
                             coinName={coinName}
                             milestoneSummary={milestoneSummary}
                             onChangeState={() => {
-                                console.log("AY BRUH")
                                 updateUI()
                             }}
                         ></TabsContent>
