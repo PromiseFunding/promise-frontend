@@ -26,10 +26,10 @@ const modalStyle = {
 
 const Form: NextPage = () => {
     const [open, setOpen] = useState(true)
-    const handleOpen = () => {
+    async function handleOpen() {
         setOpen(true)
     }
-    const handleClose = () => {
+    async function handleClose() {
         setOpen(false)
     }
     return (
@@ -47,7 +47,6 @@ const Form: NextPage = () => {
 
                 <Modal
                     open={open}
-                    onClose={handleClose}
                     aria-labelledby="modal-modal-title"
                     aria-describedby="modal-modal-description"
                 >
