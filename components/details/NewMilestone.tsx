@@ -11,7 +11,7 @@ import { contractAddressesInterface, propType } from "../../config/types"
 import styles from "../../styles/details/details.module.css"
 import TextField from "@mui/material/TextField"
 import Modal from '@mui/material/Modal';
-import { BigNumber } from "ethers"
+import { BigNumber, ContractTransaction } from "ethers"
 import Button from '@mui/material/Button';
 
 import Box from "@mui/material/Box"
@@ -103,7 +103,6 @@ export default function NewMilestone(props: propType) {
             onSuccess: (tx) => {
                 handleClose()
                 handleSuccess(tx)
-                props.onChangeState!()
             },
             onError: (err) => {
                 console.log(err)
@@ -126,6 +125,7 @@ export default function NewMilestone(props: propType) {
         })
 
         updateMilestoneLength()
+        props.onChangeState!()
     }
 
     const handleNewNotification = function () {

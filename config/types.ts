@@ -84,7 +84,7 @@ export interface milestoneSummary {
     votesTried: BigNumber
     timeLeftVoting: BigNumber
     funderCalledVote: boolean
-    preMilestoneTotalFunded: number
+    preMilestoneTotalFunded: BigNumber
     preFundingDuration: BigNumber
     preFundingEnd: BigNumber
     roundEnd: BigNumber

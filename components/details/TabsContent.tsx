@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import StatusBar from "./StatusBar"
 import { propType } from "../../config/types"
 import Updates from "./Updates"
+import Stats from "./Stats"
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -79,7 +80,11 @@ export default function TabsContent(props: propType) {
                 ></Updates>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                Item Three
+                <Stats fundAddress={props.fundAddress}
+                    milestoneSummary={props.milestoneSummary}
+                    funderSummary={props.funderSummary}
+                    decimals={props.decimals!}
+                />
             </TabPanel>
             <TabPanel value={value} index={3}>
                 Item Four

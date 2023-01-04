@@ -59,11 +59,10 @@ export default function HorizontalNonLinearStepper(props: propType) {
 
     async function updateUI() {
         const funderSummary = await getFunderSummary() as funderSummary
-
         const amountFundedFromCall = funderSummary!.funderTrancheAmountRaised.toNumber()
         const amountRaisedFromCall = funderSummary!.trancheAmountRaised.toNumber()
         const amountTotalRaisedFromCall = funderSummary!.trancheTotalAmountRaised.toNumber()
-        const amountTotalPreRaisedFromCall = milestoneSummary!.preMilestoneTotalFunded
+        const amountTotalPreRaisedFromCall = milestoneSummary!.preMilestoneTotalFunded.toNumber()
         const getDurationPreRound = milestoneSummary!.preFundingDuration.toNumber()
         const didFunderWithdrawFromCall = funderSummary!.didFunderWithdraw
         const tranchesFromCall = milestoneSummary!.milestones
