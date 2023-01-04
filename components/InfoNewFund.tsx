@@ -112,9 +112,10 @@ export default function InfoForm(props: propInfoFund) {
                 <br></br>
                 <br></br>
                 <div>
-                    <h1 style={{ fontSize: "25px", fontWeight: "450" }}>
+                    <h1 style={{ fontSize: "25px", fontWeight: "600" }}>
                         2. Yield Generating Fundraiser:
                     </h1>
+                    <br></br>
                     <h1 style={{ fontSize: "18px", textAlign: "center" }}>
                         {" "}
                         The &apos;Yield Generating Fundraiser&apos; or &apos;Yield Fund&apos; for
@@ -184,7 +185,7 @@ export default function InfoForm(props: propInfoFund) {
                 <br></br>
                 <br></br>
                 <div>
-                    <h1 style={{ fontSize: "25px", fontWeight: "450" }}>Recommendation:</h1>
+                    <h1 style={{ fontSize: "25px", fontWeight: "600" }}>Recommendation:</h1>
                     <br></br>
                     <h1 style={{ fontSize: "18px" }}>
                         It is recommended that you weigh the pros and cons of each type of fundraiser and pick the one that best suits your purpose.

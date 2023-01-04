@@ -16,6 +16,7 @@ import Particles from "react-tsparticles"
 import { loadFull } from "tsparticles"
 import { useCallback } from "react"
 import { Engine } from "tsparticles-engine"
+import Typed from "react-typed"
 
 const Discover: NextPage = () => {
     const addresses: contractAddressesInterface = contractAddresses
@@ -120,7 +121,8 @@ const Discover: NextPage = () => {
                 main={true}
             ></Header>
             <div className={styles.fundsWeLove}>
-                <h1
+                <Typed strings={["Fundraisers We Love...", "Fundraisers We Care About..."]} typeSpeed={150} backSpeed={150} loop/>
+                {/* <h1
                     style={{
                         position: "relative",
                         fontWeight: "700",
@@ -129,7 +131,7 @@ const Discover: NextPage = () => {
                     }}
                 >
                     Fundraisers We Love...
-                </h1>
+                </h1> */}
             </div>
             <br></br>
             <div>
