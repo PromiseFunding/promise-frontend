@@ -25,7 +25,7 @@ export interface propInfoFund {
 }
 
 export interface propInfoFund {
-    onClickOK(): void
+    onClickOK?(arg0: void): void
 }
 
 export interface propType {

@@ -193,10 +193,8 @@ export default function InfoForm(props: propInfoFund) {
                         suited for one time use cases or causes and charitable donations. Ultimately, however, the decision is up to you! Pick the fundraiser that you want to start, fill out the details very carefully and thoughtfully, and get started!
                     </h1>
                 </div>
-                <br></br>
-                <br></br>
-                <div style={{ textAlign: "center" }}>
-                    <Button className={styles.buttonStyle} onClick={handleClick} style={{ ['--override-color' as any]: "green" }}>I Have Read and Understand</Button>
+                <div>
+                    <Button className={styles.buttonStyle} onClick={props.onClickOK()!} style={{ ['--override-color' as any]: "green" }}>OK</Button>
                 </div>
             </div>
         </div>
