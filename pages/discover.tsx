@@ -8,7 +8,7 @@ import CategorySelector from "../components/CategorySelector"
 import SortSelector from "../components/SortingSearch"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { contractAddressesInterface } from "../config/types"
-import { contractAddresses, FundFactory } from "../constants"
+import { contractAddresses, FundFactory, YieldFundFactory } from "../constants"
 import { ref, get } from "firebase/database"
 import { database } from "../firebase-config"
 import * as React from "react"
@@ -37,6 +37,11 @@ const Discover: NextPage = () => {
               ]
             : null
 
+    const yieldAddress =
+        chainId in addresses
+            ? addresses[chainId]["FundFactory"][addresses[chainId]["FundFactory"].length - 1]
+            : null
+
     //TODO: get helper-config working instead!... gets rid of decimal function
     const [allFunds, setAllFunds] = useState<string[]>([])
     const [query, setQuery] = useState("")
@@ -48,8 +53,18 @@ const Discover: NextPage = () => {
         params: {},
     })
 
+    const { runContractFunction: getAllYieldFundsAAVE } = useWeb3Contract({
+        abi: YieldFundFactory,
+        contractAddress: yieldAddress!,
+        functionName: "getAllYieldFundsAAVE",
+        params: {},
+    })
+
     async function updateUI() {
-        const allFundsFromCall = (await getAllPromiseFund()) as string[]
+        const allPromiseFundsFromCall = (await getAllPromiseFund()) as string[]
+        const allYieldFundsFromCall = (await getAllYieldFundsAAVE()) as string[]
+        console.log(allYieldFundsFromCall)
+        const allFundsFromCall: string[] = allPromiseFundsFromCall.concat(allYieldFundsFromCall)
         const finalFunds: string[] = []
         if (allFundsFromCall) {
             for (const fund of allFundsFromCall) {
@@ -70,46 +85,8 @@ const Discover: NextPage = () => {
         }
     }, [isWeb3Enabled, fundFactoryAddress])
 
-    const options = {
-        // background: {
-        //     color: "#fff",
-        // },
-        particles: {
-            shape: {
-                type: "circle",
-            },
-            number: {
-                value: 7,
-            },
-            color: {
-                // value: "random",
-                //value: ["#0A1A6A", "#A42525"]
-                value: "#A42525",
-            },
-            opacity: {
-                value: 0.3,
-            },
-            size: {
-                value: { min: 30, max: 50 },
-            },
-            move: {
-                enable: true,
-                speed: 0.25,
-                random: false,
-            },
-            bounds: {
-                top: 500,
-            },
-        },
-    }
-
-    const particlesInit = useCallback(async (engine: Engine) => {
-        await loadFull(engine)
-    }, [])
-
     return (
         <div>
-            {/* <Particles options={options} init={particlesInit} style={{ zIndex: -1 }} /> */}
             <Head>
                 <title>Promise</title>
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
@@ -121,14 +98,22 @@ const Discover: NextPage = () => {
                 main={true}
             ></Header>
             <div className={styles.fundsWeLove}>
-                <h1 style={{
-                    position: "relative",
-                    fontWeight: "700",
-                    display: "table-cell",
-                    verticalAlign: "middle",
-                    height: "100%",
-                }} >Fundraisers
-                    <Typed strings={[" ", " We Love...", " We Care About...", " That Matter."]} typeSpeed={150} backSpeed={150} loop />
+                <h1
+                    style={{
+                        position: "relative",
+                        fontWeight: "700",
+                        display: "table-cell",
+                        verticalAlign: "middle",
+                        height: "100%",
+                    }}
+                >
+                    Fundraisers
+                    <Typed
+                        strings={[" ", " We Love...", " We Care About...", " That Matter."]}
+                        typeSpeed={150}
+                        backSpeed={150}
+                        loop
+                    />
                 </h1>
             </div>
             <br></br>

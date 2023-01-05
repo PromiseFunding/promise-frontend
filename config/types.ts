@@ -111,7 +111,8 @@ export interface databaseFundObject {
     imageURL: string
     description: string
     category: string
-    locktime: string
+    locktime?: string
     asset: string
-    milestones: milestone[]
+    milestones?: milestone[]
+    type?: string
 }
