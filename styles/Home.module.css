@@ -590,7 +590,23 @@
     flex-wrap: wrap;
 }
 
+.newFundFormYield {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding-right: 50px;
+    padding-left: 50px;
+    flex-wrap: wrap;
+}
+
 .formSectionOuter {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    padding: 10px;
+}
+
+.formSectionOuterYield {
     display: flex;
     flex-direction: column;
     width: 50%;
@@ -655,6 +671,15 @@
 .formSection {
     display: flex;
     flex-direction: row;
+    padding-top: 50px;
+    gap: 10px;
+    padding-bottom: 15px;
+    width: 100%;
+}
+
+.formSectionYield {
+    display: flex;
+    justify-content: center;
     padding-top: 50px;
     gap: 10px;
     padding-bottom: 15px;
@@ -792,6 +817,15 @@
 .drawer {
     position: absolute;
     display: none;
+}
+
+@media (max-width: 1450px) {
+    .formSectionOuterYield {
+        width: 100%;
+    }
+    .newFundFormYield {
+        flex-direction: column;
+    }
 }
 
 @media (max-width: 1200px) {

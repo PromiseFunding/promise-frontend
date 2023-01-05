@@ -4,6 +4,7 @@ import Tab from "@mui/material/Tab"
 import Typography from "@mui/material/Typography"
 import Box from "@mui/material/Box"
 import NewFund from "./Newfund"
+import NewYieldFund from "./NewYieldFund"
 
 interface TabPanelProps {
     children?: React.ReactNode
@@ -34,7 +35,7 @@ function a11yProps(index: number) {
     }
 }
 
-export default function TabsContent() {
+export default function NewFundTabs() {
     const [value, setValue] = React.useState(0)
 
     const handleChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -53,7 +54,7 @@ export default function TabsContent() {
                 <NewFund></NewFund>
             </TabPanel>
             <TabPanel value={value} index={1}>
-                <NewFund></NewFund>
+                <NewYieldFund></NewYieldFund>
             </TabPanel>
         </Box>
     )
