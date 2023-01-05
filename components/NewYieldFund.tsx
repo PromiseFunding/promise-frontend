@@ -373,7 +373,7 @@ export default function NewYieldFund() {
                         >
                             <div style={{ display: "flex", gap: "20px", paddingTop: "20px" }}>
                                 <h1 style={{ fontSize: "26px", paddingLeft: "80px" }}>
-                                    Select an image:
+                                    Select an Image:
                                 </h1>
                                 <input
                                     type="file"
@@ -403,12 +403,16 @@ export default function NewYieldFund() {
                             )}
 
                             <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold text-5xl py-5 px-8 rounded-lg mb-10"
+                                className={styles.newFundButton}
+                                style={{
+                                    display: "flex",
+                                    margin: "auto",
+                                }}
                                 onClick={async function () {
                                     handleNewFundraiser()
                                 }}
                             >
-                                <div>Create New Fundraiser</div>
+                                <div>Create Yield Fund</div>
                             </button>
                         </div>
                     </div>

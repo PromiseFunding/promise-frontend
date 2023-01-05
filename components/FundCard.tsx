@@ -29,6 +29,11 @@ export default function FundCard(props: propTypeFundCard) {
         })
     }, [])
 
+    // function handleScroll(section: string) {
+    //     const element = document.getElementById(section)
+    //     element!.scrollIntoView({ behavior: "smooth", inline: "nearest" })
+    // }
+
     return (
         <div>
             {data ? (
@@ -63,6 +68,11 @@ export default function FundCard(props: propTypeFundCard) {
                                                     textDecoration: "underline",
                                                     color: "lightblue",
                                                 }}
+                                                // onClick={(e) => {
+                                                //     window.onload = () => {
+                                                //         handleScroll("faq")
+                                                //     }
+                                                // }}
                                             >
                                                 Learn more
                                             </Link>

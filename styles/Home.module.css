@@ -105,17 +105,17 @@
 }
 
 .newFundButton {
-    padding: 10px;
-    font-size: 15px;
+    padding: 15px;
+    font-size: 40px;
     color: rgb(255, 255, 255);
     background: linear-gradient(125.78deg, #e5509acc 17.93%, #b02588cc 42.06%, #694dcbcc 73.89%);
     border-radius: 10px;
     margin-top: auto;
     margin-bottom: auto;
-    margin-left: 30px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-weight: bold;
 }
 
 .newFundButton:hover {
@@ -538,7 +538,7 @@
     font-weight: 700;
     padding: 10px;
     border-radius: 0.25rem;
-    margin-left: auto;
+    margin-right: auto;
 }
 
 .buttonStyle:hover {

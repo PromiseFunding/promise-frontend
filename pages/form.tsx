@@ -53,10 +53,11 @@ const Form: NextPage = () => {
                 </h1>
             </div>
             <div className="p-5 flex flex-col">
-                <NewFundTabs></NewFundTabs>
-                <Button className={styles.buttonStyle} onClick={handleOpen}>
-                    Here for now to pop up info
+                {/* <Button className={styles.buttonStyle} onClick={handleOpen}>
+                    More Info
                 </Button>
+                <br></br> */}
+                <NewFundTabs></NewFundTabs>
 
                 <Modal
                     open={open}

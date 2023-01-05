@@ -46,8 +46,8 @@ export default function NewFundTabs() {
         <Box sx={{ width: "100%", height: "100%" }}>
             <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered>
-                    <Tab sx={{ width: "100%" }} label="Promise Fund" {...a11yProps(0)} />
-                    <Tab sx={{ width: "100%" }} label="Yield Fund" {...a11yProps(1)} />
+                    <Tab sx={{ width: "50%" }} label="Promise Fund" {...a11yProps(0)} />
+                    <Tab sx={{ width: "50%" }} label="Yield Fund" {...a11yProps(1)} />
                 </Tabs>
             </Box>
             <TabPanel value={value} index={0}>

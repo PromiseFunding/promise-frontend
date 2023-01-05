@@ -33,7 +33,7 @@ const modalStyle = {
     transform: "translate(-50%, -50%)",
     width: "80%",
     height: "50%",
-    bgcolor: 'background.paper',
+    bgcolor: "background.paper",
     boxShadow: 24,
     p: 3,
     borderRadius: "25px",
@@ -185,7 +185,9 @@ export default function NewFund() {
                     })
                 })
 
-                set(refDb(database, `${chainId}/users/${account}/owner/${fundAddress}`), {type: "Promise Fund"})
+                set(refDb(database, `${chainId}/users/${account}/owner/${fundAddress}`), {
+                    type: "Promise Fund",
+                })
             }
         )
         await timeout(1000) //for 1 sec delay
@@ -585,7 +587,7 @@ export default function NewFund() {
                         >
                             <div style={{ display: "flex", gap: "20px", paddingTop: "20px" }}>
                                 <h1 style={{ fontSize: "26px", paddingLeft: "80px" }}>
-                                    Select an image:
+                                    Select an Image:
                                 </h1>
                                 <input
                                     type="file"
@@ -615,12 +617,16 @@ export default function NewFund() {
                             )}
 
                             <button
-                                className="bg-blue-500 hover:bg-blue-700 text-white font-bold text-5xl py-5 px-8 rounded-lg mb-10"
+                                className={styles.newFundButton}
+                                style={{
+                                    display: "flex",
+                                    margin: "auto",
+                                }}
                                 onClick={async function () {
                                     handleNewFundraiser()
                                 }}
                             >
-                                <div>Create New Fundraiser</div>
+                                <div>Create Promise Fund</div>
                             </button>
                         </div>
                     </div>

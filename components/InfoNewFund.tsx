@@ -196,7 +196,7 @@ export default function InfoForm(props: propInfoFund) {
                 <br></br>
                 <br></br>
                 <div style={{ textAlign: "center" }}>
-                    <Button className={styles.buttonStyle} onClick={handleClick} style={{ ['--override-color' as any]: "green" }}>OK</Button>
+                    <Button className={styles.buttonStyle} onClick={handleClick} style={{ ['--override-color' as any]: "green" }}>I Have Read and Understand</Button>
                 </div>
             </div>
         </div>
