@@ -84,7 +84,7 @@ export interface milestoneSummary {
     votesTried: BigNumber
     timeLeftVoting: BigNumber
     funderCalledVote: boolean
-    preMilestoneTotalFunded: number
+    preMilestoneTotalFunded: BigNumber
     preFundingDuration: BigNumber
     preFundingEnd: BigNumber
     roundEnd: BigNumber
@@ -98,6 +98,8 @@ export interface funderSummary {
     trancheAmountRaised: BigNumber
     trancheTotalAmountRaised: BigNumber
     fundAmount: BigNumber
+    seedFundAmount: BigNumber
+    amounts: BigNumber[]
 }
 
 export interface databaseFundObject {

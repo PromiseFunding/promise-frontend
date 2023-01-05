@@ -11,7 +11,7 @@ import { contractAddressesInterface, propType } from "../../config/types"
 import styles from "../../styles/details/details.module.css"
 import TextField from "@mui/material/TextField"
 import Modal from '@mui/material/Modal';
-import { BigNumber } from "ethers"
+import { BigNumber, ContractTransaction } from "ethers"
 import Button from '@mui/material/Button';
 
 import Box from "@mui/material/Box"
@@ -103,7 +103,6 @@ export default function NewMilestone(props: propType) {
             onSuccess: (tx) => {
                 handleClose()
                 handleSuccess(tx)
-                props.onChangeState!()
             },
             onError: (err) => {
                 console.log(err)
@@ -126,6 +125,7 @@ export default function NewMilestone(props: propType) {
         })
 
         updateMilestoneLength()
+        props.onChangeState!()
     }
 
     const handleNewNotification = function () {
@@ -187,14 +187,14 @@ export default function NewMilestone(props: propType) {
         <div className={styles.newFund}>
             {isWeb3Enabled && fundAddress ? (
                 <div style={{ width: "100%", display: "flex", flexDirection: "column", margin: "20px" }}>
-                    <Button style={{ width: "20%", backgroundColor: "grey", color: "white", padding: "10px", margin: "auto" }} onClick={() => { setOpen(true) }}>Add Milestone</Button>
+                    <Button className={styles.donateButton} style={{ width: "20%", marginLeft: "auto", marginRight: "auto", marginTop: "40px" }} onClick={() => { setOpen(true) }}>Add Milestone</Button>
                     <Modal
                         open={open}
                         aria-labelledby="modal-modal-title"
                         aria-describedby="modal-modal-description"
                         onClose={handleClose}>
                         <Box sx={modalStyle}>
-                            <h1 className="text-4xl font-bold text-center text-slate-900">Add Another Milestone:</h1>
+                            <h1 className="text-4xl font-bold text-center text-slate-900">Add Another Milestone</h1>
 
                             <div style={{ width: "100%", alignContent: "center", alignItems: "center", paddingRight: "250px", paddingLeft: "250px" }}>
                                 <div className={styles.formSection}>
@@ -263,12 +263,12 @@ export default function NewMilestone(props: propType) {
 
                                         </ul>
                                         <button
-                                            className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded ml-auto"
+                                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-auto"
                                             onClick={async function () {
                                                 handleNewMilestone()
                                             }}
                                         >
-                                            <div>Add Milestone</div>
+                                            Add Milestone
                                         </button>
                                         <div style={{ fontStyle: "italic" }}><p>Disclaimer: Adding a milestone is a permanent change to the underlying contract.
                                             If planning on adding a milestone, it is recommended to do so prior to withdrawing your funds or you will have to &apos;withdraw&apos; twice to begin accepting donations again. More info in FAQ/help page.</p></div>

@@ -6,6 +6,7 @@ import Box from '@mui/material/Box';
 import StatusBar from "./StatusBar"
 import { propType } from "../../config/types"
 import Updates from "./Updates"
+import Stats from "./Stats"
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -52,7 +53,7 @@ export default function TabsContent(props: propType) {
                     <Tab sx={{ width: "25%" }} label="Milestones" {...a11yProps(0)} />
                     <Tab sx={{ width: "25%" }} label="Updates" {...a11yProps(1)} />
                     <Tab sx={{ width: "25%" }} label="Overview" {...a11yProps(2)} />
-                    <Tab sx={{ width: "25%" }} label="Donate" {...a11yProps(3)} />
+                    <Tab sx={{ width: "25%" }} label="Connect" {...a11yProps(3)} />
 
                 </Tabs>
             </Box>
@@ -79,10 +80,15 @@ export default function TabsContent(props: propType) {
                 ></Updates>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                Item Three
+                <Stats fundAddress={props.fundAddress}
+                    milestoneSummary={props.milestoneSummary}
+                    funderSummary={props.funderSummary}
+                    decimals={props.decimals!}
+                    coinName={props.coinName}
+                />
             </TabPanel>
             <TabPanel value={value} index={3}>
-                Item Four
+                This is where the discord / telegram integration thing goes
             </TabPanel>
         </Box>
     );

@@ -48,8 +48,8 @@ export default function NewFund() {
     const yieldAddress =
         chainId in addresses
             ? addresses[chainId]["PromiseFundFactory"][
-                  addresses[chainId]["PromiseFundFactory"].length - 1
-              ]
+            addresses[chainId]["PromiseFundFactory"].length - 1
+            ]
             : null
     const chainIdNum = parseInt(chainIdHex!)
 
@@ -170,7 +170,7 @@ export default function NewFund() {
         // upload to fund folder
         uploadTask.on(
             "state_changed",
-            (snapshot) => {},
+            (snapshot) => { },
             (err) => console.log(err),
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((url) => {
@@ -184,7 +184,7 @@ export default function NewFund() {
                     })
                 })
 
-                set(refDb(database, `${chainId}/users/${account}/owner/${fundAddress}`), {fundAddress: fundAddress})
+                set(refDb(database, `${chainId}/users/${account}/owner/${fundAddress}`), { fundAddress: fundAddress })
             }
         )
         await timeout(1000) //for 1 sec delay
@@ -566,7 +566,7 @@ export default function NewFund() {
                                             newMilestone()
                                         }}
                                     >
-                                        <div>Add Milestone</div>
+                                        Add Milestone
                                     </button>
                                 </div>
                             </div>

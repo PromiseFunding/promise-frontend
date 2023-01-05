@@ -59,11 +59,10 @@ export default function HorizontalNonLinearStepper(props: propType) {
 
     async function updateUI() {
         const funderSummary = await getFunderSummary() as funderSummary
-
         const amountFundedFromCall = funderSummary!.funderTrancheAmountRaised.toNumber()
         const amountRaisedFromCall = funderSummary!.trancheAmountRaised.toNumber()
         const amountTotalRaisedFromCall = funderSummary!.trancheTotalAmountRaised.toNumber()
-        const amountTotalPreRaisedFromCall = milestoneSummary!.preMilestoneTotalFunded
+        const amountTotalPreRaisedFromCall = milestoneSummary!.preMilestoneTotalFunded.toNumber()
         const getDurationPreRound = milestoneSummary!.preFundingDuration.toNumber()
         const didFunderWithdrawFromCall = funderSummary!.didFunderWithdraw
         const tranchesFromCall = milestoneSummary!.milestones
@@ -118,7 +117,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
                 milestonesArray && milestonesArray.length > 0 && milestoneDurations ? (
                     <div>
                         <div className="pb-20">
-                            <h1 className="text-5xl font-bold text-center text-slate-900">Fundraiser Overview</h1>
+                            <h1 style={{ fontSize: "40px", fontWeight: "500", textAlign: "center", paddingTop: "30px" }}>Fundraiser Overview</h1>
                             <p className="text-center text-slate-900 pt-2"> Select a round to see the Promises made for that milestone.</p>
                         </div>
 
