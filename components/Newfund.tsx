@@ -386,7 +386,7 @@ export default function NewFund() {
                     )}
                 </Box>
             </Modal>
-            <div className={styles.createNewFund}>
+            {/* <div className={styles.createNewFund}>
                 <h1
                     style={{
                         position: "relative",
@@ -397,7 +397,7 @@ export default function NewFund() {
                 >
                     Create A New Fund
                 </h1>
-            </div>
+            </div> */}
             {isWeb3Enabled && yieldAddress ? (
                 <Box>
                     <div className={styles.newFundForm}>

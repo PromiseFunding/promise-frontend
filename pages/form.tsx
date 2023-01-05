@@ -3,6 +3,7 @@ import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import Header from "../components/Header"
 import NewFund from "../components/Newfund"
+import NewFundTabs from "../components/NewFundTabs"
 import InfoNewFund from "../components/InfoNewFund"
 import Link from "next/link"
 import Box from "@mui/material/Box"
@@ -39,8 +40,20 @@ const Form: NextPage = () => {
                 <meta name="description" content="Version one of the FundMe Smart Contract" />
             </Head>
             <Header main={false}></Header>
+            <div className={styles.createNewFund}>
+                <h1
+                    style={{
+                        position: "relative",
+                        display: "table-cell",
+                        verticalAlign: "middle",
+                        fontWeight: "700",
+                    }}
+                >
+                    Create A New Fund
+                </h1>
+            </div>
             <div className="p-5 flex flex-col">
-                <NewFund></NewFund>
+                <NewFundTabs></NewFundTabs>
                 <Button className={styles.buttonStyle} onClick={handleOpen}>
                     Here for now to pop up info
                 </Button>
