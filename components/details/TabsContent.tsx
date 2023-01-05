@@ -53,7 +53,7 @@ export default function TabsContent(props: propType) {
                     <Tab sx={{ width: "25%" }} label="Milestones" {...a11yProps(0)} />
                     <Tab sx={{ width: "25%" }} label="Updates" {...a11yProps(1)} />
                     <Tab sx={{ width: "25%" }} label="Overview" {...a11yProps(2)} />
-                    <Tab sx={{ width: "25%" }} label="Donate" {...a11yProps(3)} />
+                    <Tab sx={{ width: "25%" }} label="Connect" {...a11yProps(3)} />
 
                 </Tabs>
             </Box>
@@ -84,10 +84,11 @@ export default function TabsContent(props: propType) {
                     milestoneSummary={props.milestoneSummary}
                     funderSummary={props.funderSummary}
                     decimals={props.decimals!}
+                    coinName={props.coinName}
                 />
             </TabPanel>
             <TabPanel value={value} index={3}>
-                Item Four
+                This is where the discord / telegram integration thing goes
             </TabPanel>
         </Box>
     );

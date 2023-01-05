@@ -256,6 +256,7 @@ const Details: NextPage = () => {
                             totalRaised={totalFunds}
                             coinName={coinName}
                             milestoneSummary={milestoneSummary}
+                            funderSummary={funderSummary}
                             onChangeState={() => {
                                 updateUI()
                             }}

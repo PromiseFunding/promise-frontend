@@ -98,6 +98,8 @@ export interface funderSummary {
     trancheAmountRaised: BigNumber
     trancheTotalAmountRaised: BigNumber
     fundAmount: BigNumber
+    seedFundAmount: BigNumber
+    amounts: BigNumber[]
 }
 
 export interface databaseFundObject {

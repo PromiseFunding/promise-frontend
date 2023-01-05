@@ -117,7 +117,7 @@ export default function HorizontalNonLinearStepper(props: propType) {
                 milestonesArray && milestonesArray.length > 0 && milestoneDurations ? (
                     <div>
                         <div className="pb-20">
-                            <h1 className="text-5xl font-bold text-center text-slate-900">Fundraiser Overview</h1>
+                            <h1 style={{ fontSize: "40px", fontWeight: "500", textAlign: "center", paddingTop: "30px" }}>Fundraiser Overview</h1>
                             <p className="text-center text-slate-900 pt-2"> Select a round to see the Promises made for that milestone.</p>
                         </div>
 
