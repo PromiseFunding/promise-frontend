@@ -97,14 +97,22 @@ const Discover: NextPage = () => {
                 main={true}
             ></Header>
             <div className={styles.fundsWeLove}>
-                <h1 style={{
-                    position: "relative",
-                    fontWeight: "700",
-                    display: "table-cell",
-                    verticalAlign: "middle",
-                    height: "100%",
-                }} >Fundraisers
-                    <Typed strings={[" ", " We Love...", " We Care About...", " That Matter."]} typeSpeed={150} backSpeed={150} loop />
+                <h1
+                    style={{
+                        position: "relative",
+                        fontWeight: "700",
+                        display: "table-cell",
+                        verticalAlign: "middle",
+                        height: "100%",
+                    }}
+                >
+                    Fundraisers
+                    <Typed
+                        strings={[" ", " We Love...", " We Care About...", " That Matter."]}
+                        typeSpeed={150}
+                        backSpeed={150}
+                        loop
+                    />
                 </h1>
             </div>
             <br></br>
