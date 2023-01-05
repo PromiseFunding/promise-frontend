@@ -7,6 +7,7 @@ import StatusBar from "./StatusBar"
 import { propType } from "../../config/types"
 import Updates from "./Updates"
 import Stats from "./Stats"
+import CommunityForum from './CommunityForum';
 
 interface TabPanelProps {
     children?: React.ReactNode;
@@ -88,7 +89,11 @@ export default function TabsContent(props: propType) {
                 />
             </TabPanel>
             <TabPanel value={value} index={3}>
-                This is where the discord / telegram integration thing goes
+                <CommunityForum
+                    fundAddress={props.fundAddress}
+                    milestoneSummary={props.milestoneSummary}
+                    funderSummary={props.funderSummary}
+                ></CommunityForum>
             </TabPanel>
         </Box>
     );
