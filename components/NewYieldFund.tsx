@@ -146,7 +146,10 @@ export default function NewYieldFund() {
                         type: "Yield Fund",
                     })
                 })
-                set(refDb(database, `${chainId}/users/${account}/owner/${fundAddress}`), {type: "Yield Fund"})
+                set(refDb(database, `${chainId}/users/${account}/owner/${fundAddress}`), {
+                    fundAddress: fundAddress,
+                    type: "Yield Fund",
+                })
             }
         )
 

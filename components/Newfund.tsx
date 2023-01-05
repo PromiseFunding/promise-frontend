@@ -186,6 +186,7 @@ export default function NewFund() {
                 })
 
                 set(refDb(database, `${chainId}/users/${account}/owner/${fundAddress}`), {
+                    fundAddress: fundAddress,
                     type: "Promise Fund",
                 })
             }
