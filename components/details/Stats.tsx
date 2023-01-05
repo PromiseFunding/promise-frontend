@@ -121,17 +121,20 @@ export default function Stats(props: propType) {
     return (
         <div style={{ display: "flex", flexDirection: "column" }}>
             <h1 style={{ fontSize: "40px", fontWeight: "500", textAlign: "center", padding: "30px" }}>Milestone Statistics</h1>
-            <div style={{ display: "flex", flexDirection: "row", marginTop: "20px" }}>
-                <div style={{ width: "50%" }}>
-                    <Bar options={getOptions("owner")} data={getData("owner")} />
-                    {userAddress != owner.toLowerCase() ? (
-                        <Bar options={getOptions("funder")} data={getData("funder")} />
-                    ) : (<></>)}
+            {milestoneSummary.lifeTimeRaised.toNumber() > 0 ? (
+                <div style={{ display: "flex", flexDirection: "row", marginTop: "20px" }}>
+                    <div style={{ width: "50%" }}>
+                        <Bar options={getOptions("owner")} data={getData("owner")} />
+                        {userAddress != owner.toLowerCase() ? (
+                            <Bar options={getOptions("funder")} data={getData("funder")} />
+                        ) : (<></>)}
+                    </div>
+                    <div style={{ width: "50%" }}>
+                        <Pie data={getData("owner")} options={getOptions("owner")} />
+                    </div>
                 </div>
-                <div style={{ width: "50%" }}>
-                    <Pie data={getData("owner")} title="Total Raised by Milestone" />
-                </div>
-            </div>
+            ) : (<h1 style={{ fontSize: "20px", textAlign: "center" }}>This fundraiser has no statistics to report yet. </h1>)}
+
         </div>
     )
 }

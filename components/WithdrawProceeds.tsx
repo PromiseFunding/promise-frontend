@@ -58,7 +58,7 @@ export default function WithdrawProceeds(props: propType) {
     const updateUI = async function () {
         if (isWeb3Enabled && fundAddress && milestoneSummary) {
             if (state == 4) {
-                let withdrawableProceedsFromCall = milestoneSummary!.preMilestoneTotalFunded
+                let withdrawableProceedsFromCall = milestoneSummary!.preMilestoneTotalFunded.toNumber()
                 if (withdrawableProceedsFromCall > 0) {
                     setWithdrawableProceeds(withdrawableProceedsFromCall / 10 ** decimals!)
                 }
