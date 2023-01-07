@@ -1,5 +1,5 @@
-import React from 'react';
-import { BigNumber } from 'ethers';
+import React from "react"
+import { BigNumber } from "ethers"
 
 type Dictionary = {
     [x: string]: string[]
@@ -18,9 +18,7 @@ export interface update {
     }
 }
 
-export interface updates {
-
-}
+export interface updates {}
 
 export interface propInfoFund {
     onClickOK?(arg0: void): void
@@ -45,8 +43,8 @@ export interface propType {
     milestoneSummary?: milestoneSummary
     funderSummary?: funderSummary
     format?: string
+    fundSummary?: fundSummary
 }
-
 
 export interface propTypeEntryNumber {
     onChangePage?(arg0: number): void
@@ -57,7 +55,7 @@ export interface propTypeEntryNumber {
 export interface propTypeFunds {
     fundAddressArray: string[]
     query?: string
-    children?: React.ReactNode;
+    children?: React.ReactNode
 }
 
 export interface propTypeFundCard {
@@ -104,6 +102,16 @@ export interface funderSummary {
     fundAmount: BigNumber
     seedFundAmount: BigNumber
     amounts: BigNumber[]
+}
+
+//yield fund summary
+export interface fundSummary {
+    totalActiveFunded: BigNumber
+    totalActiveInterestFunded: BigNumber
+    totalLifetimeFunded: BigNumber
+    totalLifetimeStraightFunded: BigNumber
+    totalLifetimeInterestFunded: BigNumber
+    amountWithdrawnByOwner: BigNumber
 }
 
 export interface databaseFundObject {

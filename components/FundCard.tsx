@@ -13,6 +13,7 @@ import { useMoralis, useWeb3Contract } from "react-moralis"
 import { propTypeFundCard } from "../config/types"
 import Tooltip from "@mui/material/Tooltip"
 import Link from "next/link"
+import StateStatusYield from "./discover/StateStatusYield"
 
 export default function FundCard(props: propTypeFundCard) {
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
@@ -133,10 +134,10 @@ export default function FundCard(props: propTypeFundCard) {
                                             {data.description}
                                         </div>
                                     </div>
-                                    <StateStatus
+                                    <StateStatusYield
                                         fundAddress={fund!}
                                         format="discover"
-                                    ></StateStatus>
+                                    ></StateStatusYield>
                                 </CardActionArea>
                             </Card>
                         </div>
