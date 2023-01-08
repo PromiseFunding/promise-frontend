@@ -118,11 +118,6 @@ const Details: NextPage = () => {
                             </div>
                             <div className={styles.sticky}>
                                 <div className="text-center flex flex-col border-2 border-slate-500">
-                                    <WithdrawProceeds
-                                        fundAddress={fundAddress}
-                                        assetAddress={assetAddress}
-                                        ownerFund={owner}
-                                    ></WithdrawProceeds>
                                     <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
                                     {isWeb3Enabled && owner != userAddress ? (
                                         <>

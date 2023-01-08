@@ -63,7 +63,6 @@ const Discover: NextPage = () => {
     async function updateUI() {
         const allPromiseFundsFromCall = (await getAllPromiseFund()) as string[]
         const allYieldFundsFromCall = (await getAllYieldFundsAAVE()) as string[]
-        console.log(allYieldFundsFromCall)
         const allFundsFromCall: string[] = allPromiseFundsFromCall.concat(allYieldFundsFromCall)
         const finalFunds: string[] = []
         if (allFundsFromCall) {

@@ -4,7 +4,7 @@ import { styled } from "@mui/material/styles"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { propType, fundSummary, propTypeFundCard } from "../../config/types"
 import { useState, useEffect } from "react"
-import { abi, YieldFundFactory } from "../../constants"
+import { abi, yieldAbi } from "../../constants"
 import { BigNumber } from "ethers"
 import { tokenConfig } from "../../config/token-config"
 import { ref, get } from "firebase/database"
@@ -29,9 +29,8 @@ export default function StateStatusYield(props: propType) {
     const [userAddress, setUserAddress] = useState("")
     const [percent, setPercent] = useState(0)
 
-
     const { runContractFunction: getFundSummary } = useWeb3Contract({
-        abi: YieldFundFactory,
+        abi: yieldAbi,
         contractAddress: fundAddress!,
         functionName: "getFundSummary",
         params: {},
@@ -47,8 +46,11 @@ export default function StateStatusYield(props: propType) {
         if (totalLifetimeFunded.toNumber() == 0) {
             setPercent(0)
         } else {
-            //percent equals how much was straight donated 
-            const percent = (totalLifetimeFunded!.toNumber() - totalLifetimeInterestFunded!.toNumber()) / totalLifetimeFunded!.toNumber() * 100
+            //percent equals how much was straight donated
+            const percent =
+                ((totalLifetimeFunded!.toNumber() - totalLifetimeInterestFunded!.toNumber()) /
+                    totalLifetimeFunded!.toNumber()) *
+                100
             setPercent(percent)
         }
         settotalActiveFunded(totalActiveFunded.toNumber())
@@ -56,7 +58,7 @@ export default function StateStatusYield(props: propType) {
         settotalLifetimeFunded(totalLifetimeFunded.toNumber())
         settotalLifetimeStraightFunded(totalLifetimeStraightFunded.toNumber())
         settotalLifetimeInterestFunded(totalLifetimeInterestFunded.toNumber())
-        setamountWithdrawnByOwner(amountWithdrawnByOwner.toNumber())
+        // setamountWithdrawnByOwner(amountWithdrawnByOwner.toNumber())
         // const assetAddressFromCall = fundInfo.assetAddress
         // const coinName = getAssetName(assetAddressFromCall!)
         // setAsset(coinName)
@@ -71,17 +73,19 @@ export default function StateStatusYield(props: propType) {
         return ""
     }
 
-    useEffect(() => {
-        async function fetchData() {
-            if (format == "discover") {
-                setFundInfo((await getFundSummary()) as fundSummary)
-            }
+    async function fetchData() {
+        if (format == "discover") {
+            setFundInfo((await getFundSummary()) as fundSummary)
         }
+    }
 
+    useEffect(() => {
         if (isWeb3Enabled && fundAddress && fundInfo) {
             updateUI()
         }
-        fetchData()
+        if (isWeb3Enabled && fundAddress && !fundInfo){
+            fetchData()
+        }
     }, [isWeb3Enabled, fundAddress, fundInfo])
 
     useEffect(() => {
@@ -94,11 +98,11 @@ export default function StateStatusYield(props: propType) {
         height: 10,
         borderRadius: 5,
         [`&.${linearProgressClasses.colorPrimary}`]: {
-            backgroundColor: theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
+            backgroundColor: theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
         },
         [`& .${linearProgressClasses.bar}`]: {
             borderRadius: 5,
-            backgroundColor: theme.palette.mode === 'light' ? 'green' : 'green',
+            backgroundColor: theme.palette.mode === "light" ? "green" : "green",
         },
     }))
 
@@ -109,8 +113,10 @@ export default function StateStatusYield(props: propType) {
                     <>
                         {totalLifetimeFunded.toLocaleString("en-US")} {asset} Lifetime Raised
                         <BorderLinearProgress variant="determinate" value={percent} />
-                        {totalLifetimeStraightFunded.toLocaleString("en-US")} {asset} Donated Straight
-                        {totalLifetimeInterestFunded.toLocaleString("en-US")} {asset} Donated To Interest Pool
+                        {totalLifetimeStraightFunded.toLocaleString("en-US")} {asset} Donated
+                        Straight
+                        {totalLifetimeInterestFunded.toLocaleString("en-US")} {asset} Donated To
+                        Interest Pool
                     </>
                 </div>
             ) : (
