@@ -70,7 +70,7 @@ export default function CurrentTrancheDonation(props: propType) {
             props.onGetFunderInfo!()
 
         }
-    }, [isWeb3Enabled, fundAddress, account, totalRaised])
+    }, [isWeb3Enabled, fundAddress, totalRaised])
 
     const handleSuccess = async function (tx: ContractTransaction) {
         //alert("Friendly Reminder: By confirming the next MetaMask transaction you will be funding " + JSON.stringify(val + " " + coinName) + " to Milestone " + JSON.stringify(milestone))

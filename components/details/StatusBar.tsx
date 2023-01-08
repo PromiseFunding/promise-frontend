@@ -164,20 +164,25 @@ export default function HorizontalNonLinearStepper(props: propType) {
                                             <div style={{ display: "flex", flexDirection: "row", marginTop: "50px" }}>
                                                 <p className={styles.textarea}>{milestonesArray[activeStep - 1].description}</p>
                                                 <div style={{ width: "50%", textAlign: "center" }}>
-                                                    <div style={{ fontSize: "40px" }}> <b style={{ color: "green", fontWeight: "400" }}>{(milestoneSummary!.milestones[activeStep - 1]!.totalRaised!.toNumber() / 10 ** decimals!).toLocaleString("en-US")}</b> {coinName}</div>
-                                                    <h1 style={{ fontSize: "15px" }}>raised in <b>{milestonesArray[activeStep - 1].name}</b> of <b style={{ color: "green" }}>{totalRaised.toLocaleString("en-US")}</b> {coinName} total.</h1>
-                                                    {tranche == activeStep - 1 ? (
-                                                        <div >
-                                                            <BorderLinearProgress variant="determinate" value={percent} />
-                                                            <h2>Round ends {convertSeconds(milestoneSummary!.milestones![activeStep - 1]!.startTime!.toNumber() + milestoneSummary!.milestones![activeStep - 1]!.milestoneDuration!.toNumber())}</h2>
-                                                        </div>
-                                                    ) : (
+                                                    {currState == 4 ? (<h1 style={{ fontSize: "30px" }}>This milestone hasn&apos;t started taking donations yet.</h1>) :
                                                         <div>
-                                                            {tranche! < activeStep - 1 ?
-                                                                (<></>) :
-                                                                (<h2>Round ended {convertSeconds(preFundingEnd)}</h2>)
-                                                            }
-                                                        </div>)}
+                                                            <div style={{ fontSize: "40px" }}> <b style={{ color: "green", fontWeight: "400" }}>{(milestoneSummary!.milestones[activeStep - 1]!.totalRaised!.toNumber() / 10 ** decimals!).toLocaleString("en-US")}</b> {coinName}</div>
+                                                            <h1 style={{ fontSize: "15px" }}>raised in <b>{milestonesArray[activeStep - 1].name}</b> of <b style={{ color: "green" }}>{totalRaised.toLocaleString("en-US")}</b> {coinName} total.</h1>
+
+                                                            {tranche == activeStep - 1 ? (
+                                                                <div >
+                                                                    <BorderLinearProgress variant="determinate" value={percent} />
+                                                                    <h2>Round ends {convertSeconds(milestoneSummary!.milestones![activeStep - 1]!.startTime!.toNumber() + milestoneSummary!.milestones![activeStep - 1]!.milestoneDuration!.toNumber())}</h2>
+                                                                </div>
+                                                            ) : (
+                                                                <div>
+                                                                    {tranche! < activeStep - 1 ?
+                                                                        (<></>) :
+                                                                        (<h2>Round ended {convertSeconds(preFundingEnd)}</h2>)
+                                                                    }
+                                                                </div>)}
+                                                        </div>}
+
                                                 </div>
                                             </div>
 

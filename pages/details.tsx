@@ -24,7 +24,7 @@ import WithdrawExpired from "../components/details/WithdrawExpired"
 const Details: NextPage = () => {
     const router = useRouter()
     const fundAddress = router.query.fund as string
-    const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
+    const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
 
     const fundRef = ref(database, chainId + "/funds/" + fundAddress)

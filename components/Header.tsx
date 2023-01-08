@@ -71,6 +71,7 @@ export default function Header(props: { onChangeQuery?(arg0: string): void; main
             <div className="ml-auto">
                 <ConnectButton
                     moralisAuth={true}
+                    
                 />
             </div>
         </nav>
