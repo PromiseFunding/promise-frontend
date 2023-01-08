@@ -53,7 +53,7 @@ export default function YieldDonation(props: propType) {
         abi: yieldAbi,
         contractAddress: fundAddress!,
         functionName: "fund",
-        params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()), interest: true },
+        params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
     })
 
     const handleSuccess = async function () {
