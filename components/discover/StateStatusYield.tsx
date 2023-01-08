@@ -27,6 +27,7 @@ export default function StateStatusYield(props: propType) {
     const [amountWithdrawnByOwner, setamountWithdrawnByOwner] = useState(0)
     const [asset, setAsset] = useState("")
     const [userAddress, setUserAddress] = useState("")
+    const [percent, setPercent] = useState(0)
 
 
     const { runContractFunction: getFundSummary } = useWeb3Contract({
@@ -43,6 +44,13 @@ export default function StateStatusYield(props: propType) {
         const totalLifetimeStraightFunded = fundInfo.totalLifetimeStraightFunded
         const totalLifetimeInterestFunded = fundInfo.totalLifetimeInterestFunded
         const amountWithdrawnByOwner = fundInfo.amountWithdrawnByOwner
+        if (totalLifetimeFunded.toNumber() == 0) {
+            setPercent(0)
+        } else {
+            //percent equals how much was straight donated 
+            const percent = (totalLifetimeFunded!.toNumber() - totalLifetimeInterestFunded!.toNumber()) / totalLifetimeFunded!.toNumber() * 100
+            setPercent(percent)
+        }
         settotalActiveFunded(totalActiveFunded.toNumber())
         settotalActiveInterestFundeded(totalActiveInterestFunded.toNumber())
         settotalLifetimeFunded(totalLifetimeFunded.toNumber())
@@ -82,12 +90,25 @@ export default function StateStatusYield(props: propType) {
         }
     }, [account])
 
+    const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+        height: 10,
+        borderRadius: 5,
+        [`&.${linearProgressClasses.colorPrimary}`]: {
+            backgroundColor: theme.palette.grey[theme.palette.mode === 'light' ? 200 : 800],
+        },
+        [`& .${linearProgressClasses.bar}`]: {
+            borderRadius: 5,
+            backgroundColor: theme.palette.mode === 'light' ? 'green' : 'green',
+        },
+    }))
+
     return (
         <div className={styles.stateStatus}>
             {format == "discover" ? (
                 <div>
                     <>
                         {totalLifetimeFunded.toLocaleString("en-US")} {asset} Lifetime Raised
+                        <BorderLinearProgress variant="determinate" value={percent} />
                         {totalLifetimeStraightFunded.toLocaleString("en-US")} {asset} Donated Straight
                         {totalLifetimeInterestFunded.toLocaleString("en-US")} {asset} Donated To Interest Pool
                     </>

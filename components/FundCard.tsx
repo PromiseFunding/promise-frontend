@@ -61,8 +61,8 @@ export default function FundCard(props: propTypeFundCard) {
                                 color="gray"
                             >
                                 <CardActionArea
-                                    // href={`/details/?fund=${fund}`} eventually change to the details page
-                                    href={`/discover`}
+                                    href={`/detailsYield/?fund=${fund}`}
+                                    // href={`/discover`}
                                     sx={{
                                         display: "flex",
                                         flexDirection: "column",
