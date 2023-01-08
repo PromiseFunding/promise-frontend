@@ -10,6 +10,7 @@ import { tokenConfig } from "../../config/token-config"
 import { ref, get } from "firebase/database"
 import { database } from "../../firebase-config"
 import { formatDuration, convertSeconds } from "../../utils/utils"
+import Tooltip from "@mui/material/Tooltip"
 
 export default function StateStatusYield(props: propType) {
     const fundAddress = props.fundAddress
@@ -20,7 +21,7 @@ export default function StateStatusYield(props: propType) {
     const chainIdNum = parseInt(chainIdHex!)
     const chainId: string = parseInt(chainIdHex!).toString()
     const [totalActiveFunded, settotalActiveFunded] = useState(0)
-    const [totalActiveInterestFunded, settotalActiveInterestFundeded] = useState(0)
+    const [totalActiveInterestFunded, settotalActiveInterestFunded] = useState(0)
     const [totalLifetimeFunded, settotalLifetimeFunded] = useState(0)
     const [totalLifetimeStraightFunded, settotalLifetimeStraightFunded] = useState(0)
     const [totalLifetimeInterestFunded, settotalLifetimeInterestFunded] = useState(0)
@@ -53,12 +54,37 @@ export default function StateStatusYield(props: propType) {
                 100
             setPercent(percent)
         }
-        settotalActiveFunded(totalActiveFunded.toNumber())
-        settotalActiveInterestFundeded(totalActiveInterestFunded.toNumber())
-        settotalLifetimeFunded(totalLifetimeFunded.toNumber())
-        settotalLifetimeStraightFunded(totalLifetimeStraightFunded.toNumber())
-        settotalLifetimeInterestFunded(totalLifetimeInterestFunded.toNumber())
-        // setamountWithdrawnByOwner(amountWithdrawnByOwner.toNumber())
+        settotalActiveFunded(
+            +(
+                totalActiveFunded.toNumber() /
+                10 ** tokenConfig[chainIdNum]["USDC"].decimals!
+            ).toFixed(2)
+        )
+        settotalActiveInterestFunded(
+            +(
+                totalActiveInterestFunded.toNumber() /
+                10 ** tokenConfig[chainIdNum]["USDC"].decimals!
+            ).toFixed(2)
+        )
+        settotalLifetimeFunded(
+            +(
+                totalLifetimeFunded.toNumber() /
+                10 ** tokenConfig[chainIdNum]["USDC"].decimals!
+            ).toFixed(2)
+        )
+        settotalLifetimeStraightFunded(
+            +(
+                totalLifetimeStraightFunded.toNumber() /
+                10 ** tokenConfig[chainIdNum]["USDC"].decimals!
+            ).toFixed(2)
+        )
+        settotalLifetimeInterestFunded(
+            +(
+                totalLifetimeInterestFunded.toNumber() /
+                10 ** tokenConfig[chainIdNum]["USDC"].decimals!
+            ).toFixed(2)
+        )
+        // setamountWithdrawnByOwner(+(amountWithdrawnByOwner!.toNumber()/ 10 ** tokenConfig[chainIdNum]["USDC"].decimals!).toFixed(2))
         // const assetAddressFromCall = fundInfo.assetAddress
         // const coinName = getAssetName(assetAddressFromCall!)
         // setAsset(coinName)
@@ -83,7 +109,7 @@ export default function StateStatusYield(props: propType) {
         if (isWeb3Enabled && fundAddress && fundInfo) {
             updateUI()
         }
-        if (isWeb3Enabled && fundAddress && !fundInfo){
+        if (isWeb3Enabled && fundAddress && !fundInfo) {
             fetchData()
         }
     }, [isWeb3Enabled, fundAddress, fundInfo])
@@ -96,29 +122,69 @@ export default function StateStatusYield(props: propType) {
 
     const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
         height: 10,
-        borderRadius: 5,
-        [`&.${linearProgressClasses.colorPrimary}`]: {
+        borderRadius: 0,
+        [`&.${linearProgressClasses.colorSecondary}`]: {
             backgroundColor: theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
         },
         [`& .${linearProgressClasses.bar}`]: {
-            borderRadius: 5,
-            backgroundColor: theme.palette.mode === "light" ? "green" : "green",
+            backgroundColor: theme.palette.mode === "light" ? "lightgreen" : "yellow",
         },
     }))
 
     return (
         <div className={styles.stateStatus}>
             {format == "discover" ? (
-                <div>
-                    <>
-                        {totalLifetimeFunded.toLocaleString("en-US")} {asset} Lifetime Raised
-                        <BorderLinearProgress variant="determinate" value={percent} />
-                        {totalLifetimeStraightFunded.toLocaleString("en-US")} {asset} Donated
-                        Straight
-                        {totalLifetimeInterestFunded.toLocaleString("en-US")} {asset} Donated To
-                        Interest Pool
-                    </>
-                </div>
+                <>
+                    <div>
+                        <>
+                            <div style={{ fontWeight: "500" }}>
+                                {totalLifetimeFunded.toLocaleString("en-US")} {asset} USDC Lifetime
+                                Raised
+                            </div>
+                            <BorderLinearProgress variant="determinate" value={percent} />
+                            <div style={{ color: "lightgreen", fontWeight: "500" }}>
+                                {totalLifetimeStraightFunded.toLocaleString("en-US")} {asset}{" "}
+                                USDC Straight Donated
+                            </div>
+                            <div style={{ color: "lightblue", fontWeight: "500" }}>
+                                {totalLifetimeInterestFunded.toLocaleString("en-US")} {asset}{" "}
+                                USDC &apos;Lossless&apos; Donated
+                            </div>
+                        </>
+                    </div>
+                    {/* <div>
+                        <div style={{ fontWeight: "500" }}>
+                            {totalLifetimeFunded.toLocaleString("en-US")} {asset} Lifetime Raised
+                        </div>
+                        <Tooltip
+                            title={
+                                <>
+                                    <div>
+                                        <>
+                                            <div style={{ color: "lightgreen" }}>
+                                                {totalLifetimeStraightFunded.toLocaleString(
+                                                    "en-US"
+                                                )}{" "}
+                                                {asset} Straight Donated
+                                            </div>
+                                            <div style={{ color: "lightblue" }}>
+                                                {totalLifetimeInterestFunded.toLocaleString(
+                                                    "en-US"
+                                                )}{" "}
+                                                {asset} &apos;Lossless&apos; Donated
+                                            </div>
+                                        </>
+                                    </div>
+                                </>
+                            }
+                            placement="right"
+                            arrow
+                        >
+                            <BorderLinearProgress variant="determinate" value={percent} />
+                        </Tooltip>
+                        <br></br>
+                    </div> */}
+                </>
             ) : (
                 <></>
             )}
