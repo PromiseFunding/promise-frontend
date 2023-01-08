@@ -59,9 +59,6 @@ export default function Vote(props: propType) {
         if (account) {
             setUserAddress(account)
         }
-        if (isWeb3Enabled && fundAddress) {
-            props.onGetFunderInfo!()
-        }
     }, [isWeb3Enabled, fundAddress, account])
 
     const handleClose = () => {

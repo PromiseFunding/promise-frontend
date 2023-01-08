@@ -62,13 +62,6 @@ export default function EndVote(props: propType) {
         }
     }, [funderSummary])
 
-    useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
-            props.onGetFunderInfo!()
-
-        }
-    }, [isWeb3Enabled, fundAddress])
-
 
     const handleNewNotification = function () {
         dispatch({

@@ -15,7 +15,6 @@ import React from 'react';
 import createEmotionCache from '../src/createEmotionCache';
 import { CacheProvider } from '@emotion/react';
 
-
 library.add(fab, faCoffee, fas)
 
 const SERVER_URL = process.env.NEXT_PUBLIC_SERVER_URL || ""
