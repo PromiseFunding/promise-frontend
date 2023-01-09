@@ -154,12 +154,11 @@
     position: absolute;
     top: 6px;
     left: 6px;
-    /* background-color: #9C27B0; */
-    background: linear-gradient(125.78deg, #e9f504e3 17.93%, #9eb82bee 42.06%, #aba87ecc 73.89%);
+    /* background: linear-gradient(125.78deg, #e9f504e3 17.93%, #9eb82bee 42.06%, #aba87ecc 73.89%); */
+    background: linear-gradient(125.78deg, #f0f802 17.93%, #a2dc0eee 42.06%, #52c803cc 73.89%);
     color: #ffffff;
     width: 30px;
     height: 30px;
-    /* borderRadius: "50%", //circular option */
     border-radius: 4px 4px 4px 4px;
     display: flex;
     align-items: center;
@@ -168,7 +167,8 @@
 }
 
 .yellowBadge:hover {
-    background: linear-gradient(125.78deg, #aba87ecc 17.93%, #9eb82bee 42.06%, #e9f504e3 73.89%);
+    /* background: linear-gradient(125.78deg, #aba87ecc 17.93%, #9eb82bee 42.06%, #e9f504e3 73.89%); */
+    background: linear-gradient(125.78deg, #52c803cc 17.93%, #a2dc0eee 42.06%, #f0f802 73.89%);
     color: lightgrey;
     cursor: pointer;
 }

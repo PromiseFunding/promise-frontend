@@ -63,8 +63,31 @@ export default function CustomizedAccordions() {
                 </div>
                 <br></br>
                 <Accordion expanded={expanded === "panel1"} onChange={handleChange("panel1")}>
+                    <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
+                        <Typography>
+                            What are the two different types of fundraisers on the Promise
+                            platform?
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Typography>
+                            The &apos;Promise Fund&apos; is the milestone based fundraising that
+                            works as described above. The secondary type of fundraiser made
+                            available by Promise is the &apos;Yield Fund&apos; which is more useful
+                            for one time causes and stands for yield generating fundraisers. Yield
+                            generating fundraisers allow donors to donate straight to the
+                            fundraiser or through a decentralized yield generating protocol which
+                            enables the donor to donate the interest earned and subsequently
+                            withdraw their initial deposit, therefore making a novel
+                            &apos;lossless&apos; donation.
+                        </Typography>
+                    </AccordionDetails>
+                </Accordion>
+                <Accordion expanded={expanded === "panel2"} onChange={handleChange("panel2")}>
                     <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
-                        <Typography>What are the benefits of milestone based funding?</Typography>
+                        <Typography>
+                            What are the benefits of a milestone based &apos;Promise Fund&apos;?
+                        </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography>
@@ -83,9 +106,46 @@ export default function CustomizedAccordions() {
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
-                <Accordion expanded={expanded === "panel2"} onChange={handleChange("panel2")}>
+                <Accordion expanded={expanded === "panel3"} onChange={handleChange("panel3")}>
+                    <AccordionSummary aria-controls="panel1d-content" id="panel1d-header">
+                        <Typography>
+                            What are the benefits and features of a &apos;Yield Fund&apos;?
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Typography>
+                            &apos;Yield Fund&apos; sets up easy and novel crowdfunding options for
+                            you! Some key features of this type of fundraiser includes:{" "}
+                            <ul
+                                style={{
+                                    listStyleType: "circle",
+                                    marginTop: "10px",
+                                    marginLeft: "65px",
+                                }}
+                            >
+                                <li>
+                                    Straight Donation: This type of fundraiser allows donors to
+                                    donate easily straight to the project using stablecoin assets.
+                                </li>
+                                <li>
+                                    Interest Donation: Donors can utilize a novel interest donation
+                                    to fund your project. Through this type of donation method the
+                                    funds donated are reallocated to the AAVE lending protocol
+                                    where the interest is made available to the owner, and the
+                                    donor can withdraw their initial deposit.{" "}
+                                </li>
+                                <li>
+                                    Time Lock: Determine how long users must keep their funds in
+                                    the interest generating donation method before they can
+                                    withdraw.
+                                </li>
+                            </ul>
+                        </Typography>
+                    </AccordionDetails>
+                </Accordion>
+                <Accordion expanded={expanded === "panel4"} onChange={handleChange("panel4")}>
                     <AccordionSummary aria-controls="panel2d-content" id="panel2d-header">
-                        <Typography>How does voting work?</Typography>
+                        <Typography>How does voting work in &apos;Promise&apos; funds?</Typography>
                     </AccordionSummary>
                     <AccordionDetails>
                         <Typography>
@@ -104,10 +164,11 @@ export default function CustomizedAccordions() {
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
-                <Accordion expanded={expanded === "panel3"} onChange={handleChange("panel3")}>
+                <Accordion expanded={expanded === "panel5"} onChange={handleChange("panel5")}>
                     <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
                         <Typography>
-                            How do withdrawals work and when do they become available?
+                            How do withdrawals work and when do they become available for
+                            &apos;Promise&apos; funds?
                         </Typography>
                     </AccordionSummary>
                     <AccordionDetails>
@@ -123,7 +184,24 @@ export default function CustomizedAccordions() {
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
-                <Accordion expanded={expanded === "panel4"} onChange={handleChange("panel4")}>
+                <Accordion expanded={expanded === "panel6"} onChange={handleChange("panel6")}>
+                    <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
+                        <Typography>
+                            How do withdrawals work and when do they become available for
+                            &apos;Yield&apos; funds?
+                        </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                        <Typography>
+                            Donors can only withdraw in a &apos;Yield&apos; fund when they donate
+                            through the &apos;lossless&apos; donation method and after the
+                            specified timelock. The timelock is set by the owner of the fundraiser
+                            and specifies the amount of time a donor has to keep their funds locked
+                            in the yield generating protocol prior to withdrawing their funds.
+                        </Typography>
+                    </AccordionDetails>
+                </Accordion>
+                <Accordion expanded={expanded === "panel7"} onChange={handleChange("panel7")}>
                     <AccordionSummary aria-controls="panel3d-content" id="panel3d-header">
                         <Typography>
                             What are the badges in the top left corners of the fundraisers on the
@@ -134,13 +212,10 @@ export default function CustomizedAccordions() {
                         <Typography>
                             There are two different types of badges, representing the two different
                             types of fundraisers that are available on our platform. The purple
-                            badge with the letter &apos;P&apos; represents our &apos;Promise&apos;
-                            milestone based fundraiser. The yellow badge with the letter
-                            &apos;Y&apos; represents our secondary fundraising option for one time
-                            causes and stands for yield generating fundraisers. Yield generating
-                            fundraisers allow donors to donate straight to the fundraiser or
-                            through a yield generating protocol which allows the donor to donate
-                            the interest earned.
+                            badge with the letter &apos;P&apos; represents our milestone based
+                            fundraiser, &apos;Promise Fund&apos;. The yellow badge with the letter
+                            &apos;Y&apos; represents our yield generating fundraising, &apos;Yield
+                            Fund&apos;.
                         </Typography>
                     </AccordionDetails>
                 </Accordion>
