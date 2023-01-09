@@ -70,10 +70,10 @@ const Details: NextPage = () => {
     const {
         runContractFunction: getFunderSummary,
     } = useWeb3Contract({
-        abi: abi,
+        abi: yieldAbi,
         contractAddress: fundAddress!,
         functionName: "getFunderSummary",
-        params: { funder: funderParam, level: levelParam },
+        params: { funder: funderParam },
     })
 
     async function updateFunderInfo() {
@@ -105,10 +105,10 @@ const Details: NextPage = () => {
     }, [account])
 
     useEffect(() => {
-        if (funderParam && levelParam >= 0) {
+        if (funderParam) {
             updateFunderInfo()
         }
-    }, [funderParam, levelParam])
+    }, [funderParam])
 
     useEffect(() => {
         onValue(fundRef, (snapshot) => {

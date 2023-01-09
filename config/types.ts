@@ -48,6 +48,7 @@ export interface propType {
     funderSummary?: funderSummary
     format?: string
     fundSummary?: fundSummary
+    funderSummaryYield?: funderSummaryYield
 }
 
 export interface propTypeEntryNumber {
@@ -115,9 +116,16 @@ export interface fundSummary {
     totalLifetimeFunded: BigNumber
     totalLifetimeStraightFunded: BigNumber
     totalLifetimeInterestFunded: BigNumber
-    amountWithdrawnByOwner: BigNumber
+    totalWithdrawnByOwner: BigNumber
     owner: string
     assetAddress: string
+    i_lockTime: BigNumber
+}
+
+export interface funderSummaryYield {
+    amountWithdrawable: BigNumber
+    amountTotal: BigNumber
+    entryTime: BigNumber
 }
 
 export interface databaseFundObject {

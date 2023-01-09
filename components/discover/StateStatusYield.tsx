@@ -16,7 +16,8 @@ export default function StateStatusYield(props: propType) {
     const fundAddress = props.fundAddress
     const format = props.format
     const fundSummary = props.fundSummary
-    const funderSummary = props.funderSummary
+    const funderSummary = props.funderSummaryYield
+    const decimals = props.decimals
 
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
     const chainIdNum = parseInt(chainIdHex!)
@@ -55,7 +56,13 @@ export default function StateStatusYield(props: propType) {
         const totalLifetimeFunded = fundInfo.totalLifetimeFunded
         const totalLifetimeStraightFunded = fundInfo.totalLifetimeStraightFunded
         const totalLifetimeInterestFunded = fundInfo.totalLifetimeInterestFunded
-        const amountWithdrawnByOwner = fundInfo.amountWithdrawnByOwner
+        const totalWithdrawnByOwner = fundInfo.totalWithdrawnByOwner
+        const lockTime = fundInfo.i_lockTime
+        setLockTime(lockTime.toNumber())
+        setOwner(fundInfo.owner.toLowerCase())
+        const assetAddressFromCall = fundInfo.assetAddress
+        const coinName = getAssetName(assetAddressFromCall!)
+        setAsset(coinName)
         if (totalLifetimeFunded.toNumber() == 0) {
             setPercent(0)
         } else {
