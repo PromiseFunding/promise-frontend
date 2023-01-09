@@ -13,6 +13,7 @@ import { Pie, Bar } from 'react-chartjs-2';
 import { funderSummary, milestoneSummary, propType } from '../../config/types';
 import { updateMetadata } from 'firebase/storage';
 import { useMoralis } from 'react-moralis';
+import PoolInfo from "./PoolInfo"
 
 ChartJS.register(
     CategoryScale,
@@ -120,21 +121,26 @@ export default function Stats(props: propType) {
 
     return (
         <div style={{ display: "flex", flexDirection: "column" }}>
-            <h1 style={{ fontSize: "40px", fontWeight: "500", textAlign: "center", padding: "30px" }}>Milestone Statistics</h1>
-            {milestoneSummary.lifeTimeRaised.toNumber() > 0 ? (
-                <div style={{ display: "flex", flexDirection: "row", marginTop: "20px" }}>
-                    <div style={{ width: "50%" }}>
-                        <Bar options={getOptions("owner")} data={getData("owner")} />
-                        {userAddress != owner.toLowerCase() ? (
-                            <Bar options={getOptions("funder")} data={getData("funder")} />
-                        ) : (<></>)}
+            <div style={{ height: "700px" }}>
+                <h1 style={{ fontSize: "40px", fontWeight: "500", textAlign: "center", padding: "30px", }}>Milestone Statistics</h1>
+                {milestoneSummary.lifeTimeRaised.toNumber() > 0 ? (
+                    <div style={{ display: "flex", flexDirection: "row", marginTop: "20px" }}>
+                        <div style={{ width: "50%" }}>
+                            <Bar options={getOptions("owner")} data={getData("owner")} />
+                            {userAddress != owner.toLowerCase() ? (
+                                <Bar options={getOptions("funder")} data={getData("funder")} />
+                            ) : (<></>)}
+                        </div>
+                        <div style={{ width: "50%" }}>
+                            <Pie data={getData("owner")} options={getOptions("owner")} />
+                        </div>
                     </div>
-                    <div style={{ width: "50%" }}>
-                        <Pie data={getData("owner")} options={getOptions("owner")} />
-                    </div>
-                </div>
-            ) : (<h1 style={{ fontSize: "20px", textAlign: "center" }}>This fundraiser has no statistics to report yet. </h1>)}
-
+                ) : (<h1 style={{ fontSize: "20px", textAlign: "center" }}>This fundraiser has no statistics to report yet. </h1>)}
+            </div>
+            <PoolInfo
+                fundAddress={props.fundAddress}
+                milestoneSummary={milestoneSummary}
+            />
         </div>
     )
 }

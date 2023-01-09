@@ -81,7 +81,8 @@ export default function TabsContent(props: propType) {
                 ></Updates>
             </TabPanel>
             <TabPanel value={value} index={2}>
-                <Stats fundAddress={props.fundAddress}
+                <Stats
+                    fundAddress={props.fundAddress}
                     milestoneSummary={props.milestoneSummary}
                     funderSummary={props.funderSummary}
                     decimals={props.decimals!}

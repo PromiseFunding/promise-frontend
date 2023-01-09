@@ -39,7 +39,6 @@ export default function StateStatus(props: propType) {
     const [timeLeftVoting, setTimeLeftVoting] = useState(0)
     const [votesTried, setVotesTried] = useState(0)
 
-
     const getMilestoneName = async () => {
         const milestonesRef = ref(database, chainId + "/funds/" + fundAddress + "/milestones/" + tranche + "/name")
         const snapshot = await get(milestonesRef)
@@ -138,14 +137,16 @@ export default function StateStatus(props: propType) {
                     {state == 4 ? (
                         <>Seed Funding Round
                             <BorderLinearProgress variant="determinate" value={percent} />
-                            {amountRaisedPre.toLocaleString("en-US")} {asset} Raised
+                            <h2 style={{ fontSize: "8px" }}>progress</h2>
+                            <b>{amountRaisedPre.toLocaleString("en-US")} {asset} Raised</b>
                         </>)
                         :
                         (<>Milestone {tranche + 1}: <b>{milestoneName}</b>
                             <BorderLinearProgress variant="determinate" value={percent} />
-                            {amountRaisedTotal.toLocaleString("en-US")} {asset} Raised
-                            <br></br>
+                            <h1 style={{ fontSize: "10px", fontWeight: "500", fontStyle: "italic" }}>round progress</h1>
+                            <b style={{ color: "green" }}>{amountRaisedTotal.toLocaleString("en-US")} </b>{asset} Raised
                         </>)}
+
                 </div>
             ) : (<div>
                 {state == 4 ? (
