@@ -1,10 +1,10 @@
-import { contractAddresses, abi } from "../constants"
-import styles from "../styles/Home.module.css"
+import { contractAddresses, abi } from "../../constants"
+import styles from "../../styles/Home.module.css"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { useEffect, useState } from "react"
 import { BigNumber } from "ethers"
-import { networkConfig } from "../config/helper-config"
-import { contractAddressesInterface, propType } from "../config/types"
+import { networkConfig } from "../../config/helper-config"
+import { contractAddressesInterface, propType } from "../../config/types"
 
 //contract is already deployed... trying to look at features of contract
 export default function PoolInfo(props: propType) {
@@ -41,11 +41,11 @@ export default function PoolInfo(props: propType) {
     }, [isWeb3Enabled, milestoneSummary])
 
     return (
-        <div className="py-5 px-5 text-slate-800">
-            <div className="my-20 w-[600px] drop-shadow rounded-md">
-                <details className="bg-slate-400 open:bg-slate-200 duration-300">
+        <div style={{ width: "100%", borderRadius: "10px", position: "relative" }}>
+            <div className="my-20 drop-shadow rounded-md">
+                <details className="bg-slate-300 open:bg-slate-200 duration-300 rounded">
                     <summary className="bg-inherit px-5 py-3 text-lg cursor-pointer font-bold">
-                        Fund / Pool Information:
+                        Fund Information
                     </summary>
                     <div className="bg-white px-5 py-3 border border-gray-300 text-slate-800 text-sm font-light">
                         {isWeb3Enabled && fundAddress ? (
@@ -68,12 +68,12 @@ export default function PoolInfo(props: propType) {
                                         <u className={styles.fundinfo}><b className={styles.fundinfo}>{account}</b></u>
                                     </a>
                                 </div>
-                                <div>
+                                {/* <div>
                                     Pool Address:
                                     <a href={tracker + poolAddress!}>
                                         <u className={styles.fundinfo}><b className={styles.fundinfo}>{poolAddress}</b></u>
                                     </a>
-                                </div>
+                                </div> */}
                                 <div>
                                     Asset Address:
                                     <a href={tracker + asset}>
