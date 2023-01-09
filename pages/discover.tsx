@@ -111,6 +111,7 @@ const Discover: NextPage = () => {
                         strings={[" ", " We Love...", " We Care About...", " That Matter."]}
                         typeSpeed={150}
                         backSpeed={150}
+                        backDelay={1500}
                         loop
                     />
                 </h1>

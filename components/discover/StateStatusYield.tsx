@@ -14,8 +14,9 @@ import { formatDuration, convertSeconds } from '../../utils/utils';
 
 export default function StateStatusYield(props: propType) {
     const fundAddress = props.fundAddress
-    const [fundInfo, setFundInfo] = useState(props.fundSummary!)
     const format = props.format
+    const fundSummary = props.fundSummary
+    const funderSummary = props.funderSummary
 
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
     const chainIdNum = parseInt(chainIdHex!)
@@ -49,18 +50,14 @@ export default function StateStatusYield(props: propType) {
     })
 
     async function updateUI() {
-        const tranchesFromCall = milestoneInfo.milestones
-        const currentTrancheFromCall = milestoneInfo.currentTranche
-        setTranche(currentTrancheFromCall!)
-        const currentStateFromCall = milestoneInfo.state
-        setState(currentStateFromCall!)
-        await getMilestoneName()
-        const timeLeftFromCall = milestoneInfo.timeLeftRound
-        setTimeLeft(timeLeftFromCall.toNumber())
-        if (currentStateFromCall == 4) {
-            const roundDuration = milestoneInfo.preFundingDuration
-            const percent = (roundDuration!.toNumber() - timeLeftFromCall.toNumber()) / roundDuration!.toNumber() * 100
-            setPercent(percent)
+        const totalActiveFunded = fundInfo.totalActiveFunded
+        const totalActiveInterestFunded = fundInfo.totalActiveInterestFunded
+        const totalLifetimeFunded = fundInfo.totalLifetimeFunded
+        const totalLifetimeStraightFunded = fundInfo.totalLifetimeStraightFunded
+        const totalLifetimeInterestFunded = fundInfo.totalLifetimeInterestFunded
+        const amountWithdrawnByOwner = fundInfo.amountWithdrawnByOwner
+        if (totalLifetimeFunded.toNumber() == 0) {
+            setPercent(0)
         } else {
             const roundDuration = tranchesFromCall[currentTrancheFromCall].milestoneDuration
             const percent = (roundDuration!.toNumber() - timeLeftFromCall.toNumber()) / roundDuration!.toNumber() * 100
@@ -97,20 +94,20 @@ export default function StateStatusYield(props: propType) {
         return ""
     }
 
-    useEffect(() => {
-        async function fetchData() {
-            if (format == 'discover') {
-                setMilestoneInfo(await getMilestoneSummary() as milestoneSummary)
-            }
+    async function fetchData() {
+        if (format == "discover") {
+            setFundInfo((await getFundSummary()) as fundSummary)
         }
     }
 
-        if (isWeb3Enabled && fundAddress && milestoneInfo) {
+    useEffect(() => {
+        if (isWeb3Enabled && fundAddress && fundInfo) {
             updateUI()
         }
-        fetchData()
-
-    }, [isWeb3Enabled, fundAddress, milestoneInfo, funderSummary])
+        if (isWeb3Enabled && fundAddress && !fundInfo) {
+            fetchData()
+        }
+    }, [isWeb3Enabled, fundAddress, fundInfo])
 
     useEffect(() => {
         if (account) {

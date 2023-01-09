@@ -1,20 +1,23 @@
 import type { NextPage } from "next"
-import { abi } from "../constants"
-import Head from "next/head"
-import styles from "../styles/Home.module.css"
-import Header from "../components/Header"
-import YieldDonation from "../components/YieldDonation"
-import Withdraw from "../components/WithdrawFunder"
-import WithdrawProceeds from "../components/WithdrawProceeds"
-import PoolInfo from "../components/PoolInfo"
-import StraightDonation from "../components/StraightDonation"
+import { abi, contractAddresses, yieldAbi } from "../constants"
 import { useRouter } from "next/router"
 import { useEffect, useState } from "react"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { ref, onValue } from "firebase/database"
 import { database } from "../firebase-config"
-import { databaseFundObject } from "../config/types"
-import { CardMedia } from "@mui/material"
+import { databaseFundObject, fundSummary, funderSummary} from "../config/types"
+import { contractAddressesInterface, propType } from "../config/types"
+import { tokenConfig } from "../config/token-config"
+import styles from "../styles/details/details.module.css"
+import Image from "next/image"
+import Button from "@mui/material/Button"
+import Head from "next/head"
+import Header from "../components/Header"
+import StateStatusYield from "../components/discover/StateStatusYield"
+import TabsContent from "../components/details/TabsContent"
+import Donate from "../components/details/Donate"
+import Withdraw from "../components/details/Withdraw"
+
 
 const Details: NextPage = () => {
     const router = useRouter()
@@ -25,55 +28,96 @@ const Details: NextPage = () => {
     const fundRef = ref(database, chainId + "/funds/" + fundAddress)
     const [data, setData] = useState<databaseFundObject>()
     const [assetAddress, setAssetAddress] = useState("")
-    const [userAddress, setAddress] = useState("0")
-    const [owner, setOwner] = useState("0")
+    const [owner, setOwner] = useState("")
     const [amt, setAmt] = useState(0)
+    const [state, setState] = useState(0)
+    const [tranche, setTranche] = useState(0)
+    const [timeLeft, setTimeLeft] = useState(100)
+    const [totalFunds, setTotalFunds] = useState(0)
+    const [milestoneDurations, setMilestoneDurations] = useState<number[]>()
+    const [funderCalledVote, setFunderCalledVote] = useState<boolean>(false)
+    const [numVotesTried, setNumVotesTried] = useState(0)
+    const [timeLeftVoting, setTimeLeftVoting] = useState(0)
+    const [fundSummary, setFundSummary] = useState<fundSummary>()
+    const [funderSummary, setFunderSummary] = useState<funderSummary>()
 
-    const { runContractFunction: getOwner } = useWeb3Contract({
+    const [funderParam, setFunderParam] = useState("")
+    const [levelParam, setLevelParam] = useState(0)
+    const [userAddress, setUserAddress] = useState("")
+
+    const addresses: contractAddressesInterface = contractAddresses
+
+    //TODO: get helper-config working instead!... gets rid of decimal function
+    const chainIdNum = parseInt(chainIdHex!)
+
+    let coinName = "USDT"
+
+    for (const coin in tokenConfig[chainIdNum]) {
+        if (tokenConfig[chainIdNum][coin].assetAddress == assetAddress) {
+            coinName = coin
+        }
+    }
+
+    const decimals = chainId in addresses ? tokenConfig[chainIdNum][coinName].decimals : null
+
+    const { runContractFunction: getFundSummary } = useWeb3Contract({
+        abi: yieldAbi,
+        contractAddress: fundAddress!,
+        functionName: "getFundSummary",
+        params: {},
+    })
+
+    const {
+        runContractFunction: getFunderSummary,
+    } = useWeb3Contract({
         abi: abi,
         contractAddress: fundAddress!,
-        functionName: "getOwner",
-        params: {},
+        functionName: "getFunderSummary",
+        params: { funder: funderParam, level: levelParam },
     })
 
-    const { runContractFunction: getAssetAddress } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress, // specify the networkId
-        functionName: "getAssetAddress",
-        params: {},
-    })
-
-    const updateAmountTrigger = function () {
-        setAmt(amt + 1)
+    async function updateFunderInfo() {
+        const funderInfo = (await getFunderSummary()) as funderSummary
+        setFunderSummary(funderInfo)
+        updateUI()
     }
+
+    async function updateUI() {
+        const fundInfo = (await getFundSummary()) as fundSummary
+        setFundSummary(fundInfo)
+        const ownerFromCall = fundInfo.owner
+        const assetAddressFromCall = fundInfo.assetAddress
+        setAssetAddress(assetAddressFromCall!)
+        setOwner((ownerFromCall as String).toLowerCase())
+    }
+
+    useEffect(() => {
+        if (isWeb3Enabled && fundAddress) {
+            setFunderParam(userAddress)
+            setLevelParam(tranche)
+        }
+    }, [isWeb3Enabled, fundAddress, userAddress])
+
+    useEffect(() => {
+        if (account) {
+            setUserAddress(account)
+        }
+    }, [account])
+
+    useEffect(() => {
+        if (funderParam && levelParam >= 0) {
+            updateFunderInfo()
+        }
+    }, [funderParam, levelParam])
 
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
             setData(snapshot.val())
         })
-    }, [fundAddress])
-
-    useEffect(() => {
-        if (account) {
-            setAddress(account.toLowerCase())
-        }
-    }, [account])
-
-    async function updateUI() {
-        const assetAddressFromCall = (await getAssetAddress()) as string
-        setAssetAddress(assetAddressFromCall)
-        const ownerFromCall = await getOwner()
-        setOwner((ownerFromCall as string).toLowerCase())
-    }
-
-    useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
-            updateUI()
-        }
-    }, [isWeb3Enabled, fundAddress])
+    }, [fundAddress, chainId])
 
     return (
-        <div className={styles.container}>
+        <div>
             <Header main={false}></Header>
 
             <Head>
@@ -118,39 +162,69 @@ const Details: NextPage = () => {
                             </div>
                             <div className={styles.sticky}>
                                 <div className="text-center flex flex-col border-2 border-slate-500">
-                                    <WithdrawProceeds
-                                        fundAddress={fundAddress}
-                                        assetAddress={assetAddress}
-                                        ownerFund={owner}
-                                    ></WithdrawProceeds>
                                     <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
                                     {isWeb3Enabled && owner != userAddress ? (
                                         <>
-                                            <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                                            <YieldDonation
+                                            <Button className={styles.shareButton}>Share</Button>
+                                            <Donate
                                                 fundAddress={fundAddress}
-                                                assetAddress={assetAddress}
-                                                onChangeAmountFunded={() => updateAmountTrigger()}
-                                            ></YieldDonation>
-                                            <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
+                                                decimals={decimals!}
+                                                fundSummary={fundSummary}
+                                                funderSummary={funderSummary}
+                                                onGetFunderInfo={() => {
+                                                    updateFunderInfo()
+                                                }}
+                                            ></Donate>
                                         </>
                                     ) : (
-                                        <p></p>
+                                        <></>
+                                    )}
+                                    {userAddress == owner ? (
+                                        <Withdraw
+                                            fundAddress={fundAddress}
+                                            fundSummary={fundSummary}
+                                            funderSummary={funderSummary}
+                                            onGetFunderInfo={() => {
+                                                updateFunderInfo()
+                                            }}
+                                        ></Withdraw>
+                                    ) : (
+                                        <></>
                                     )}
                                 </div>
                             </div>
                         </div>
                     </div>
-                ) : (
-                    <div></div>
-                )}
-                <div className="p-10">
-                    <PoolInfo
-                        fundAddress={router.query.fund as string}
-                        assetAddress={assetAddress}
-                    />
+                    <div className={styles.contentLower}>
+                        {/* <TabsContent
+                            fundAddress={fundAddress}
+                            tranche={tranche}
+                            milestoneDurations={milestoneDurations}
+                            ownerFund={owner}
+                            decimals={decimals!}
+                            userAddress={userAddress}
+                            currState={state}
+                            totalRaised={totalFunds}
+                            coinName={coinName}
+                            milestoneSummary={milestoneSummary}
+                            funderSummary={funderSummary}
+                            onChangeState={() => {
+                                updateUI()
+                            }}
+                        ></TabsContent> */}
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div>
+                    <Head>
+                        <title>Promise Fundraiser</title>
+                        <meta
+                            name="description"
+                            content="Version one of the FundMe Smart Contract"
+                        />
+                    </Head>
+                </div>
+            )}
         </div>
     )
 }

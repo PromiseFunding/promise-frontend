@@ -116,6 +116,8 @@ export interface fundSummary {
     totalLifetimeStraightFunded: BigNumber
     totalLifetimeInterestFunded: BigNumber
     amountWithdrawnByOwner: BigNumber
+    owner: string
+    assetAddress: string
 }
 
 export interface databaseFundObject {
