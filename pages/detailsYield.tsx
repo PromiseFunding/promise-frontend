@@ -16,7 +16,6 @@ import Header from "../components/Header"
 import StateStatusYield from "../components/discover/StateStatusYield"
 import TabsContent from "../components/details/TabsContent"
 import DonateYield from "../components/details/DonateYield"
-import Withdraw from "../components/details/Withdraw"
 import WithdrawYield from "../components/details/WithdrawYield"
 
 const Details: NextPage = () => {
@@ -175,6 +174,7 @@ const Details: NextPage = () => {
                                             ></DonateYield>
                                             <WithdrawYield
                                                 fundAddress={fundAddress}
+                                                decimals={decimals!}
                                                 fundSummary={fundSummary}
                                                 funderSummaryYield={funderSummary}
                                                 onGetFunderInfo={() => {
@@ -188,6 +188,7 @@ const Details: NextPage = () => {
                                     {userAddress == owner ? (
                                         <WithdrawYield
                                             fundAddress={fundAddress}
+                                            decimals={decimals!}
                                             fundSummary={fundSummary}
                                             funderSummaryYield={funderSummary}
                                             onGetFunderInfo={() => {
