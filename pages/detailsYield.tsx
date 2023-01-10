@@ -180,6 +180,7 @@ const Details: NextPage = () => {
                                                 onGetFunderInfo={() => {
                                                     updateFunderInfo()
                                                 }}
+                                                coinName={coinName}
                                             ></WithdrawYield>
                                         </>
                                     ) : (
@@ -194,6 +195,7 @@ const Details: NextPage = () => {
                                             onGetFunderInfo={() => {
                                                 updateFunderInfo()
                                             }}
+                                            coinName={coinName}
                                         ></WithdrawYield>
                                     ) : (
                                         <></>

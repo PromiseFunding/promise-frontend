@@ -7,6 +7,25 @@ import Button from "@mui/material/Button"
 import { BigNumber, ContractTransaction } from "ethers"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { TextField } from "@material-ui/core"
+import Modal from "@mui/material/Modal"
+import Box from "@mui/material/Box"
+import FormHelperText from "@mui/material/FormHelperText"
+import FormControl from "@mui/material/FormControl"
+import InputLabel from "@mui/material/InputLabel"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+
+const modalStyle = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "375px",
+    height: "80%",
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 3,
+    borderRadius: "25px",
+}
 
 export default function WithdrawYield(props: propType) {
     const fundAddress = props.fundAddress
@@ -14,9 +33,11 @@ export default function WithdrawYield(props: propType) {
     const owner = fundSummary!.owner
     const funderSummary = props.funderSummaryYield
     const decimals = props.decimals
+    const coinName = props.coinName
 
     const { account } = useMoralis()
 
+    const [open, setOpen] = useState(false)
     const [userAddress, setUserAddress] = useState("")
     const [val, setVal] = useState("0")
 
@@ -30,7 +51,6 @@ export default function WithdrawYield(props: propType) {
 
     const handleChangeAmount = async (event: { target: { value: SetStateAction<string> } }) => {
         const max = funderSummary!.amountWithdrawable.toNumber() / 10 ** decimals!
-        console.log(max)
         if (max == 0) {
             setVal("0")
         } else if ((event.target.value as unknown as number) > 0) {
@@ -110,6 +130,10 @@ export default function WithdrawYield(props: propType) {
         return "* There are no funds from you to withdraw from the interest donation method."
     }
 
+    const handleClose = () => {
+        setOpen(false)
+    }
+
     return (
         <div>
             {userAddress == owner.toLowerCase() ? (
@@ -130,33 +154,82 @@ export default function WithdrawYield(props: propType) {
                 </div>
             ) : (
                 <>
-                    <div style={{ width: "100%", textAlign: "center" }}>
-                        <TextField
-                            type="number"
-                            name="duration"
-                            label="Withdraw Amount"
-                            variant="filled"
-                            value={val}
-                            onChange={handleChangeAmount}
-                            style={{
-                                width: "60%",
-                                marginTop: "15px",
-                                backgroundColor: "rgb(241 245 249)",
-                                borderRadius: "10px",
-                            }}
-                        />
+                    <div>
+                        <Modal
+                            open={open}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                            onClose={handleClose}
+                        >
+                            <Box sx={modalStyle}>
+                                <div className={styles.modalForm}>
+                                    <div>
+                                        <div>
+                                            <FormHelperText style={{ textAlign: "center", fontSize: "20px", color: "black" }}>
+                                                <>
+                                                    Interest Donor Withdraw
+                                                </>
+                                            </FormHelperText>
+                                            <FormControl>
+                                                <div style={{ textAlign: "center" }}>
+                                                    <FontAwesomeIcon
+                                                        className={styles.donateIcon}
+                                                        icon={["fas", "calendar-days"]}
+                                                        mask={["fas", "square-full"]}
+                                                        size="6x"
+                                                        transform="shrink-4"
+                                                    />
+                                                </div>
+                                                <FormHelperText style={{ textAlign: "center" }}>
+                                                    <>
+                                                        You can withdraw up to{" "}
+                                                        {funderSummary!.amountWithdrawable.toNumber() / 10 ** decimals!} {coinName!}
+                                                    </>
+                                                </FormHelperText>
+                                            </FormControl>
+                                        </div>
+                                    </div>
+                                    <div style={{ width: "100%", textAlign: "center" }}>
+                                        <TextField
+                                            type="number"
+                                            name="duration"
+                                            label="Withdraw Amount"
+                                            variant="filled"
+                                            value={val}
+                                            onChange={handleChangeAmount}
+                                            style={{
+                                                width: "60%",
+                                                marginTop: "15px",
+                                                backgroundColor: "rgb(241 245 249)",
+                                                borderRadius: "10px",
+                                            }}
+                                        />
+                                    </div>
+                                    <Button
+                                        className={styles.donateButton2}
+                                        style={{ bottom: "0px" }}
+                                        onClick={async function () {
+                                            handleClose()
+                                            await withdrawFundsFromPool({
+                                                onSuccess: (tx) =>
+                                                    handleSuccess(tx as ContractTransaction),
+                                                onError: (error) => console.log(error),
+                                            })
+                                        }}
+                                    >
+                                        Withdraw
+                                    </Button>
+                                </div>
+                            </Box>
+                        </Modal>
                     </div>
-                    <br></br>
                     <div>
                         <Button
                             disabled={isDisabled()}
                             className={isDisabled() ? styles.disabledButton : styles.donateButton}
                             style={{ marginBottom: isDisabled() ? "0px" : "10px" }}
                             onClick={async function () {
-                                await withdrawFundsFromPool({
-                                    onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
-                                    onError: (error) => console.log(error),
-                                })
+                                setOpen(true)
                             }}
                         >
                             Withdraw
