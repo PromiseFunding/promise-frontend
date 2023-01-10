@@ -51,7 +51,7 @@ export default function DonateYield(props: propType) {
     const chainId: string = parseInt(chainIdHex!).toString()
 
     const [open, setOpen] = useState(false)
-    const [donateType, setDonateType] = useState("interest")
+    const [donateType, setDonateType] = useState("straight")
     const [amount, setAmount] = useState("0")
     const [userAddress, setUserAddress] = useState("0")
     const [amountFunded, setAmountFunded] = useState(0)
@@ -218,7 +218,7 @@ export default function DonateYield(props: propType) {
                                             className={styles.donateIcon}
                                             icon={[
                                                 "fas",
-                                                donateType == "straight"
+                                                donateType == "interest"
                                                     ? "calendar-days"
                                                     : "bullseye",
                                             ]}

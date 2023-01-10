@@ -1,19 +1,17 @@
 import { useEffect, useState } from "react"
 import { propType } from "../../config/types"
 import styles from "../../styles/details/details.module.css"
-import { abi } from "../../constants"
+import { yieldAbi } from "../../constants"
 import { useWeb3Contract, useMoralis } from "react-moralis"
 import Button from "@mui/material/Button"
 import { ContractTransaction } from "ethers"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 
-export default function Withdraw(props: propType) {
+export default function WithdrawYield(props: propType) {
     const fundAddress = props.fundAddress
-    const milestoneSummary = props.milestoneSummary
-    const owner = milestoneSummary!.owner
-    const funderSummary = props.funderSummary
-    const state = milestoneSummary!.state
-    const tranche = milestoneSummary!.currentTranche
+    const fundSummary = props.fundSummary
+    const owner = fundSummary!.owner
+    const funderSummary = props.funderSummaryYield
 
     const { account } = useMoralis()
 
@@ -27,34 +25,17 @@ export default function Withdraw(props: propType) {
 
     const dispatch = useNotification()
 
-    const isDisabled = (): boolean => {
-        if (state != 4) {
-            if (
-                milestoneSummary!.milestones[
-                    milestoneSummary!.currentTranche
-                ].activeRaised!.toNumber() == 0
-            ) {
-                return true
-            }
-            if (userAddress != owner.toLowerCase() && funderSummary!.fundAmount.toNumber() == 0) {
-                return true
-            }
-        }
-
-        return false
-    }
-
     const { runContractFunction: withdrawProceeds } = useWeb3Contract({
-        abi: abi,
+        abi: yieldAbi,
         contractAddress: fundAddress!,
         functionName: "withdrawProceeds",
         params: {},
     })
 
-    const { runContractFunction: withdrawProceedsFunder } = useWeb3Contract({
-        abi: abi,
+    const { runContractFunction: withdrawFundsFromPool } = useWeb3Contract({
+        abi: yieldAbi,
         contractAddress: fundAddress!,
-        functionName: "withdrawProceedsFunder",
+        functionName: "withdrawFundsFromPool",
         params: {},
     })
 
@@ -87,25 +68,27 @@ export default function Withdraw(props: propType) {
         }
     }
 
+    const isDisabled = (): boolean => {
+        if (userAddress != owner.toLowerCase() && funderSummary!.amountWithdrawable.toNumber() == 0) {
+            return true
+        }
+        if (userAddress == owner.toLowerCase() && fundSummary!.totalActiveFunded.toNumber() == 0) {
+            return true
+        }
+
+        return false
+    }
+
+    const disabledMessage = (): string => {
+        if (owner.toLowerCase() == userAddress.toLowerCase()) {
+            return "* There are no funds for you to withdraw."
+        }
+        return "* There are no funds from you to withdraw from the interest donation method."
+    }
+
     return (
         <div>
-            {state == 3 ? (
-                <div>
-                    <Button
-                        disabled={isDisabled()}
-                        className={isDisabled() ? styles.disabledButton : styles.donateButton}
-                        style={{ marginBottom: isDisabled() ? "0px" : "10px" }}
-                        onClick={async function () {
-                            await withdrawProceedsFunder({
-                                onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
-                                onError: (error) => console.log(error),
-                            })
-                        }}
-                    >
-                        Withdraw
-                    </Button>
-                </div>
-            ) : (
+            {userAddress == owner ? (
                 <div>
                     <Button
                         disabled={isDisabled()}
@@ -121,6 +104,37 @@ export default function Withdraw(props: propType) {
                         Withdraw
                     </Button>
                 </div>
+            ) : (
+                <div>
+                    <Button
+                        disabled={isDisabled()}
+                        className={isDisabled() ? styles.disabledButton : styles.donateButton}
+                        style={{ marginBottom: isDisabled() ? "0px" : "10px" }}
+                        onClick={async function () {
+                            await withdrawFundsFromPool({
+                                onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
+                                onError: (error) => console.log(error),
+                            })
+                        }}
+                    >
+                        Withdraw
+                    </Button>
+                </div>
+            )}
+            {isDisabled() ? (
+                <div
+                    className={styles.disabledText}
+                    style={
+                        {
+                            "--visibility": isDisabled() ? "visible" : "hidden",
+                            "--position": isDisabled() ? "relative" : "absolute",
+                        } as React.CSSProperties
+                    }
+                >
+                    {disabledMessage()}
+                </div>
+            ) : (
+                <div></div>
             )}
         </div>
     )

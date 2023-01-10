@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { ref, onValue } from "firebase/database"
 import { database } from "../firebase-config"
-import { databaseFundObject, fundSummary, funderSummary} from "../config/types"
+import { databaseFundObject, fundSummary, funderSummaryYield } from "../config/types"
 import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
 import styles from "../styles/details/details.module.css"
@@ -15,9 +15,9 @@ import Head from "next/head"
 import Header from "../components/Header"
 import StateStatusYield from "../components/discover/StateStatusYield"
 import TabsContent from "../components/details/TabsContent"
-import Donate from "../components/details/Donate"
+import DonateYield from "../components/details/DonateYield"
 import Withdraw from "../components/details/Withdraw"
-
+import WithdrawYield from "../components/details/WithdrawYield"
 
 const Details: NextPage = () => {
     const router = useRouter()
@@ -29,20 +29,17 @@ const Details: NextPage = () => {
     const [data, setData] = useState<databaseFundObject>()
     const [assetAddress, setAssetAddress] = useState("")
     const [owner, setOwner] = useState("")
-    const [amt, setAmt] = useState(0)
-    const [state, setState] = useState(0)
-    const [tranche, setTranche] = useState(0)
-    const [timeLeft, setTimeLeft] = useState(100)
-    const [totalFunds, setTotalFunds] = useState(0)
-    const [milestoneDurations, setMilestoneDurations] = useState<number[]>()
-    const [funderCalledVote, setFunderCalledVote] = useState<boolean>(false)
-    const [numVotesTried, setNumVotesTried] = useState(0)
-    const [timeLeftVoting, setTimeLeftVoting] = useState(0)
+    const [totalActiveFunded, settotalActiveFunded] = useState(0)
+    const [totalActiveInterestFunded, settotalActiveInterestFunded] = useState(0)
+    const [totalLifetimeFunded, settotalLifetimeFunded] = useState(0)
+    const [totalLifetimeStraightFunded, settotalLifetimeStraightFunded] = useState(0)
+    const [totalLifetimeInterestFunded, settotalLifetimeInterestFunded] = useState(0)
+    const [amountWithdrawnByOwner, setamountWithdrawnByOwner] = useState(0)
+    const [lockTime, setLockTime] = useState(0)
     const [fundSummary, setFundSummary] = useState<fundSummary>()
-    const [funderSummary, setFunderSummary] = useState<funderSummary>()
+    const [funderSummary, setFunderSummary] = useState<funderSummaryYield>()
 
     const [funderParam, setFunderParam] = useState("")
-    const [levelParam, setLevelParam] = useState(0)
     const [userAddress, setUserAddress] = useState("")
 
     const addresses: contractAddressesInterface = contractAddresses
@@ -67,9 +64,7 @@ const Details: NextPage = () => {
         params: {},
     })
 
-    const {
-        runContractFunction: getFunderSummary,
-    } = useWeb3Contract({
+    const { runContractFunction: getFunderSummary } = useWeb3Contract({
         abi: yieldAbi,
         contractAddress: fundAddress!,
         functionName: "getFunderSummary",
@@ -77,7 +72,7 @@ const Details: NextPage = () => {
     })
 
     async function updateFunderInfo() {
-        const funderInfo = (await getFunderSummary()) as funderSummary
+        const funderInfo = (await getFunderSummary()) as funderSummaryYield
         setFunderSummary(funderInfo)
         updateUI()
     }
@@ -89,12 +84,25 @@ const Details: NextPage = () => {
         const assetAddressFromCall = fundInfo.assetAddress
         setAssetAddress(assetAddressFromCall!)
         setOwner((ownerFromCall as String).toLowerCase())
+        const totalActiveFunded = fundInfo.totalActiveFunded
+        const totalActiveInterestFunded = fundInfo.totalActiveInterestFunded
+        const totalLifetimeFunded = fundInfo.totalLifetimeFunded
+        const totalLifetimeStraightFunded = fundInfo.totalLifetimeStraightFunded
+        const totalLifetimeInterestFunded = fundInfo.totalLifetimeInterestFunded
+        const totalWithdrawnByOwner = fundInfo.totalWithdrawnByOwner
+        const lockTime = fundInfo.i_lockTime
+        settotalActiveFunded(totalActiveFunded.toNumber() / 10 ** decimals!)
+        settotalActiveInterestFunded(totalActiveInterestFunded.toNumber() / 10 ** decimals!)
+        settotalLifetimeFunded(totalLifetimeFunded.toNumber() / 10 ** decimals!)
+        settotalLifetimeStraightFunded(totalLifetimeStraightFunded.toNumber() / 10 ** decimals!)
+        settotalLifetimeInterestFunded(totalLifetimeInterestFunded.toNumber() / 10 ** decimals!)
+        setamountWithdrawnByOwner(totalWithdrawnByOwner.toNumber() / 10 ** decimals!)
+        setLockTime(lockTime.toNumber())
     }
 
     useEffect(() => {
         if (isWeb3Enabled && fundAddress) {
             setFunderParam(userAddress)
-            setLevelParam(tranche)
         }
     }, [isWeb3Enabled, fundAddress, userAddress])
 
@@ -119,75 +127,73 @@ const Details: NextPage = () => {
     return (
         <div>
             <Header main={false}></Header>
-
-            <Head>
-                <title>YieldMe Version 1.0</title>
-                <meta name="description" content="Version one of the FundMe Smart Contract" />
-            </Head>
-            <br></br>
-            <div className="p-5 bg-slate-700 text-slate-200 rounded border-2 border-slate-500">
-                {data ? (
-                    <div>
-                        <div className={styles.details}>
-                            <div className="p-5 rounded content-center">
-                                <h1 className="text-5xl font-bold text-slate-200">
-                                    {data.fundTitle}
-                                </h1>
-                                <div className="py-5">
-                                    <CardMedia
-                                        component="img"
-                                        height="140"
-                                        width="140"
-                                        image={data.imageURL}
-                                        alt="fundraiser"
-                                        sx={{
-                                            width: 800,
-                                            height: 800,
-                                        }}
-                                    />
-                                </div>
-                                <br></br>
-                                <div className="font-bold">
-                                    <h1 className="text-2xl">Description:</h1>
-                                    <br></br>
-                                    <div className="font-normal">{data.description}</div>
-                                </div>
-                                <br></br>
-                                <div className="font-bold">
-                                    <div className="font-normal">
-                                        {" "}
-                                        <b className="text-2xl">Category:</b> {data.category}
-                                    </div>
-                                </div>
+            {data && fundSummary && funderSummary ? (
+                <div className={styles.detailsMain}>
+                    <Head>
+                        <title>
+                            {data.fundTitle}: {data.description}
+                        </title>
+                        <meta
+                            name="description"
+                            content="Version one of the FundMe Smart Contract"
+                        />
+                    </Head>
+                    <div className={styles.title}>{data.fundTitle}</div>
+                    <div className={styles.contentMain}>
+                        <div className={styles.content}>
+                            <div className={styles.mainImage}>
+                                <Image
+                                    src={data.imageURL}
+                                    alt="Fundraiser Image"
+                                    layout="fill"
+                                    objectFit="cover"
+                                    style={{ borderRadius: "20px" }}
+                                ></Image>
                             </div>
-                            <div className={styles.sticky}>
-                                <div className="text-center flex flex-col border-2 border-slate-500">
-                                    <hr className="h-px bg-gray-200 border-0 dark:bg-gray-700" />
-                                    {isWeb3Enabled && owner != userAddress ? (
+                            <div className={styles.textArea}>{data.description} </div>
+                        </div>
+                        <div className={styles.actionsOuter}>
+                            <div className={styles.actionsInner}>
+                                <StateStatusYield
+                                    fundAddress={fundAddress}
+                                    fundSummary={fundSummary}
+                                    decimals={decimals!}
+                                    format="details"
+                                ></StateStatusYield>
+                                <div className={styles.buttons}>
+                                    {userAddress != owner ? (
                                         <>
                                             <Button className={styles.shareButton}>Share</Button>
-                                            <Donate
+                                            <DonateYield
                                                 fundAddress={fundAddress}
                                                 decimals={decimals!}
                                                 fundSummary={fundSummary}
-                                                funderSummary={funderSummary}
+                                                funderSummaryYield={funderSummary}
                                                 onGetFunderInfo={() => {
                                                     updateFunderInfo()
                                                 }}
-                                            ></Donate>
+                                            ></DonateYield>
+                                            <WithdrawYield
+                                                fundAddress={fundAddress}
+                                                fundSummary={fundSummary}
+                                                funderSummaryYield={funderSummary}
+                                                onGetFunderInfo={() => {
+                                                    updateFunderInfo()
+                                                }}
+                                            ></WithdrawYield>
                                         </>
                                     ) : (
                                         <></>
                                     )}
                                     {userAddress == owner ? (
-                                        <Withdraw
+                                        <WithdrawYield
                                             fundAddress={fundAddress}
                                             fundSummary={fundSummary}
-                                            funderSummary={funderSummary}
+                                            funderSummaryYield={funderSummary}
                                             onGetFunderInfo={() => {
                                                 updateFunderInfo()
                                             }}
-                                        ></Withdraw>
+                                        ></WithdrawYield>
                                     ) : (
                                         <></>
                                     )}
