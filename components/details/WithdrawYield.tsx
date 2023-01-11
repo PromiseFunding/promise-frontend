@@ -129,7 +129,7 @@ export default function WithdrawYield(props: propType) {
         if (owner.toLowerCase() == userAddress.toLowerCase()) {
             return "* There are no funds for you to withdraw."
         }
-        return "* There are no funds from you to withdraw from the interest donation method."
+        return "* There are no funds for you to withdraw from the interest donation method."
     }
 
     const handleClose = () => {
@@ -180,7 +180,7 @@ export default function WithdrawYield(props: propType) {
                             } as React.CSSProperties
                         }
                     >
-                        * The timelock is still going. You have {timeLeftFunder} seconds left
+                        * The timelock is still going. You have {timeLeftFunder} seconds left before withdrawing becomes available.
                     </div>
                 </>
             ) : (
