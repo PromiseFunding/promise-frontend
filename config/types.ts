@@ -120,12 +120,14 @@ export interface fundSummary {
     owner: string
     assetAddress: string
     i_lockTime: BigNumber
+    withdrawableInterestProceeds: BigNumber
 }
 
 export interface funderSummaryYield {
     amountWithdrawable: BigNumber
     amountTotal: BigNumber
     entryTime: BigNumber
+    timeLeftLock: BigNumber
 }
 
 export interface databaseFundObject {

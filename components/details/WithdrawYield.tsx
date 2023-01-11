@@ -40,11 +40,13 @@ export default function WithdrawYield(props: propType) {
     const [open, setOpen] = useState(false)
     const [userAddress, setUserAddress] = useState("")
     const [val, setVal] = useState("0")
+    const [timeLeftFunder, settimeLeftFunder] = useState(0)
 
     useEffect(() => {
         if (account) {
             setUserAddress(account)
         }
+        settimeLeftFunder(funderSummary!.timeLeftLock.toNumber())
     }, [account])
 
     const dispatch = useNotification()
@@ -152,6 +154,35 @@ export default function WithdrawYield(props: propType) {
                         Withdraw
                     </Button>
                 </div>
+            ) : timeLeftFunder > 0 ? (
+                <>
+                    <div>
+                        <Button
+                            disabled={true}
+                            className={styles.disabledButton}
+                            style={{ marginBottom: "0px" }}
+                            onClick={async function () {
+                                await withdrawFundsFromPool({
+                                    onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
+                                    onError: (error) => console.log(error),
+                                })
+                            }}
+                        >
+                            Withdraw
+                        </Button>
+                    </div>
+                    <div
+                        className={styles.disabledText}
+                        style={
+                            {
+                                "--visibility": "visible",
+                                "--position": "relative",
+                            } as React.CSSProperties
+                        }
+                    >
+                        * The timelock is still going. You have {timeLeftFunder} seconds left
+                    </div>
+                </>
             ) : (
                 <>
                     <div>
@@ -165,10 +196,14 @@ export default function WithdrawYield(props: propType) {
                                 <div className={styles.modalForm}>
                                     <div>
                                         <div>
-                                            <FormHelperText style={{ textAlign: "center", fontSize: "20px", color: "black" }}>
-                                                <>
-                                                    Interest Donor Withdraw
-                                                </>
+                                            <FormHelperText
+                                                style={{
+                                                    textAlign: "center",
+                                                    fontSize: "20px",
+                                                    color: "black",
+                                                }}
+                                            >
+                                                <>Interest Donor Withdraw</>
                                             </FormHelperText>
                                             <FormControl>
                                                 <div style={{ textAlign: "center" }}>
@@ -183,7 +218,9 @@ export default function WithdrawYield(props: propType) {
                                                 <FormHelperText style={{ textAlign: "center" }}>
                                                     <>
                                                         You can withdraw up to{" "}
-                                                        {funderSummary!.amountWithdrawable.toNumber() / 10 ** decimals!} {coinName!}
+                                                        {funderSummary!.amountWithdrawable.toNumber() /
+                                                            10 ** decimals!}{" "}
+                                                        {coinName!}
                                                     </>
                                                 </FormHelperText>
                                             </FormControl>
