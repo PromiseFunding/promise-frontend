@@ -34,6 +34,7 @@ export default function WithdrawYield(props: propType) {
     const funderSummary = props.funderSummaryYield
     const decimals = props.decimals
     const coinName = props.coinName
+    const entryTime = funderSummary!.entryTime
 
     const { account } = useMoralis()
 
@@ -47,7 +48,7 @@ export default function WithdrawYield(props: propType) {
             setUserAddress(account)
         }
         settimeLeftFunder(funderSummary!.timeLeftLock.toNumber())
-    }, [account])
+    }, [account, entryTime])
 
     const dispatch = useNotification()
 
