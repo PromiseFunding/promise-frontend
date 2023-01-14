@@ -18,10 +18,19 @@ export default function StateStatusYield(props: propType) {
     const fundSummary = props.fundSummary
     const funderSummary = props.funderSummaryYield
     const decimals = props.decimals
+    const coinName = props.coinName
 
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
     const chainIdNum = parseInt(chainIdHex!)
     const chainId: string = parseInt(chainIdHex!).toString()
+    const [totalActiveFunded, settotalActiveFunded] = useState(0)
+    const [totalActiveInterestFunded, settotalActiveInterestFunded] = useState(0)
+    const [totalLifetimeFunded, settotalLifetimeFunded] = useState(0)
+    const [totalLifetimeStraightFunded, settotalLifetimeStraightFunded] = useState(0)
+    const [totalLifetimeInterestFunded, settotalLifetimeInterestFunded] = useState(0)
+    const [amountWithdrawnByOwner, setamountWithdrawnByOwner] = useState(0)
+    const [asset, setAsset] = useState("")
+    const [userAddress, setUserAddress] = useState("")
     const [percent, setPercent] = useState(0)
     const [tranche, setTranche] = useState(0)
     const [state, setState] = useState(0)
@@ -58,6 +67,7 @@ export default function StateStatusYield(props: propType) {
         const totalLifetimeInterestFunded = fundInfo.totalLifetimeInterestFunded
         const totalWithdrawnByOwner = fundInfo.totalWithdrawnByOwner
         const lockTime = fundInfo.i_lockTime
+        const withdrawableProceeds = fundInfo.withdrawableInterestProceeds
         setLockTime(lockTime.toNumber())
         setOwner(fundInfo.owner.toLowerCase())
         const assetAddressFromCall = fundInfo.assetAddress
@@ -70,22 +80,42 @@ export default function StateStatusYield(props: propType) {
             const percent = (roundDuration!.toNumber() - timeLeftFromCall.toNumber()) / roundDuration!.toNumber() * 100
             setPercent(percent)
         }
-        const amountRaisedFromCall = tranchesFromCall[currentTrancheFromCall].totalRaised
-        const amountRaisedTotalFromCall = milestoneInfo.lifeTimeRaised
-        const amountRaisedPreFromCall = milestoneInfo.preTotalFunds
-        const assetAddressFromCall = milestoneInfo.assetAddress
-        const coinName = getAssetName(assetAddressFromCall!)
-        const votesTriedFromCall = milestoneInfo.votesTried
-        setOwner(milestoneInfo.owner.toLowerCase())
-        setAsset(coinName)
-        setAmountRaisedMilestone(+(amountRaisedFromCall!.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
-        setAmountRaisedTotal(+(amountRaisedTotalFromCall!.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
-        // props.onChangeAmount!(+(amountRaisedTotalFromCall!.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
-        setAmountRaisedPre(+(amountRaisedPreFromCall!.toNumber() / 10 ** tokenConfig[chainIdNum][coinName].decimals!).toFixed(2))
-        setPreFundingEnd(milestoneInfo.preFundingEnd.toNumber())
-        setRoundEnd(milestoneInfo.roundEnd.toNumber())
-        setTimeLeftVoting(milestoneInfo.timeLeftVoting.toNumber())
-        setVotesTried(votesTriedFromCall.toNumber())
+        settotalActiveFunded(
+            +(
+                totalActiveFunded.toNumber() /
+                10 ** tokenConfig[chainIdNum][coinName].decimals!
+            ).toFixed(2)
+        )
+        settotalActiveInterestFunded(
+            +(
+                totalActiveInterestFunded.toNumber() /
+                10 ** tokenConfig[chainIdNum][coinName].decimals!
+            ).toFixed(2)
+        )
+        settotalLifetimeFunded(
+            +(
+                totalLifetimeFunded.toNumber() /
+                10 ** tokenConfig[chainIdNum][coinName].decimals!
+            ).toFixed(2)
+        )
+        settotalLifetimeStraightFunded(
+            +(
+                totalLifetimeStraightFunded.toNumber() /
+                10 ** tokenConfig[chainIdNum][coinName].decimals!
+            ).toFixed(2)
+        )
+        settotalLifetimeInterestFunded(
+            +(
+                totalLifetimeInterestFunded.toNumber() /
+                10 ** tokenConfig[chainIdNum][coinName].decimals!
+            ).toFixed(2)
+        )
+        setamountWithdrawnByOwner(
+            +(
+                totalWithdrawnByOwner.toNumber() /
+                10 ** tokenConfig[chainIdNum][coinName].decimals!
+            ).toFixed(2)
+        )
         if (format != "discover") {
             const amountFundedFromCall = funderSummary!.fundAmount.toNumber()
             setWithdrawableAmount(amountFundedFromCall / 10 ** decimals!)
@@ -137,118 +167,72 @@ export default function StateStatusYield(props: propType) {
     return (
         <div className={styles.stateStatus}>
             {format == "discover" ? (
-                <div>
-                    {state == 4 ? (
-                        <>Seed Funding Round
-                            <BorderLinearProgress variant="determinate" value={percent} />
-                            {amountRaisedPre.toLocaleString("en-US")} {asset} Raised
-                        </>)
-                        :
-                        (<>Milestone {tranche + 1}: <b>{milestoneName}</b>
-                            <BorderLinearProgress variant="determinate" value={percent} />
-                            {amountRaisedTotal.toLocaleString("en-US")} {asset} Raised
-                            <br></br>
-                        </>)}
-                </div>
-            ) : (<div>
-                {state == 4 ? (
-                    <>
-                        <div style={{ marginBottom: "10px" }}>
-                            <b style={{ fontSize: "40px", color: "green", fontWeight: "400" }}>{amountRaisedPre.toLocaleString("en-US")}</b>
-                            <div style={{ fontWeight: "700" }}>{asset} Raised</div>
-                        </div>
-                        {timeLeft > 0 ? (
-                            <div>
-                                The fundraiser will accept seed donations until {convertSeconds(preFundingEnd)}
-                            </div>
-                        ) : (
-                            <div>
-                                {owner == userAddress ? `The seed funding round ended ${convertSeconds(preFundingEnd)}. You may now withdraw the proceeds raised.` :
-                                    `The seed funding round ended ${convertSeconds(preFundingEnd)}. The fundraiser will soon start taking donations again once the owner starts the first milestone round.
-                                 `}
-
-                            </div>)}
-                        <div style={{ marginTop: "10px", marginBottom: "10px", textAlign: "center" }}>
-                            <BorderLinearProgress sx={{ height: "20px", borderRadius: "30px" }} variant="determinate" value={percent} />
-                            <div style={{ fontSize: "10px" }}>Seed round progress</div>
-                        </div>
-                    </>)
-                    :
-
-                    (
-                        <div>
-                            {state == 3 ? (
-                                <div style={{ marginBottom: "10px" }}>
-                                    <b style={{ fontSize: "20px", color: "red", fontWeight: "400" }}>Fundraiser Ended.</b>
-                                    {owner == userAddress ? (<div>The funders of this project have determined that you did not live up to the promises of the milestones and will now be able to withdraw their money.</div>) : (
-                                        <div>
-                                            The funders of this project have determined the creator did not live up to the promises made for this milestone.
-                                            <div style={{ textAlign: "center", marginTop: "20px" }}>
-                                                <h1 style={{ fontSize: "40px", color: "green", fontWeight: "400" }}>{withdrawableAmount.toLocaleString("en-US")} {asset}</h1>
-                                                Available to withdraw
+                <>
+                    <div style={{ fontWeight: "500", fontSize: "15px" }}>
+                        <b style={{ color: "green" }}>
+                            {totalLifetimeFunded.toLocaleString("en-US")}
+                        </b>{" "}
+                        {asset} Pledged
+                    </div>
+                    {/* <Tooltip
+                            title={
+                                <>
+                                    <div>
+                                        <>
+                                            <div style={{ color: "lightgreen" }}>
+                                                {totalLifetimeStraightFunded.toLocaleString(
+                                                    "en-US"
+                                                )}{" "}
+                                                {asset} Straight Donated
                                             </div>
-
-                                        </div>
-                                    )}
-                                </div>
-                            ) : (
-                                <div>
-                                    <div style={{ marginBottom: "10px" }}>
-                                        <b style={{ fontSize: "40px", color: "green", fontWeight: "400" }}>{amountRaisedMilestone.toLocaleString("en-US")}</b>
-                                        <div>{asset} Raised in <b>{milestoneName}</b> of <b style={{ color: "green", fontWeight: "400" }}>{amountRaisedTotal} </b> {asset} Total.
-                                        </div>
+                                            <div style={{ color: "lightblue" }}>
+                                                {totalLifetimeInterestFunded.toLocaleString(
+                                                    "en-US"
+                                                )}{" "}
+                                                {asset} &apos;Lossless&apos; Donated
+                                            </div>
+                                        </>
                                     </div>
-                                    {state == 1 ? (
-                                        <h1 style={{ fontSize: "20px", color: timeLeftVoting > 172800 ? "green" : timeLeftVoting > 86400 ? "orange" : "red" }}>
-                                            {timeLeftVoting > 0 ? `${formatDuration(timeLeftVoting)} left in voting period.` : "The voting period has ended. Anyone may now end the vote to process the results."}
-                                        </h1>) : (
-                                        <div>
-                                            {state == 2 ? (
-                                                <div>
-                                                    {milestoneInfo.withdrawExpired && userAddress != owner.toLowerCase() ? (
-                                                        <h1 style={{ fontWeight: "500", color: "red" }}>
-                                                            The Creator has not withdrawn the funds in the 30 day period. Anyone may now terminate the fundraiser to release the remaining funds back to the fundraisers.
-                                                        </h1>) : (
-                                                        <div>
-                                                            {milestoneInfo.milestones[milestoneInfo.currentTranche].activeRaised!.toNumber() ? (
-                                                                <div>
-                                                                    {userAddress == owner.toLowerCase() ?
-                                                                        (milestoneInfo.currentTranche + 1 != milestoneInfo.milestones.length ? "Milestone vote successful! You may now withdraw the funds raised in this milestone. The next milestone will start immediately upon withdrawal." : "Milestone vote successful! You may now withdraw the final funds raised in this fundraiser. If you wish, you may add another milestone to continue the fundraiser.")
-                                                                        : (milestoneInfo.currentTranche + 1 != milestoneInfo.milestones.length ? "Milestone vote successful. The next Milestone will start after the creator withdraws the funds raised." : "Milestone vote successful. The creator may now withdraw the final funds raised for the fundraiser. ")}</div>
-                                                            ) : (<h1>All funds have been withdrawn, the fundraiser is complete.</h1>)
-
-                                                            }</div>)}
-
-
-
-                                                </div>) : (
-                                                <div>
-                                                    {votesTried < 1 ? (
-                                                        <div>
-                                                            <div style={{ marginTop: "10px", marginBottom: "10px", textAlign: "center" }}>
-                                                                Milestone {tranche + 1} of {milestoneInfo.milestones.length}: <b>{milestoneName}</b>
-                                                                <BorderLinearProgress sx={{ height: "20px", borderRadius: "30px" }} variant="determinate" value={percent} />
-                                                                <div style={{ fontSize: "10px" }}>milestone progress</div>
-                                                            </div>
-
-                                                            The fundraiser will accept donations for this milestone until {convertSeconds(roundEnd)}
-                                                        </div>) : (
-                                                        <h1>The initial vote for this milestone failed. It is now eligible for a re-vote to determine the final status of the fundraiser.</h1>
-                                                    )}
-
-                                                </div>)}
-                                        </div>
-                                    )}
-
-                                </div>
-                            )
+                                </>
                             }
-                        </div>
-                    )
-                }
-            </div >)
-            }
-
-        </div >
+                            placement="right"
+                            arrow
+                        >
+                            <BorderLinearProgress variant="determinate" value={percent} />
+                        </Tooltip> */}
+                    <br></br>
+                </>
+            ) : (
+                <>
+                    {userAddress == owner ? (
+                        <>
+                            <div>
+                                <div
+                                    style={{
+                                        marginTop: "10px",
+                                        marginBottom: "10px",
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    Amount You Can Withdraw {totalLifetimeFunded}:
+                                </div>
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div
+                                style={{
+                                    marginTop: "10px",
+                                    marginBottom: "10px",
+                                    textAlign: "center",
+                                }}
+                            >
+                                Amount You Can Withdraw {withdrawableAmount}:
+                            </div>
+                        </>
+                    )}
+                </>
+            )}
+        </div>
     )
 }

@@ -158,6 +158,7 @@ const Details: NextPage = () => {
                                     fundSummary={fundSummary}
                                     decimals={decimals!}
                                     format="details"
+                                    coinName={coinName}
                                 ></StateStatusYield>
                                 <div className={styles.buttons}>
                                     {userAddress != owner ? (
