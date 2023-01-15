@@ -147,6 +147,8 @@ export default function StateStatus(props: propType) {
                             <b style={{ color: "green" }}>{amountRaisedTotal.toLocaleString("en-US")} </b>{asset} Raised
                         </>)}
 
+                        
+
                 </div>
             ) : (<div>
                 {state == 4 ? (
