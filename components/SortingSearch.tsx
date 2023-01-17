@@ -1,19 +1,28 @@
-import { Fragment } from 'react'
-import { Menu, Transition } from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { Fragment } from "react"
+import { Menu, Transition } from "@headlessui/react"
+import { ChevronDownIcon } from "@heroicons/react/20/solid"
 import Link from "next/link"
 import styles from "../styles/Home.module.css"
+import { useEffect, useState } from "react"
 
 function classNames(...classes: any[]) {
-    return classes.filter(Boolean).join(' ')
+    return classes.filter(Boolean).join(" ")
 }
 
 export default function SortSelector(props: { onChangeSort?(arg0: void): void }) {
+    const [type, setType] = useState("Sort By")
+
     return (
         <Menu as="div" className={props.onChangeSort ? styles.drawerItem : styles.category}>
             <div>
-                <Menu.Button className={props.onChangeSort ?"inline-flex justify-center rounded text-black-header"  : "inline-flex justify-center rounded py-2 text-black-header hover:text-purple-header"}>
-                    Sort By
+                <Menu.Button
+                    className={
+                        props.onChangeSort
+                            ? "inline-flex justify-center rounded text-black-header"
+                            : "inline-flex justify-center rounded py-2 text-black-header hover:text-purple-header"
+                    }
+                >
+                    {type}
                     <ChevronDownIcon className="-mr-1 ml-2 h-5 w-5" aria-hidden="true" />
                 </Menu.Button>
             </div>
@@ -33,11 +42,20 @@ export default function SortSelector(props: { onChangeSort?(arg0: void): void })
                             {({ active }) => (
                                 <Link legacyBehavior href="/discover">
                                     <a
-
                                         className={classNames(
-                                            active ? 'bg-gray-100 text-gray-900' : 'text-gray-700 hover:text-purple-header hover:bg-background-header',
-                                            'block px-4 py-2 text-lg'
-                                        )} onClick={(e) => { if (props.onChangeSort) { props.onChangeSort() } }}
+                                            active
+                                                ? "bg-gray-100 text-gray-900"
+                                                : "text-gray-700 hover:text-purple-header hover:bg-background-header",
+                                            "block px-4 py-2 text-lg"
+                                        )}
+                                        onClick={(e) => {
+                                            {
+                                                setType("Sort By")
+                                            }
+                                            if (props.onChangeSort) {
+                                                props.onChangeSort()
+                                            }
+                                        }}
                                     >
                                         ---
                                     </a>
@@ -45,6 +63,54 @@ export default function SortSelector(props: { onChangeSort?(arg0: void): void })
                             )}
                         </Menu.Item>
                         <Menu.Item>
+                            {({ active }) => (
+                                <Link legacyBehavior href="/discover/?sortby=promise">
+                                    <a
+                                        className={classNames(
+                                            active
+                                                ? "bg-gray-100 text-gray-900"
+                                                : "text-gray-700 hover:text-purple-header hover:bg-background-header",
+                                            "block px-4 py-2 text-lg"
+                                        )}
+                                        onClick={(e) => {
+                                            {
+                                                setType("Promise Funds")
+                                            }
+                                            if (props.onChangeSort) {
+                                                props.onChangeSort()
+                                            }
+                                        }}
+                                    >
+                                        Promise Funds
+                                    </a>
+                                </Link>
+                            )}
+                        </Menu.Item>
+                        <Menu.Item>
+                            {({ active }) => (
+                                <Link legacyBehavior href="/discover/?sortby=yield">
+                                    <a
+                                        className={classNames(
+                                            active
+                                                ? "bg-gray-100 text-gray-900"
+                                                : "text-gray-700 hover:text-purple-header hover:bg-background-header",
+                                            "block px-4 py-2 text-lg"
+                                        )}
+                                        onClick={(e) => {
+                                            {
+                                                setType("Yield Funds")
+                                            }
+                                            if (props.onChangeSort) {
+                                                props.onChangeSort()
+                                            }
+                                        }}
+                                    >
+                                        Yield Funds
+                                    </a>
+                                </Link>
+                            )}
+                        </Menu.Item>
+                        {/* <Menu.Item>
                             {({ active }) => (
                                 <Link legacyBehavior href="/discover/?sortby=top5">
                                     <a
@@ -73,7 +139,7 @@ export default function SortSelector(props: { onChangeSort?(arg0: void): void })
                                     </a>
                                 </Link>
                             )}
-                        </Menu.Item>
+                        </Menu.Item> */}
                     </div>
                 </Menu.Items>
             </Transition>

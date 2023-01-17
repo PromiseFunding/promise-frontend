@@ -106,8 +106,33 @@ export default function Search(props: propTypeFunds) {
         return newFilter
     }
 
+    const filterSorting = async (funds: string[]) => {
+        const newFilter: string[] = []
+
+        if (sortBy == "") {
+            return funds
+        } else {
+            for (const fund of funds) {
+                const typeRef = ref(database, chainId + "/funds/" + fund + "/type")
+                const snapshot = await get(typeRef)
+                const typeVal = snapshot.val()
+                if (typeVal && typeVal.toLowerCase().split(" ")[0] == sortBy.toLowerCase()) {
+                    newFilter.push(fund)
+                }
+            }
+        }
+
+        return newFilter
+    }
+
     const updateCategories = async () => {
         filterCategories(props.fundAddressArray).then((value) => {
+            setFilteredData(value)
+        })
+    }
+
+    const updateSorting = async () => {
+        filterSorting(props.fundAddressArray).then((value) => {
             setFilteredData(value)
         })
     }
@@ -136,9 +161,9 @@ export default function Search(props: propTypeFunds) {
         updateCategories()
     }, [props.fundAddressArray, category])
 
-    // useEffect(() => {
-    //     updateSorting()
-    // }, [sortBy])
+    useEffect(() => {
+        updateSorting()
+    }, [sortBy])
 
     useEffect(() => {
         setPage(1)

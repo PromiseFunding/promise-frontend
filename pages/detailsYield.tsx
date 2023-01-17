@@ -214,9 +214,6 @@ const Details: NextPage = () => {
                             coinName={coinName}
                             fundSummary={fundSummary}
                             funderSummaryYield={funderSummary}
-                            onChangeAmountFunded={() => {
-                                updateFunderInfo()
-                            }}
                         ></TabsContentYield>
                     </div>
                 </div>
