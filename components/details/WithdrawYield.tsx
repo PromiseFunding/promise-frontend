@@ -119,7 +119,8 @@ export default function WithdrawYield(props: propType) {
         ) {
             return true
         }
-        if (userAddress == owner.toLowerCase() && fundSummary!.totalActiveFunded.toNumber() == 0) {
+        //interestProceeds + totalActiveFunded - totalActiveInterestFunded
+        if (userAddress == owner.toLowerCase() && ((fundSummary!.withdrawableInterestProceeds.toNumber() + fundSummary!.totalActiveFunded.toNumber() - fundSummary!.totalActiveInterestFunded.toNumber()) == 0)) {
             return true
         }
 

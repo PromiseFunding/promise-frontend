@@ -14,7 +14,7 @@ import Button from "@mui/material/Button"
 import Head from "next/head"
 import Header from "../components/Header"
 import StateStatusYield from "../components/discover/StateStatusYield"
-import TabsContent from "../components/details/TabsContent"
+import TabsContentYield from "../components/details/TabsContentYield"
 import DonateYield from "../components/details/DonateYield"
 import WithdrawYield from "../components/details/WithdrawYield"
 
@@ -206,22 +206,18 @@ const Details: NextPage = () => {
                         </div>
                     </div>
                     <div className={styles.contentLower}>
-                        {/* <TabsContent
+                        <TabsContentYield
                             fundAddress={fundAddress}
-                            tranche={tranche}
-                            milestoneDurations={milestoneDurations}
                             ownerFund={owner}
                             decimals={decimals!}
                             userAddress={userAddress}
-                            currState={state}
-                            totalRaised={totalFunds}
                             coinName={coinName}
-                            milestoneSummary={milestoneSummary}
-                            funderSummary={funderSummary}
-                            onChangeState={() => {
-                                updateUI()
+                            fundSummary={fundSummary}
+                            funderSummaryYield={funderSummary}
+                            onChangeAmountFunded={() => {
+                                updateFunderInfo()
                             }}
-                        ></TabsContent> */}
+                        ></TabsContentYield>
                     </div>
                 </div>
             ) : (
