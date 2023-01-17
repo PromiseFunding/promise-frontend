@@ -90,7 +90,7 @@ export default function StateStatusYield(props: propType) {
             +(
                 totalActiveInterestFunded.toNumber() /
                 10 ** tokenConfig[chainIdNum][coinName].decimals!
-            ).toFixed(2)
+            ).toFixed(decimals)
         )
         settotalLifetimeFunded(
             +(
