@@ -125,6 +125,7 @@ export interface fundSummary {
 
 export interface funderSummaryYield {
     amountWithdrawable: BigNumber
+    amountStraightTotal: BigNumber
     amountTotal: BigNumber
     entryTime: BigNumber
     timeLeftLock: BigNumber

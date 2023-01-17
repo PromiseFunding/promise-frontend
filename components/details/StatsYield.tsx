@@ -88,7 +88,7 @@ export default function StatsYield(props: propType) {
 
     const getDataFunder = () => {
         const newData = {
-            labels: ["Life Time Contributed", "Total Straight Donated", "Amount Withdrawable"],
+            labels: ["Life Time Contributed", "Total Straight Donated", "Amount Withdrawable (Interest Method)"],
             datasets: [
                 {
                     label: `Total Amount Raised (${coinName})`,
@@ -113,7 +113,7 @@ export default function StatsYield(props: propType) {
             funderSummaryYield.amountWithdrawable.toNumber() / 10 ** decimals
         )
         newData.datasets[0].data.unshift(
-            funderSummaryYield.amountTotal.toNumber() / 10 ** decimals
+            funderSummaryYield.amountStraightTotal.toNumber() / 10 ** decimals
         )
         newData.datasets[0].data.unshift(
             funderSummaryYield.amountTotal.toNumber() / 10 ** decimals
@@ -169,7 +169,7 @@ export default function StatsYield(props: propType) {
                         justifyContent: "center",
                     }}
                 >
-                    <div style={{ width: "65%" }}>
+                    <div style={{ width: "70%" }}>
                         <Bar options={getOptions("owner")} data={getData()} />
                         <br></br>
                         {userAddress != owner!.toLowerCase() ? (

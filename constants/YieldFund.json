@@ -146,7 +146,8 @@
                     { "type": "uint256", "name": "totalWithdrawnByOwner" },
                     { "type": "address", "name": "owner" },
                     { "type": "address", "name": "assetAddress" },
-                    { "type": "uint256", "name": "i_lockTime" }
+                    { "type": "uint256", "name": "i_lockTime" },
+                    { "type": "uint256", "name": "withdrawableInterestProceeds" }
                 ]
             }
         ]
@@ -164,7 +165,8 @@
                 "components": [
                     { "type": "uint256", "name": "amountWithdrawable" },
                     { "type": "uint256", "name": "amountTotal" },
-                    { "type": "uint256", "name": "entryTime" }
+                    { "type": "uint256", "name": "entryTime" },
+                    { "type": "uint256", "name": "timeLeftLock" }
                 ]
             }
         ]
