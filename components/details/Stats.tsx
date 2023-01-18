@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react"
 import {
     Chart as ChartJS,
     ArcElement,
@@ -8,22 +8,14 @@ import {
     Title,
     Tooltip,
     Legend,
-} from 'chart.js';
-import { Pie, Bar } from 'react-chartjs-2';
-import { funderSummary, milestoneSummary, propType } from '../../config/types';
-import { updateMetadata } from 'firebase/storage';
-import { useMoralis } from 'react-moralis';
+} from "chart.js"
+import { Pie, Bar } from "react-chartjs-2"
+import { funderSummary, milestoneSummary, propType } from "../../config/types"
+import { updateMetadata } from "firebase/storage"
+import { useMoralis } from "react-moralis"
 import PoolInfo from "./PoolInfo"
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement,
-    Title,
-    Tooltip,
-    Legend,
-    ArcElement
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement)
 
 type dataType = {
     labels: string[]
@@ -34,9 +26,8 @@ type dataType = {
         borderColor: string[]
         borderWidth: number
         rotation: number
-    }[];
+    }[]
 }
-
 
 export default function Stats(props: propType) {
     const milestoneSummary = props.milestoneSummary as milestoneSummary
@@ -57,44 +48,64 @@ export default function Stats(props: propType) {
 
     const getData = (type: string) => {
         const newData = {
-            labels: ['Seed Funding Round', 'Milestone 1', 'Milestone 2', 'Milestone 3', 'Milestone 4', 'Milestone 5'],
+            labels: [
+                "Seed Funding Round",
+                "Milestone 1",
+                "Milestone 2",
+                "Milestone 3",
+                "Milestone 4",
+                "Milestone 5",
+            ],
             datasets: [
                 {
                     label: `Total Amount Raised (${coinName})`,
                     data: [1, 1, 1, 1, 1, 1],
                     backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
+                        "rgba(255, 99, 132, 0.2)",
+                        "rgba(54, 162, 235, 0.2)",
+                        "rgba(255, 206, 86, 0.2)",
+                        "rgba(75, 192, 192, 0.2)",
+                        "rgba(153, 102, 255, 0.2)",
+                        "rgba(255, 159, 64, 0.2)",
                     ],
                     borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)',
+                        "rgba(255, 99, 132, 1)",
+                        "rgba(54, 162, 235, 1)",
+                        "rgba(255, 206, 86, 1)",
+                        "rgba(75, 192, 192, 1)",
+                        "rgba(153, 102, 255, 1)",
+                        "rgba(255, 159, 64, 1)",
                     ],
                     borderWidth: 1,
-                    rotation: -90
+                    rotation: -90,
                 },
             ],
         }
         const milestones = milestoneSummary.milestones
         if (type == "funder") {
-            newData.datasets[0].data = funderSummary.amounts.map(a => a.toNumber() / 10 ** decimals)
-            newData.datasets[0].data.unshift(funderSummary.seedFundAmount.toNumber() / 10 ** decimals)
-
+            newData.datasets[0].data = funderSummary.amounts.map(
+                (a) => a.toNumber() / 10 ** decimals
+            )
+            newData.datasets[0].data.unshift(
+                funderSummary.seedFundAmount.toNumber() / 10 ** decimals
+            )
         } else {
-            newData.datasets[0].data = milestones.map(a => a.totalRaised!.toNumber() / 10 ** decimals)
-            newData.datasets[0].data.unshift(milestoneSummary.preMilestoneTotalFunded.toNumber() / 10 ** decimals)
+            newData.datasets[0].data = milestones.map(
+                (a) => a.totalRaised!.toNumber() / 10 ** decimals
+            )
+            newData.datasets[0].data.unshift(
+                milestoneSummary.preMilestoneTotalFunded.toNumber() / 10 ** decimals
+            )
         }
 
-        newData.datasets[0].backgroundColor = newData.datasets[0].backgroundColor.slice(0, milestones.length + 1)
-        newData.datasets[0].borderColor = newData.datasets[0].borderColor.slice(0, milestones.length + 1)
+        newData.datasets[0].backgroundColor = newData.datasets[0].backgroundColor.slice(
+            0,
+            milestones.length + 1
+        )
+        newData.datasets[0].borderColor = newData.datasets[0].borderColor.slice(
+            0,
+            milestones.length + 1
+        )
         newData.labels = newData.labels.slice(0, milestones.length + 1)
 
         return newData
@@ -105,16 +116,19 @@ export default function Stats(props: propType) {
             responsive: true,
             plugins: {
                 legend: {
-                    position: 'bottom' as const,
-                    display: false
+                    position: "bottom" as const,
+                    display: false,
                 },
                 title: {
                     display: true,
                     fontSize: 30,
-                    text: type == "owner" ? `Total Raised by Milestone (${coinName})` : `Your Contributions By Milestone (${coinName})`,
+                    text:
+                        type == "owner"
+                            ? `Total Raised by Milestone (${coinName})`
+                            : `Your Contributions By Milestone (${coinName})`,
                 },
             },
-        };
+        }
 
         return options
     }
@@ -122,27 +136,37 @@ export default function Stats(props: propType) {
     return (
         <div style={{ display: "flex", flexDirection: "column" }}>
             <div style={{ height: "700px" }}>
-                <h1 style={{ fontSize: "40px", fontWeight: "500", textAlign: "center", padding: "30px", }}>Milestone Statistics</h1>
+                <h1
+                    style={{
+                        fontSize: "40px",
+                        fontWeight: "500",
+                        textAlign: "center",
+                        padding: "30px",
+                    }}
+                >
+                    Milestone Statistics
+                </h1>
                 {milestoneSummary.lifeTimeRaised.toNumber() > 0 ? (
                     <div style={{ display: "flex", flexDirection: "row", marginTop: "20px" }}>
                         <div style={{ width: "50%" }}>
                             <Bar options={getOptions("owner")} data={getData("owner")} />
                             {userAddress != owner.toLowerCase() ? (
                                 <Bar options={getOptions("funder")} data={getData("funder")} />
-                            ) : (<></>)}
+                            ) : (
+                                <></>
+                            )}
                         </div>
                         <div style={{ width: "50%" }}>
                             <Pie data={getData("owner")} options={getOptions("owner")} />
                         </div>
                     </div>
-                ) : (<h1 style={{ fontSize: "20px", textAlign: "center" }}>This fundraiser has no statistics to report yet. </h1>)}
+                ) : (
+                    <h1 style={{ fontSize: "20px", textAlign: "center" }}>
+                        This fundraiser has no statistics to report yet.{" "}
+                    </h1>
+                )}
             </div>
-            <PoolInfo
-                fundAddress={props.fundAddress}
-                milestoneSummary={milestoneSummary}
-            />
+            <PoolInfo fundAddress={props.fundAddress} milestoneSummary={milestoneSummary} />
         </div>
     )
 }
-
-

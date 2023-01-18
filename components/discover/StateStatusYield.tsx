@@ -2,15 +2,15 @@ import LinearProgress, { linearProgressClasses } from "@mui/material/LinearProgr
 import styles from "../../styles/Home.module.css"
 import { styled } from "@mui/material/styles"
 import { useMoralis, useWeb3Contract } from "react-moralis"
-import { milestone, propType, milestoneSummary, propTypeFundCard } from '../../config/types';
-import { useState, useEffect } from 'react';
-import { abi } from "../../constants"
+import { propType, fundSummary, propTypeFundCard } from "../../config/types"
+import { useState, useEffect } from "react"
+import { abi, yieldAbi } from "../../constants"
 import { BigNumber } from "ethers"
 import { tokenConfig } from "../../config/token-config"
 import { ref, get } from "firebase/database"
 import { database } from "../../firebase-config"
-import { states } from "../../config/helper-config"
-import { formatDuration, convertSeconds } from '../../utils/utils';
+import { formatDuration, convertSeconds } from "../../utils/utils"
+import Tooltip from "@mui/material/Tooltip"
 
 export default function StateStatusYield(props: propType) {
     const fundAddress = props.fundAddress
@@ -24,6 +24,7 @@ export default function StateStatusYield(props: propType) {
     const chainIdNum = parseInt(chainIdHex!)
     const chainId: string = parseInt(chainIdHex!).toString()
     const [totalActiveFunded, settotalActiveFunded] = useState(0)
+    const [interestProceeds, setInterestProceeds] = useState(0)
     const [totalActiveInterestFunded, settotalActiveInterestFunded] = useState(0)
     const [totalLifetimeFunded, settotalLifetimeFunded] = useState(0)
     const [totalLifetimeStraightFunded, settotalLifetimeStraightFunded] = useState(0)
@@ -32,34 +33,21 @@ export default function StateStatusYield(props: propType) {
     const [asset, setAsset] = useState("")
     const [userAddress, setUserAddress] = useState("")
     const [percent, setPercent] = useState(0)
-    const [tranche, setTranche] = useState(0)
-    const [state, setState] = useState(0)
-    const [amountRaisedMilestone, setAmountRaisedMilestone] = useState(0)
-    const [amountRaisedTotal, setAmountRaisedTotal] = useState(0)
-    const [amountRaisedPre, setAmountRaisedPre] = useState(0)
+    const [owner, setOwner] = useState("")
+    const [lockTime, setLockTime] = useState(0)
     const [withdrawableAmount, setWithdrawableAmount] = useState(0)
-    const [asset, setAsset] = useState("")
-    const [userAddress, setUserAddress] = useState("")
-    const [timeLeftVoting, setTimeLeftVoting] = useState(0)
-    const [votesTried, setVotesTried] = useState(0)
+    const [totalFunderAmount, setTotalFunderAmount] = useState(0)
+    const [entryTime, setEntryTime] = useState(0)
 
-
-    const getMilestoneName = async () => {
-        const milestonesRef = ref(database, chainId + "/funds/" + fundAddress + "/milestones/" + tranche + "/name")
-        const snapshot = await get(milestonesRef)
-        setMilestoneName(snapshot.val())
-    }
-
-    const {
-        runContractFunction: getMilestoneSummary,
-    } = useWeb3Contract({
-        abi: abi,
+    const { runContractFunction: getFundSummary } = useWeb3Contract({
+        abi: yieldAbi,
         contractAddress: fundAddress!,
         functionName: "getFundSummary",
         params: {},
     })
 
     async function updateUI() {
+        const fundInfo = (fundSummary ? fundSummary : await getFundSummary()) as fundSummary
         const totalActiveFunded = fundInfo.totalActiveFunded
         const totalActiveInterestFunded = fundInfo.totalActiveInterestFunded
         const totalLifetimeFunded = fundInfo.totalLifetimeFunded
@@ -76,15 +64,24 @@ export default function StateStatusYield(props: propType) {
         if (totalLifetimeFunded.toNumber() == 0) {
             setPercent(0)
         } else {
-            const roundDuration = tranchesFromCall[currentTrancheFromCall].milestoneDuration
-            const percent = (roundDuration!.toNumber() - timeLeftFromCall.toNumber()) / roundDuration!.toNumber() * 100
+            //percent equals how much was straight donated
+            const percent =
+                ((totalLifetimeFunded!.toNumber() - totalLifetimeInterestFunded!.toNumber()) /
+                    totalLifetimeFunded!.toNumber()) *
+                100
             setPercent(percent)
         }
         settotalActiveFunded(
             +(
                 totalActiveFunded.toNumber() /
                 10 ** tokenConfig[chainIdNum][coinName].decimals!
-            ).toFixed(2)
+            ).toFixed(decimals)
+        )
+        setInterestProceeds(
+            +(
+                withdrawableProceeds.toNumber() /
+                10 ** tokenConfig[chainIdNum][coinName].decimals!
+            ).toFixed(decimals)
         )
         settotalActiveInterestFunded(
             +(
@@ -117,8 +114,12 @@ export default function StateStatusYield(props: propType) {
             ).toFixed(2)
         )
         if (format != "discover") {
-            const amountFundedFromCall = funderSummary!.fundAmount.toNumber()
+            const amountFundedFromCall = funderSummary!.amountWithdrawable.toNumber()
             setWithdrawableAmount(amountFundedFromCall / 10 ** decimals!)
+            const amountTotalFundedFromCall = funderSummary!.amountTotal.toNumber()
+            setTotalFunderAmount(amountTotalFundedFromCall / 10 ** decimals!)
+            const entryTimeFromCall = funderSummary!.entryTime.toNumber()
+            setEntryTime(entryTimeFromCall)
         }
     }
 
@@ -131,20 +132,11 @@ export default function StateStatusYield(props: propType) {
         return ""
     }
 
-    async function fetchData() {
-        if (format == "discover") {
-            setFundInfo((await getFundSummary()) as fundSummary)
-        }
-    }
-
     useEffect(() => {
-        if (isWeb3Enabled && fundAddress && fundInfo) {
+        if (isWeb3Enabled && fundAddress) {
             updateUI()
         }
-        if (isWeb3Enabled && fundAddress && !fundInfo) {
-            fetchData()
-        }
-    }, [isWeb3Enabled, fundAddress, fundInfo])
+    }, [isWeb3Enabled, fundAddress, fundSummary, funderSummary])
 
     useEffect(() => {
         if (account) {
@@ -152,17 +144,16 @@ export default function StateStatusYield(props: propType) {
         }
     }, [account])
 
-    const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-        height: 10,
-        borderRadius: 5,
-        [`&.${linearProgressClasses.colorPrimary}`]: {
-            backgroundColor: theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
-        },
-        [`& .${linearProgressClasses.bar}`]: {
-            borderRadius: 5,
-            backgroundColor: theme.palette.mode === "light" ? "green" : "green",
-        },
-    }));
+    // const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
+    //     height: 10,
+    //     borderRadius: 0,
+    //     [`&.${linearProgressClasses.colorSecondary}`]: {
+    //         backgroundColor: theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
+    //     },
+    //     [`& .${linearProgressClasses.bar}`]: {
+    //         backgroundColor: theme.palette.mode === "light" ? "lightgreen" : "yellow",
+    //     },
+    // }))
 
     return (
         <div className={styles.stateStatus}>
@@ -214,7 +205,11 @@ export default function StateStatusYield(props: propType) {
                                         textAlign: "center",
                                     }}
                                 >
-                                    Amount You Can Withdraw {totalLifetimeFunded}:
+                                    Amount You Can Withdraw{" "}
+                                    {interestProceeds +
+                                        totalActiveFunded -
+                                        totalActiveInterestFunded}{" "}
+                                    {coinName}:
                                 </div>
                             </div>
                         </>
@@ -227,7 +222,7 @@ export default function StateStatusYield(props: propType) {
                                     textAlign: "center",
                                 }}
                             >
-                                Amount You Can Withdraw {withdrawableAmount}:
+                                Amount You Can Withdraw {withdrawableAmount} {coinName}:
                             </div>
                         </>
                     )}

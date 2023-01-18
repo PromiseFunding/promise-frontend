@@ -156,6 +156,7 @@ const Details: NextPage = () => {
                                 <StateStatusYield
                                     fundAddress={fundAddress}
                                     fundSummary={fundSummary}
+                                    funderSummaryYield={funderSummary}
                                     decimals={decimals!}
                                     format="details"
                                     coinName={coinName}

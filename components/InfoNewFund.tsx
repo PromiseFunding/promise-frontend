@@ -8,11 +8,10 @@ import { propInfoFund } from "../config/types"
 import Button from "@mui/material/Button"
 import { MouseEventHandler } from "react"
 
-
 export default function InfoForm(props: propInfoFund) {
     function handleClick(event: React.MouseEvent<HTMLButtonElement>) {
         props.onClickOK!()
-      }
+    }
 
     return (
         <div className={styles.container}>
@@ -188,13 +187,26 @@ export default function InfoForm(props: propInfoFund) {
                     <h1 style={{ fontSize: "25px", fontWeight: "600" }}>Recommendation:</h1>
                     <br></br>
                     <h1 style={{ fontSize: "18px" }}>
-                        It is recommended that you weigh the pros and cons of each type of fundraiser and pick the one that best suits your purpose.
-                        We believe that the &apos;Promise Fund&apos; is best suited for projects or products as it inherently builds a community and reputation. We also believe that the &apos;Yield Fund&apos; is best
-                        suited for one time use cases or causes and charitable donations. Ultimately, however, the decision is up to you! Pick the fundraiser that you want to start, fill out the details very carefully and thoughtfully, and get started!
+                        It is recommended that you weigh the pros and cons of each type of
+                        fundraiser and pick the one that best suits your purpose. We believe that
+                        the &apos;Promise Fund&apos; is best suited for projects or products as it
+                        inherently builds a community and reputation. We also believe that the
+                        &apos;Yield Fund&apos; is best suited for one time use cases or causes and
+                        charitable donations. Ultimately, however, the decision is up to you! Pick
+                        the fundraiser that you want to start, fill out the details very carefully
+                        and thoughtfully, and get started!
                     </h1>
                 </div>
-                <div>
-                    <Button className={styles.buttonStyle} onClick={props.onClickOK()!} style={{ ['--override-color' as any]: "green" }}>OK</Button>
+                <br></br>
+                <br></br>
+                <div style={{ textAlign: "center" }}>
+                    <Button
+                        className={styles.buttonStyle}
+                        onClick={handleClick}
+                        style={{ ["--override-color" as any]: "green" }}
+                    >
+                        I Have Read and Understand
+                    </Button>
                 </div>
             </div>
         </div>
