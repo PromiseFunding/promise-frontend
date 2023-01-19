@@ -105,17 +105,17 @@
 }
 
 .newFundButton {
-    padding: 10px;
-    font-size: 15px;
+    padding: 15px;
+    font-size: 40px;
     color: rgb(255, 255, 255);
     background: linear-gradient(125.78deg, #e5509acc 17.93%, #b02588cc 42.06%, #694dcbcc 73.89%);
     border-radius: 10px;
     margin-top: auto;
     margin-bottom: auto;
-    margin-left: 30px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    font-weight: bold;
 }
 
 .newFundButton:hover {
@@ -146,6 +146,29 @@
 
 .purpleBadge:hover {
     background: linear-gradient(125.78deg, #694dcb 17.93%, #b02588 42.06%, #e5509a 73.89%);
+    color: lightgrey;
+    cursor: pointer;
+}
+
+.yellowBadge {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    /* background: linear-gradient(125.78deg, #e9f504e3 17.93%, #9eb82bee 42.06%, #aba87ecc 73.89%); */
+    background: linear-gradient(125.78deg, #f0f802 17.93%, #a2dc0eee 42.06%, #52c803cc 73.89%);
+    color: #ffffff;
+    width: 30px;
+    height: 30px;
+    border-radius: 4px 4px 4px 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+}
+
+.yellowBadge:hover {
+    /* background: linear-gradient(125.78deg, #aba87ecc 17.93%, #9eb82bee 42.06%, #e9f504e3 73.89%); */
+    background: linear-gradient(125.78deg, #52c803cc 17.93%, #a2dc0eee 42.06%, #f0f802 73.89%);
     color: lightgrey;
     cursor: pointer;
 }
@@ -183,7 +206,7 @@
 }
 
 .searchbar {
-    width: 25%;
+    width: 20%;
     margin-top: auto;
     margin-bottom: auto;
     font-size: 10px;
@@ -490,6 +513,13 @@
     flex-direction: row;
 }
 
+.tutorialPanelReverse {
+    height: 500px;
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
 .tutorialImage {
     text-align: center;
     width: 50%;
@@ -538,7 +568,7 @@
     font-weight: 700;
     padding: 10px;
     border-radius: 0.25rem;
-    margin-left: auto;
+    margin-right: auto;
 }
 
 .buttonStyle:hover {
@@ -590,7 +620,23 @@
     flex-wrap: wrap;
 }
 
+.newFundFormYield {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding-right: 50px;
+    padding-left: 50px;
+    flex-wrap: wrap;
+}
+
 .formSectionOuter {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    padding: 10px;
+}
+
+.formSectionOuterYield {
     display: flex;
     flex-direction: column;
     width: 50%;
@@ -655,6 +701,15 @@
 .formSection {
     display: flex;
     flex-direction: row;
+    padding-top: 50px;
+    gap: 10px;
+    padding-bottom: 15px;
+    width: 100%;
+}
+
+.formSectionYield {
+    display: flex;
+    justify-content: center;
     padding-top: 50px;
     gap: 10px;
     padding-bottom: 15px;
@@ -794,6 +849,15 @@
     display: none;
 }
 
+@media (max-width: 1450px) {
+    .formSectionOuterYield {
+        width: 100%;
+    }
+    .newFundFormYield {
+        flex-direction: column;
+    }
+}
+
 @media (max-width: 1200px) {
     .grid {
         width: 100%;
@@ -821,20 +885,26 @@
         width: 100%;
     }
     .howItWorksLanding {
-        height: 1200px;
+        height: 1100px;
     }
     .searchbar {
         width: 20vw;
     }
     .tutorialPanel {
         flex-direction: column;
-        height: 1000px;
+        height: 750px;
+    }
+    .tutorialPanelReverse {
+        flex-direction: column;
+        height: 750px;
     }
     .tutorialImage {
         width: 100%;
+        margin: 0;
     }
     .tutorialText {
         width: 100%;
+        margin: 0;
     }
     .truncateLineClamp {
         margin-left: 0px;
@@ -850,7 +920,7 @@
 
 @media (max-width: 800px) {
     .howItWorksLanding {
-        height: 1400px;
+        height: 1200px;
     }
     .landingFooterNav {
         width: 100%;
@@ -864,6 +934,12 @@
     }
     .launchAppInner {
         margin-top: 235px;
+    }
+    .tutorialPanel {
+        height: 900px;
+    }
+    .tutorialPanelReverse {
+        height: 900px;
     }
 }
 
@@ -883,7 +959,7 @@
         margin-top: 60px;
     }
     .howItWorksLanding {
-        height: 2350px;
+        height: 2000px;
     }
     .featuresBlock {
         width: 100%;

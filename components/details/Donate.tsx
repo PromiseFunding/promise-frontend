@@ -2,7 +2,6 @@ import { useEffect, useState, SetStateAction } from "react"
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import { propType } from "../../config/types"
-import { ref, get } from "firebase/database"
 import { database } from "../../firebase-config"
 import styles from "../../styles/details/details.module.css"
 import { abi, erc20Abi } from "../../constants"
@@ -18,6 +17,7 @@ import InputLabel from '@mui/material/InputLabel'
 import { TextField } from "@material-ui/core";
 import { BigNumber, ContractTransaction } from 'ethers'
 import { useNotification } from "web3uikit"
+import { update, set, ref as refDb, ref, onValue } from "firebase/database"
 
 const modalStyle = {
     position: 'absolute' as 'absolute',
@@ -45,7 +45,7 @@ export default function Donate(props: propType) {
     const timeLeftRound = milestoneSummary!.timeLeftRound.toNumber()
 
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-
+    const chainId: string = parseInt(chainIdHex!).toString()
 
     const [open, setOpen] = useState(false)
     const [donateType, setDonateType] = useState("spread")
@@ -144,6 +144,15 @@ export default function Donate(props: propType) {
             await fundTx.wait(1)
             handleNewNotification()
             props.onGetFunderInfo!()
+            var donorRef = ref(database, chainId + "/users/" + account + "/donor/" + fundAddress)
+
+            onValue(donorRef, (snapshot) => {
+                if (!snapshot.exists()) {
+                    set(refDb(database, `${chainId}/users/${account}/donor/${fundAddress}`), {
+                        fundAddress: fundAddress,
+                    })
+                }
+            })
         } catch (error) {
             console.log(error)
             handleNewNotificationError()

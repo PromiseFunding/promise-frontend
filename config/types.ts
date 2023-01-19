@@ -1,5 +1,5 @@
-import React from 'react';
-import { BigNumber } from 'ethers';
+import React from "react"
+import { BigNumber } from "ethers"
 
 type Dictionary = {
     [x: string]: string[]
@@ -18,8 +18,14 @@ export interface update {
     }
 }
 
-export interface updates {
+export interface updates {}
 
+export interface propInfoFund {
+    onClickOK?(arg0: void): void
+}
+
+export interface propInfoFund {
+    onClickOK?(arg0: void): void
 }
 
 export interface propType {
@@ -41,8 +47,9 @@ export interface propType {
     milestoneSummary?: milestoneSummary
     funderSummary?: funderSummary
     format?: string
+    fundSummary?: fundSummary
+    funderSummaryYield?: funderSummaryYield
 }
-
 
 export interface propTypeEntryNumber {
     onChangePage?(arg0: number): void
@@ -53,7 +60,7 @@ export interface propTypeEntryNumber {
 export interface propTypeFunds {
     fundAddressArray: string[]
     query?: string
-    children?: React.ReactNode;
+    children?: React.ReactNode
 }
 
 export interface propTypeFundCard {
@@ -102,12 +109,35 @@ export interface funderSummary {
     amounts: BigNumber[]
 }
 
+//yield fund summary
+export interface fundSummary {
+    totalActiveFunded: BigNumber
+    totalActiveInterestFunded: BigNumber
+    totalLifetimeFunded: BigNumber
+    totalLifetimeStraightFunded: BigNumber
+    totalLifetimeInterestFunded: BigNumber
+    totalWithdrawnByOwner: BigNumber
+    owner: string
+    assetAddress: string
+    i_lockTime: BigNumber
+    withdrawableInterestProceeds: BigNumber
+}
+
+export interface funderSummaryYield {
+    amountWithdrawable: BigNumber
+    amountStraightTotal: BigNumber
+    amountTotal: BigNumber
+    entryTime: BigNumber
+    timeLeftLock: BigNumber
+}
+
 export interface databaseFundObject {
     fundTitle: string
     imageURL: string
     description: string
     category: string
-    locktime: string
+    locktime?: string
     asset: string
-    milestones: milestone[]
+    milestones?: milestone[]
+    type?: string
 }

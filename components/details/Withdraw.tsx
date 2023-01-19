@@ -3,7 +3,7 @@ import { propType } from "../../config/types"
 import styles from "../../styles/details/details.module.css"
 import { abi } from "../../constants"
 import { useWeb3Contract, useMoralis } from "react-moralis"
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button"
 import { ContractTransaction } from "ethers"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 
@@ -29,7 +29,11 @@ export default function Withdraw(props: propType) {
 
     const isDisabled = (): boolean => {
         if (state != 4) {
-            if (milestoneSummary!.milestones[milestoneSummary!.currentTranche].activeRaised!.toNumber() == 0) {
+            if (
+                milestoneSummary!.milestones[
+                    milestoneSummary!.currentTranche
+                ].activeRaised!.toNumber() == 0
+            ) {
                 return true
             }
             if (userAddress != owner.toLowerCase() && funderSummary!.fundAmount.toNumber() == 0) {
@@ -87,30 +91,37 @@ export default function Withdraw(props: propType) {
         <div>
             {state == 3 ? (
                 <div>
-                    <Button disabled={isDisabled()} className={isDisabled() ? styles.disabledButton : styles.donateButton} style={{ marginBottom: isDisabled() ? "0px" : "10px" }}
+                    <Button
+                        disabled={isDisabled()}
+                        className={isDisabled() ? styles.disabledButton : styles.donateButton}
+                        style={{ marginBottom: isDisabled() ? "0px" : "10px" }}
                         onClick={async function () {
                             await withdrawProceedsFunder({
                                 onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
                                 onError: (error) => console.log(error),
                             })
-                        }}>
+                        }}
+                    >
                         Withdraw
                     </Button>
                 </div>
             ) : (
                 <div>
-                    <Button disabled={isDisabled()} className={isDisabled() ? styles.disabledButton : styles.donateButton} style={{ marginBottom: isDisabled() ? "0px" : "10px" }}
+                    <Button
+                        disabled={isDisabled()}
+                        className={isDisabled() ? styles.disabledButton : styles.donateButton}
+                        style={{ marginBottom: isDisabled() ? "0px" : "10px" }}
                         onClick={async function () {
                             await withdrawProceeds({
                                 onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
                                 onError: (error) => console.log(error),
                             })
-                        }}>
+                        }}
+                    >
                         Withdraw
                     </Button>
                 </div>
             )}
-
-        </div >
+        </div>
     )
 }

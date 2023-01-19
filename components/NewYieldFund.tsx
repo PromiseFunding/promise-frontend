@@ -1,4 +1,4 @@
-import { contractAddresses, FundFactory } from "../constants"
+import { contractAddresses, YieldFundFactory } from "../constants"
 // dont export from moralis when using react
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { SetStateAction, useEffect, useState } from "react"
@@ -8,7 +8,6 @@ import { contractAddressesInterface } from "../config/types"
 import { update, set, ref as refDb } from "firebase/database"
 import { ref as refStore, getDownloadURL, uploadBytesResumable } from "firebase/storage"
 import { database, storage } from "../firebase-config"
-import { milestone } from "../config/types"
 import { BigNumber } from "ethers"
 import styles from "../styles/Home.module.css"
 import TextField from "@mui/material/TextField"
@@ -24,8 +23,6 @@ import Modal from "@mui/material/Modal"
 import CircularProgress from "@mui/material/CircularProgress"
 import { useRouter } from "next/router"
 
-const categories = ["--", "Tech", "Film", "Product", "Gaming"]
-
 const modalStyle = {
     position: "absolute" as "absolute",
     top: "50%",
@@ -40,34 +37,29 @@ const modalStyle = {
 }
 
 //contract is already deployed... trying to look at features of contract
-export default function NewFund() {
+export default function NewYieldFund() {
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
 
     const yieldAddress =
         chainId in addresses
-            ? addresses[chainId]["PromiseFundFactory"][
-            addresses[chainId]["PromiseFundFactory"].length - 1
-            ]
+            ? addresses[chainId]["FundFactory"][addresses[chainId]["FundFactory"].length - 1]
             : null
     const chainIdNum = parseInt(chainIdHex!)
 
+    const [time, setTime] = useState("")
     const [assetValue, setAssetValue] = useState("USDT")
     const [title, setTitle] = useState("")
     const [description, setDescription] = useState("")
-    const [preFundDuration, setPreFundDuration] = useState("0")
     const [category, setCategory] = useState("--")
     const [assetAddress, setAssetAddress] = useState(
         chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].assetAddress : null
     )
-    const [milestonesArray, setMilestonesArray] = useState<milestone[]>([
-        {
-            name: "",
-            description: "",
-            duration: "0",
-        },
-    ])
+    const [poolAddress, setPoolAddress] = useState("")
+    const [aaveAddress, setAaveAddress] = useState("")
+    const [decimalNumber, setDecimal] = useState(0)
+
     const [open, setOpen] = useState(false)
     const [done, setDone] = useState(false)
 
@@ -77,17 +69,18 @@ export default function NewFund() {
     const router = useRouter()
 
     const {
-        runContractFunction: createPromiseFund,
+        runContractFunction: createYieldFundAAVE,
         isLoading,
         isFetching,
     } = useWeb3Contract({
-        abi: FundFactory,
+        abi: YieldFundFactory,
         contractAddress: yieldAddress!,
-        functionName: "createPromiseFund",
+        functionName: "createYieldFundAAVE",
         params: {
+            lockTime: time,
             assetAddress: assetAddress,
-            milestoneDuration: milestonesArray.map((a) => a.duration),
-            preFundingDuration: BigNumber.from(preFundDuration),
+            aaveTokenAddress: aaveAddress,
+            poolAddress: poolAddress,
         },
     })
 
@@ -106,41 +99,12 @@ export default function NewFund() {
     }
 
     const handleNewFundraiser = async () => {
-        if (category == "--" || !description || !preFundDuration || !assetValue || !file) {
+        if (category == "--" || !description || !assetValue || !time || !file) {
             handleGenericAlert("Please fill in the required fields.")
             return
         }
-        let descriptionFull = true
-        let nameFull = true
-        let durationFull = true
-        milestonesArray.map((milestone) => {
-            if (milestone.description == "") {
-                descriptionFull = false
-            }
-            if (milestone.name == "") {
-                nameFull = false
-            }
-            if (milestone.duration == "" || milestone.duration == "0") {
-                durationFull = false
-            }
-        })
-        if (!descriptionFull) {
-            handleGenericAlert("Please fill all milestone descriptions.")
-            return
-        }
-        if (!nameFull) {
-            handleGenericAlert("Please fill all milestone names.")
-            return
-        }
-        if (!durationFull) {
-            handleGenericAlert("Please fill all milestone durations.")
-            return
-        }
-        if (preFundDuration == "" || preFundDuration == "0") {
-            handleGenericAlert("Please fill the seed round duration.")
-            return
-        }
-        const createTx: any = await createPromiseFund({
+
+        const createTx: any = await createYieldFundAAVE({
             onSuccess: (tx) => {
                 handleSuccess(tx)
             },
@@ -166,11 +130,9 @@ export default function NewFund() {
             `/files/${chainId}/${fundAddress}/${crypto.randomUUID()}${file!.name}`
         )
         const uploadTask = uploadBytesResumable(iconRef, file as Blob)
-
-        // upload to fund folder
         uploadTask.on(
             "state_changed",
-            (snapshot) => { },
+            (snapshot) => {},
             (err) => console.log(err),
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((url) => {
@@ -179,28 +141,38 @@ export default function NewFund() {
                         imageURL: url,
                         description: description,
                         category: category,
-                        milestones: milestonesArray,
+                        locktime: time,
                         asset: assetValue,
-                        type: "Promise Fund",
+                        type: "Yield Fund",
                     })
                 })
-
                 set(refDb(database, `${chainId}/users/${account}/owner/${fundAddress}`), {
                     fundAddress: fundAddress,
-                    type: "Promise Fund",
+                    type: "Yield Fund",
                 })
             }
         )
+
         await timeout(1000) //for 1 sec delay
 
-        router.push(`/details/?fund=${fundAddress}`)
+        // router.push(`/details/?fund=${fundAddress}`)
+        router.push(`/discover`)
     }
 
     const handleChangeDetails = () => {
         const tokenAddress =
             chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].assetAddress : null
+        const poolAddress =
+            chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].poolAddress : null
+        const aaveAddress =
+            chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].aaveTokenAddress : null
+        const decimal =
+            chainId in tokenConfig ? tokenConfig[chainIdNum][assetValue].decimals : null
 
+        setDecimal(decimal!)
         setAssetAddress(tokenAddress!)
+        setPoolAddress(poolAddress!)
+        setAaveAddress(aaveAddress!)
     }
 
     const handleNewNotification = function () {
@@ -230,21 +202,6 @@ export default function NewFund() {
         })
     }
 
-    const newMilestone = () => {
-        if (milestonesArray.length < 5) {
-            setMilestonesArray((milestonesArray) => [
-                ...milestonesArray,
-                {
-                    name: "",
-                    description: "",
-                    duration: "0",
-                },
-            ])
-        } else {
-            handleGenericAlert("The maximum number of milestones is 5")
-        }
-    }
-
     function handleChangeImage(event: { target: { files: SetStateAction<any> } }) {
         setFile(event.target.files[0])
     }
@@ -261,69 +218,18 @@ export default function NewFund() {
         setCategory(event.target.value)
     }
 
-    function handleChangeMilestoneName(
-        event: { target: { value: SetStateAction<string> } },
-        index: number
-    ) {
-        let items = [...milestonesArray]
-        let item = { ...items[index] }
-        item.name = event.target.value as string
-        items[index] = item
-        setMilestonesArray(items)
-    }
-
-    function handleChangeMilestoneDescription(
-        event: { target: { value: SetStateAction<string> } },
-        index: number
-    ) {
-        let items = [...milestonesArray]
-        let item = { ...items[index] }
-        item.description = event.target.value as string
-        items[index] = item
-        setMilestonesArray(items)
-    }
-
-    const handleChangeDuration = (
-        event: { target: { value: SetStateAction<string> } },
-        index: number
-    ) => {
-        //max for now is 120 days
-        const max = 10368000
-        let items = [...milestonesArray]
-        let item = { ...items[index] }
+    const handleChangeLockTime = (event: { target: { value: SetStateAction<string> } }) => {
+        //max for now is 20 years
+        const max = 630720000
         if ((event.target.value as unknown as number) > 0) {
             const value = Math.max(
                 0,
                 Math.min(max as number, Number(Number(event.target.value).toFixed(0)))
             )
-            item.duration = value.toString()
+            setTime(value.toString())
         } else {
-            item.duration = "0"
+            setTime("0")
         }
-        items[index] = item
-        setMilestonesArray(items)
-    }
-
-    const handleChangePreFundDuration = (event: { target: { value: SetStateAction<string> } }) => {
-        //max for now is 60 days
-        const max = 5184000
-        let durationOfPreRound = "0"
-        if ((event.target.value as unknown as number) > 0) {
-            const value = Math.max(
-                0,
-                Math.min(max as number, Number(Number(event.target.value).toFixed(0)))
-            )
-            durationOfPreRound = value.toString()
-        } else {
-            durationOfPreRound = "0"
-        }
-        setPreFundDuration(durationOfPreRound)
-    }
-
-    function handleDeleteMilestone(index: number) {
-        let items = [...milestonesArray]
-        items.splice(index, 1)
-        setMilestonesArray(items)
     }
 
     return (
@@ -390,22 +296,10 @@ export default function NewFund() {
                     )}
                 </Box>
             </Modal>
-            {/* <div className={styles.createNewFund}>
-                <h1
-                    style={{
-                        position: "relative",
-                        display: "table-cell",
-                        verticalAlign: "middle",
-                        fontWeight: "700",
-                    }}
-                >
-                    Create A New Fund
-                </h1>
-            </div> */}
             {isWeb3Enabled && yieldAddress ? (
                 <Box>
-                    <div className={styles.newFundForm}>
-                        <div className={styles.formSectionOuter}>
+                    <div className={styles.newFundFormYield}>
+                        <div className={styles.formSectionOuterYield}>
                             <div className={styles.formSection}>
                                 <TextField
                                     id="outlined-basic"
@@ -451,14 +345,14 @@ export default function NewFund() {
                                 <TextField
                                     type="number"
                                     name="duration"
-                                    label="Seed Round Duration (seconds)"
+                                    label="Enter Lock Time (seconds)"
                                     variant="filled"
-                                    value={preFundDuration}
+                                    value={time}
                                     onChange={(e) => {
-                                        handleChangePreFundDuration(e)
+                                        handleChangeLockTime(e)
                                     }}
                                     style={{ width: "30%" }}
-                                    helperText="Duration of Seed Round"
+                                    helperText="Duration of Lock Time"
                                 />
                             </div>
                             <TextField
@@ -471,112 +365,6 @@ export default function NewFund() {
                                 variant="filled"
                             />
                         </div>
-
-                        <div className={styles.formSectionOuter}>
-                            <div className={styles.formSection}>
-                                <div
-                                    style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        gap: "14px",
-                                        width: "100%",
-                                    }}
-                                >
-                                    <ul>
-                                        {milestonesArray.map((curr, index) => (
-                                            <li key={index}>
-                                                <div
-                                                    style={{
-                                                        display: "flex",
-                                                        flexDirection: "column",
-                                                        gap: "14px",
-                                                        paddingBottom: "20px",
-                                                    }}
-                                                >
-                                                    <div
-                                                        style={{
-                                                            display: "flex",
-                                                            flexDirection: "row",
-                                                        }}
-                                                    >
-                                                        <TextField
-                                                            id="outlined-basic"
-                                                            label={`Milestone ${index + 1}`}
-                                                            onChange={(e) => {
-                                                                handleChangeMilestoneName(e, index)
-                                                            }}
-                                                            value={milestonesArray[index].name}
-                                                            helperText="Input a title for the milestone"
-                                                            variant="filled"
-                                                            style={{ width: "50%" }}
-                                                        />
-                                                        <TextField
-                                                            type="number"
-                                                            name="duration"
-                                                            label="Milestone Duration"
-                                                            variant="filled"
-                                                            value={milestonesArray[index].duration}
-                                                            onChange={(e) => {
-                                                                handleChangeDuration(e, index)
-                                                            }}
-                                                            style={{
-                                                                width: "50%",
-                                                                paddingLeft: "10px",
-                                                            }}
-                                                            helperText="Duration of Milestones (seconds)"
-                                                        />
-                                                        {milestonesArray.length > 1 ? (
-                                                            <div
-                                                                style={{
-                                                                    paddingLeft: "30px",
-                                                                    paddingTop: "15px",
-                                                                }}
-                                                            >
-                                                                <DeleteIcon
-                                                                    className={styles.deleteIcon}
-                                                                    onClick={(e) => {
-                                                                        handleDeleteMilestone(
-                                                                            index
-                                                                        )
-                                                                    }}
-                                                                />
-                                                            </div>
-                                                        ) : (
-                                                            <></>
-                                                        )}
-                                                    </div>
-                                                    <div style={{ paddingTop: "20px" }}>
-                                                        <TextField
-                                                            id="outlined-multiline-flexible"
-                                                            label="Milestone Description"
-                                                            multiline
-                                                            rows={10}
-                                                            onChange={(e) => {
-                                                                handleChangeMilestoneDescription(
-                                                                    e,
-                                                                    index
-                                                                )
-                                                            }}
-                                                            variant="filled"
-                                                            style={{ width: "100%" }}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                    <button
-                                        className="bg-slate-500 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded ml-auto"
-                                        onClick={async function () {
-                                            newMilestone()
-                                        }}
-                                    >
-                                        Add Milestone
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
                         <div
                             style={{
                                 display: "flex",
@@ -627,7 +415,7 @@ export default function NewFund() {
                                     handleNewFundraiser()
                                 }}
                             >
-                                <div>Create Promise Fund</div>
+                                <div>Create Yield Fund</div>
                             </button>
                         </div>
                     </div>

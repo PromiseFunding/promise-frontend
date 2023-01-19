@@ -42,7 +42,7 @@ export default function Header(props: { onChangeQuery?(arg0: string): void; main
                                         <a className={styles.headerItem}>My Fundraisers</a>
                                     </Link>
                                     <Link legacyBehavior href="/form">
-                                        <a className={styles.newFundButton}>Create New Fund</a>
+                                        <a className={styles.headerItem}>Create New Fund</a>
                                     </Link>
                                 </div>
                             </div>
@@ -60,7 +60,7 @@ export default function Header(props: { onChangeQuery?(arg0: string): void; main
                                     <a className={styles.headerItem}>My Fundraisers</a>
                                 </Link>
                                 <Link legacyBehavior href="/form">
-                                    <a className={styles.newFundButton}>Create New Fund</a>
+                                    <a className={styles.headerItem}>Create New Fund</a>
                                 </Link>
                             </div>
                         </>
@@ -69,10 +69,7 @@ export default function Header(props: { onChangeQuery?(arg0: string): void; main
             </div>
 
             <div className="ml-auto">
-                <ConnectButton
-                    moralisAuth={true}
-                    
-                />
+                <ConnectButton moralisAuth={true} />
             </div>
         </nav>
     )

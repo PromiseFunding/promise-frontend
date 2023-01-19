@@ -1,4 +1,4 @@
-import { contractAddresses, abi, erc20Abi } from "../constants"
+import { contractAddresses, yieldAbi, erc20Abi } from "../constants"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { SetStateAction, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
@@ -50,7 +50,7 @@ export default function YieldDonation(props: propType) {
     })
 
     const { runContractFunction: fund } = useWeb3Contract({
-        abi: abi,
+        abi: yieldAbi,
         contractAddress: fundAddress!,
         functionName: "fund",
         params: { amount: BigNumber.from((Number(val) * 10 ** decimals!).toString()) },
