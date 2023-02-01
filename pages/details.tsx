@@ -20,12 +20,15 @@ import Withdraw from "../components/details/Withdraw"
 import StartVote from "../components/details/StartVote"
 import Vote from "../components/details/Vote"
 import WithdrawExpired from "../components/details/WithdrawExpired"
+import { ethers } from "ethers";
 
 const Details: NextPage = () => {
     const router = useRouter()
     const fundAddress = router.query.fund as string
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
+
+    const provider = new ethers.providers.JsonRpcProvider("https://arb-goerli.g.alchemy.com/v2/zdsQZAwPV_kahb3kejyZFHR2Y77FaPTV")
 
     const fundRef = ref(database, chainId + "/funds/" + fundAddress)
     const [data, setData] = useState<databaseFundObject>()
