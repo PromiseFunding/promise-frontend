@@ -144,7 +144,7 @@ export default function WithdrawYield(props: propType) {
                 <div>
                     <Button
                         disabled={isDisabled()}
-                        className={isDisabled() ? styles.disabledButton : styles.donateButton}
+                        className={isDisabled() ? styles.disabledButton : styles.donateButtonYield}
                         style={{ marginBottom: isDisabled() ? "0px" : "10px" }}
                         onClick={async function () {
                             await withdrawProceeds({
@@ -158,7 +158,7 @@ export default function WithdrawYield(props: propType) {
                 </div>
             ) : timeLeftFunder > 0 ? (
                 <>
-                    <div>
+                    {/* <div>
                         <Button
                             disabled={true}
                             className={styles.disabledButton}
@@ -172,7 +172,7 @@ export default function WithdrawYield(props: propType) {
                         >
                             Withdraw
                         </Button>
-                    </div>
+                    </div> */}
                     <div
                         className={styles.disabledText}
                         style={
@@ -210,8 +210,8 @@ export default function WithdrawYield(props: propType) {
                                             <FormControl>
                                                 <div style={{ textAlign: "center" }}>
                                                     <FontAwesomeIcon
-                                                        className={styles.donateIcon}
-                                                        icon={["fas", "calendar-days"]}
+                                                        className={styles.donateIconYield}
+                                                        icon={["fas", "coins"]}
                                                         mask={["fas", "square-full"]}
                                                         size="6x"
                                                         transform="shrink-4"
@@ -245,7 +245,7 @@ export default function WithdrawYield(props: propType) {
                                         />
                                     </div>
                                     <Button
-                                        className={styles.donateButton2}
+                                        className={styles.donateButtonYield2}
                                         style={{ bottom: "0px" }}
                                         onClick={async function () {
                                             handleClose()
@@ -265,7 +265,7 @@ export default function WithdrawYield(props: propType) {
                     <div>
                         <Button
                             disabled={isDisabled()}
-                            className={isDisabled() ? styles.disabledButton : styles.donateButton}
+                            className={isDisabled() ? styles.disabledButton : styles.donateButtonYield}
                             style={{ marginBottom: isDisabled() ? "0px" : "10px" }}
                             onClick={async function () {
                                 setOpen(true)

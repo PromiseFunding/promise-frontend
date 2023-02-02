@@ -48,13 +48,14 @@ export default function DonateYield(props: propType) {
     const lockTime = fundInfo!.i_lockTime
     const assetAddress = fundInfo!.assetAddress
     const owner = fundInfo!.owner
+    console.log(owner)
 
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
 
 
     const [open, setOpen] = useState(false)
-    const [donateType, setDonateType] = useState("straight")
+    const [donateType, setDonateType] = useState("interest")
     const [amount, setAmount] = useState("0")
     const [userAddress, setUserAddress] = useState("0")
     const [amountFunded, setAmountFunded] = useState(0)
@@ -211,19 +212,19 @@ export default function DonateYield(props: propType) {
                                         label="Category"
                                         onChange={handleChangeType}
                                     >
-                                        <MenuItem value={"straight"}>Straight</MenuItem>
                                         <MenuItem value={"interest"}>Interest</MenuItem>
+                                        <MenuItem value={"straight"}>Straight</MenuItem>
                                     </Select>
                                 </FormControl>
                                 <FormControl>
                                     <div style={{ textAlign: "center" }}>
                                         <FontAwesomeIcon
-                                            className={styles.donateIcon}
+                                            className={styles.donateIconYield}
                                             icon={[
                                                 "fas",
                                                 donateType == "interest"
-                                                    ? "calendar-days"
-                                                    : "bullseye",
+                                                    ? "landmark"
+                                                    : "gift",
                                             ]}
                                             mask={["fas", "square-full"]}
                                             size="6x"
@@ -233,11 +234,14 @@ export default function DonateYield(props: propType) {
                                     <FormHelperText style={{ textAlign: "center" }}>
                                         {donateType == "straight" ? (
                                             <>
-                                                A straight donation is delivered directly to the fundraiser.
+                                                A straight donation is delivered directly to the
+                                                fundraiser.
                                             </>
                                         ) : (
                                             <>
-                                                An interest donation donates through the yield generating protocol and you can withdraw your deposit amount after the time lock terminates.
+                                                An interest donation donates through the yield
+                                                generating protocol and you can withdraw your
+                                                deposit amount after the time lock terminates.
                                             </>
                                         )}
                                     </FormHelperText>
@@ -263,7 +267,7 @@ export default function DonateYield(props: propType) {
                         </div>
 
                         <Button
-                            className={styles.donateButton2}
+                            className={styles.donateButtonYield2}
                             style={{ bottom: "0px" }}
                             onClick={async function () {
                                 handleClose()
@@ -280,7 +284,7 @@ export default function DonateYield(props: propType) {
             </Modal>
 
             <Button
-                className={!disabled() ? styles.donateButton : styles.disabledButton}
+                className={!disabled() ? styles.donateButtonYield : styles.disabledButton}
                 disabled={disabled()}
                 onClick={(e) => {
                     setOpen(true)

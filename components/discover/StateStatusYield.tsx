@@ -55,8 +55,8 @@ export default function StateStatusYield(props: propType) {
     }
 
     async function updateUI() {
-        const fundInfo = await getFundSummary() as fundSummary
-
+        const fundInfo = (fundSummary ? fundSummary : await getFundSummary()) as fundSummary
+        console.log(fundInfo)
         const totalActiveFunded = fundInfo.totalActiveFunded
         const totalActiveInterestFunded = fundInfo.totalActiveInterestFunded
         const totalLifetimeFunded = fundInfo.totalLifetimeFunded
