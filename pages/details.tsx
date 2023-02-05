@@ -27,22 +27,18 @@ const Details: NextPage = () => {
     const fundAddress = router.query.fund as string
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
-
-    const provider = new ethers.providers.JsonRpcProvider("https://arb-goerli.g.alchemy.com/v2/zdsQZAwPV_kahb3kejyZFHR2Y77FaPTV")
+    const rpcUrl = chainId == "421613" ? process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_RPC_URL : "http://localhost:8545"
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
+    const signer = provider
 
     const fundRef = ref(database, chainId + "/funds/" + fundAddress)
     const [data, setData] = useState<databaseFundObject>()
     const [assetAddress, setAssetAddress] = useState("")
     const [owner, setOwner] = useState("")
-    const [amt, setAmt] = useState(0)
     const [state, setState] = useState(0)
     const [tranche, setTranche] = useState(0)
-    const [timeLeft, setTimeLeft] = useState(100)
     const [totalFunds, setTotalFunds] = useState(0)
     const [milestoneDurations, setMilestoneDurations] = useState<number[]>()
-    const [funderCalledVote, setFunderCalledVote] = useState<boolean>(false)
-    const [numVotesTried, setNumVotesTried] = useState(0)
-    const [timeLeftVoting, setTimeLeftVoting] = useState(0)
     const [milestoneSummary, setMilestoneSummary] = useState<milestoneSummary>()
     const [funderSummary, setFunderSummary] = useState<funderSummary>()
 
@@ -65,23 +61,27 @@ const Details: NextPage = () => {
 
     const decimals = chainId in addresses ? tokenConfig[chainIdNum][coinName].decimals : null
 
-    const {
-        runContractFunction: getMilestoneSummary,
-    } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getMilestoneSummary",
-        params: {},
-    })
+    const getMilestoneSummary = async () => {
+        const contract = new ethers.Contract(fundAddress, abi as any[], signer)
 
-    const {
-        runContractFunction: getFunderSummary,
-    } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getFunderSummary",
-        params: { funder: funderParam, level: levelParam },
-    })
+        const getResult = async () => {
+            const result = await contract.getMilestoneSummary()
+            return result
+        }
+
+        return getResult()
+    }
+
+    const getFunderSummary = async () => {
+        const contract = new ethers.Contract(fundAddress, abi as any[], signer)
+
+        const getResult = async () => {
+            const result = await contract.getFunderSummary(funderParam, levelParam)
+            return result
+        }
+
+        return getResult()
+    }
 
     function getDurations(milestones: milestone[]): number[] {
         return milestones.map(milestone => milestone!.milestoneDuration!.toNumber())
@@ -99,24 +99,16 @@ const Details: NextPage = () => {
         const ownerFromCall = milestoneInfo.owner
         const stateFromCall = milestoneInfo.state
         const trancheFromCall = milestoneInfo.currentTranche
-        const timeLeftFromCall = milestoneInfo.timeLeftRound
         const totalFromCall = milestoneInfo.lifeTimeRaised
         const durationsFromCall = getDurations(milestoneInfo.milestones)
-        const votesTriedFromCall = milestoneInfo.votesTried
-        const timeLeftVotingFromCall = milestoneInfo.timeLeftVoting
-        const didFunderVoteFromCall = milestoneInfo.funderCalledVote
 
         setMilestoneSummary(milestoneInfo)
         setAssetAddress(assetAddressFromCall!)
         setOwner((ownerFromCall as String).toLowerCase())
         setState(stateFromCall)
         setTranche(trancheFromCall)
-        setTimeLeft(timeLeftFromCall.toNumber())
         setTotalFunds(totalFromCall.toNumber() / 10 ** decimals!)
         setMilestoneDurations(durationsFromCall!)
-        setFunderCalledVote(didFunderVoteFromCall)
-        setNumVotesTried(votesTriedFromCall.toNumber())
-        setTimeLeftVoting(timeLeftVotingFromCall.toNumber())
     }
 
     useEffect(() => {

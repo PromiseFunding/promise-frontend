@@ -17,12 +17,17 @@ import StateStatusYield from "../components/discover/StateStatusYield"
 import TabsContentYield from "../components/details/TabsContentYield"
 import DonateYield from "../components/details/DonateYield"
 import WithdrawYield from "../components/details/WithdrawYield"
+import { ethers } from "ethers";
 
 const Details: NextPage = () => {
     const router = useRouter()
     const fundAddress = router.query.fund as string
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = parseInt(chainIdHex!).toString()
+
+    const rpcUrl = chainId == "421613" ? process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_RPC_URL : "http://localhost:8545"
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
+    const signer = provider
 
     const fundRef = ref(database, chainId + "/funds/" + fundAddress)
     const [data, setData] = useState<databaseFundObject>()
@@ -56,19 +61,27 @@ const Details: NextPage = () => {
 
     const decimals = chainId in addresses ? tokenConfig[chainIdNum][coinName].decimals : null
 
-    const { runContractFunction: getFundSummary } = useWeb3Contract({
-        abi: yieldAbi,
-        contractAddress: fundAddress!,
-        functionName: "getFundSummary",
-        params: {},
-    })
+    const getFundSummary = async () => {
+        const contract = new ethers.Contract(fundAddress, yieldAbi as any[], signer)
 
-    const { runContractFunction: getFunderSummary } = useWeb3Contract({
-        abi: yieldAbi,
-        contractAddress: fundAddress!,
-        functionName: "getFunderSummary",
-        params: { funder: funderParam },
-    })
+        const getResult = async () => {
+            const result = await contract.getFundSummary()
+            return result
+        }
+
+        return getResult()
+    }
+
+    const getFunderSummary = async () => {
+        const contract = new ethers.Contract(fundAddress, yieldAbi as any[], signer)
+
+        const getResult = async () => {
+            const result = await contract.getFunderSummary(funderParam)
+            return result
+        }
+
+        return getResult()
+    }
 
     async function updateFunderInfo() {
         const funderInfo = (await getFunderSummary()) as funderSummaryYield
