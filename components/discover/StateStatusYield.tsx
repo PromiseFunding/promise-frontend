@@ -42,6 +42,7 @@ export default function StateStatusYield(props: propType) {
     const [withdrawableAmount, setWithdrawableAmount] = useState(0)
     const [totalFunderAmount, setTotalFunderAmount] = useState(0)
     const [entryTime, setEntryTime] = useState(0)
+    const [ownerWithdrawResult, setownerWithdrawResult] = useState(0)
 
     const getFundSummary = async () => {
         const contract = new ethers.Contract(fundAddress, yieldAbi as any[], signer)
@@ -56,7 +57,6 @@ export default function StateStatusYield(props: propType) {
 
     async function updateUI() {
         const fundInfo = (fundSummary ? fundSummary : await getFundSummary()) as fundSummary
-        console.log(fundInfo)
         const totalActiveFunded = fundInfo.totalActiveFunded
         const totalActiveInterestFunded = fundInfo.totalActiveInterestFunded
         const totalLifetimeFunded = fundInfo.totalLifetimeFunded
@@ -124,7 +124,7 @@ export default function StateStatusYield(props: propType) {
         )
         if (format != "discover") {
             const amountFundedFromCall = funderSummary!.amountWithdrawable.toNumber()
-            setWithdrawableAmount(amountFundedFromCall / 10 ** decimals!)
+            setWithdrawableAmount(+(amountFundedFromCall / 10 ** decimals!).toFixed(decimals))
             const amountTotalFundedFromCall = funderSummary!.amountTotal.toNumber()
             setTotalFunderAmount(amountTotalFundedFromCall / 10 ** decimals!)
             const entryTimeFromCall = funderSummary!.entryTime.toNumber()
@@ -215,9 +215,13 @@ export default function StateStatusYield(props: propType) {
                                     }}
                                 >
                                     Amount You Can Withdraw{" "}
-                                    {interestProceeds +
-                                        totalActiveFunded -
-                                        totalActiveInterestFunded}{" "}
+                                    {Math.round(
+                                        (interestProceeds +
+                                            totalActiveFunded -
+                                            totalActiveInterestFunded) *
+                                            10 ** decimals!
+                                    ) /
+                                        10 ** decimals!}{" "}
                                     {coinName}:
                                 </div>
                             </div>

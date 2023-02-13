@@ -48,7 +48,6 @@ export default function DonateYield(props: propType) {
     const lockTime = fundInfo!.i_lockTime
     const assetAddress = fundInfo!.assetAddress
     const owner = fundInfo!.owner
-    console.log(owner)
 
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
     const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID

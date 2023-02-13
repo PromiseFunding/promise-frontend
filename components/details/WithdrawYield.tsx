@@ -120,7 +120,6 @@ export default function WithdrawYield(props: propType) {
         ) {
             return true
         }
-        //interestProceeds + totalActiveFunded - totalActiveInterestFunded
         if (
             userAddress == owner.toLowerCase() &&
             fundSummary!.withdrawableInterestProceeds.toNumber() +
