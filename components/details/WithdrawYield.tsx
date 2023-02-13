@@ -189,7 +189,7 @@ export default function WithdrawYield(props: propType) {
                         }
                     >
                         * The timelock is still going. You have {formatDuration(timeLeftFunder)}{" "}
-                        seconds left before you can withdraw your deposit to the interest donation method.
+                        seconds left before you can withdraw your deposit from the interest donation method.
                     </div>
                 </>
             ) : (
