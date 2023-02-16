@@ -18,6 +18,8 @@ import { TextField } from "@material-ui/core";
 import { BigNumber, ContractTransaction } from 'ethers'
 import { useNotification } from "web3uikit"
 import { update, set, ref as refDb, ref, onValue } from "firebase/database"
+import { DEFAULT_CHAIN_ID } from "../../config/helper-config"
+
 
 const modalStyle = {
     position: 'absolute' as 'absolute',
@@ -45,7 +47,8 @@ export default function Donate(props: propType) {
     const timeLeftRound = milestoneSummary!.timeLeftRound.toNumber()
 
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
 
     const [open, setOpen] = useState(false)
     const [donateType, setDonateType] = useState("spread")

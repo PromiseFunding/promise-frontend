@@ -14,10 +14,13 @@ import { propTypeFundCard } from "../config/types"
 import Tooltip from "@mui/material/Tooltip"
 import Link from "next/link"
 import StateStatusYield from "./discover/StateStatusYield"
+import { DEFAULT_CHAIN_ID } from "../config/helper-config"
+
 
 export default function FundCard(props: propTypeFundCard) {
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
     const fund = props.fund
     const fundRef = ref(database, chainId + "/funds/" + fund)
 
@@ -80,11 +83,11 @@ export default function FundCard(props: propTypeFundCard) {
                                                         textDecoration: "underline",
                                                         color: "lightblue",
                                                     }}
-                                                    // onClick={(e) => {
-                                                    //     window.onload = () => {
-                                                    //         handleScroll("faq")
-                                                    //     }
-                                                    // }}
+                                                // onClick={(e) => {
+                                                //     window.onload = () => {
+                                                //         handleScroll("faq")
+                                                //     }
+                                                // }}
                                                 >
                                                     Learn more
                                                 </Link>
@@ -174,11 +177,11 @@ export default function FundCard(props: propTypeFundCard) {
                                                         textDecoration: "underline",
                                                         color: "lightblue",
                                                     }}
-                                                    // onClick={(e) => {
-                                                    //     window.onload = () => {
-                                                    //         handleScroll("faq")
-                                                    //     }
-                                                    // }}
+                                                // onClick={(e) => {
+                                                //     window.onload = () => {
+                                                //         handleScroll("faq")
+                                                //     }
+                                                // }}
                                                 >
                                                     Learn more
                                                 </Link>

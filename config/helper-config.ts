@@ -57,6 +57,8 @@ export const states = [
     "Accepting Seed Round Donations"
 ]
 
+export const DEFAULT_CHAIN_ID = "421613"
+
 export const developmentChains = ["hardhat", "localhost"]
 export const DEFAULT_ASSET_ADDRESS = "0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE"
 export const DEFAULT_POOL_ADDRESS = "0x368EedF3f56ad10b9bC57eed4Dac65B26Bb667f6"

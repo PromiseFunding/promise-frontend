@@ -5,6 +5,8 @@ import { useNotification } from "web3uikit" //wrapped components in this as well
 import { ContractTransaction } from "ethers"
 import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
+import { DEFAULT_CHAIN_ID } from "../config/helper-config"
+
 
 export default function WithdrawProceeds(props: propType) {
     const fundAddress = props.fundAddress
@@ -16,7 +18,8 @@ export default function WithdrawProceeds(props: propType) {
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
     const [userAddress, setAddress] = useState("0")
     const [withdrawableProceeds, setWithdrawableProceeds] = useState(0)
 

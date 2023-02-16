@@ -5,24 +5,20 @@ import Header from "../components/Header"
 import { useEffect, useState } from "react"
 import Search from "../components/Search"
 import CategorySelector from "../components/CategorySelector"
-import SortSelector from "../components/SortingSearch"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { contractAddressesInterface } from "../config/types"
 import { contractAddresses, FundFactory, YieldFundFactory } from "../constants"
 import { ref, get } from "firebase/database"
 import { database } from "../firebase-config"
 import * as React from "react"
-import Particles from "react-tsparticles"
-import { loadFull } from "tsparticles"
-import { useCallback } from "react"
-import { Engine } from "tsparticles-engine"
 import Typed from "react-typed"
 import { ethers } from "ethers";
+import { DEFAULT_CHAIN_ID } from "../config/helper-config"
 
 const Discover: NextPage = () => {
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
 
     const rpcUrl = chainId == "421613" ? process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_RPC_URL : "http://localhost:8545"
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
@@ -92,10 +88,10 @@ const Discover: NextPage = () => {
     }
 
     useEffect(() => {
-        if (isWeb3Enabled && fundFactoryAddress) {
+        if (fundFactoryAddress) {
             updateUI()
         }
-    }, [isWeb3Enabled, fundFactoryAddress])
+    }, [fundFactoryAddress])
 
     return (
         <div>
@@ -132,9 +128,8 @@ const Discover: NextPage = () => {
             <br></br>
             <div>
                 <CategorySelector></CategorySelector>
-                {/* <SortSelector></SortSelector> */}
             </div>
-            {isWeb3Enabled && fundFactoryAddress ? (
+            {fundFactoryAddress ? (
                 <>
                     <div>
                         <Search fundAddressArray={allFunds} query={query}></Search>

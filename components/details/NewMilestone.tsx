@@ -13,6 +13,8 @@ import TextField from "@mui/material/TextField"
 import Modal from '@mui/material/Modal';
 import { BigNumber, ContractTransaction } from "ethers"
 import Button from '@mui/material/Button';
+import { DEFAULT_CHAIN_ID } from "../../config/helper-config"
+
 
 import Box from "@mui/material/Box"
 
@@ -34,7 +36,8 @@ export default function NewMilestone(props: propType) {
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
     const [numberofMilestones, setNumberofMilestones] = useState(5)
     const [milestoneDuration, setMilestoneDuration] = useState("")
     const [description, setDescription] = useState("")

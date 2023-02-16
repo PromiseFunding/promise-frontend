@@ -10,6 +10,8 @@ import { database, storage } from "../../firebase-config"
 import { Button, TextField } from '@mui/material'
 import { useNotification } from "web3uikit"
 import Link from 'next/link'
+import { DEFAULT_CHAIN_ID } from "../../config/helper-config"
+
 
 export default function CommunityForum(props: propType) {
     const fundAddress = props.fundAddress
@@ -18,7 +20,8 @@ export default function CommunityForum(props: propType) {
     const owner = milestoneSummary!.owner
 
     const { account, chainId: chainIdHex, } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
 
     const [isFunder, setIsFunder] = useState(false)
     const [userAddress, setUserAddress] = useState("")

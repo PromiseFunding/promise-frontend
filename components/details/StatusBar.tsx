@@ -16,6 +16,7 @@ import { abi } from "../../constants"
 // dont export from moralis when using react
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { formatDuration, convertSeconds } from '../../utils/utils';
+import { DEFAULT_CHAIN_ID } from "../../config/helper-config"
 
 const steps = ['Milestone 1', 'Milestone 2', 'Milestone 3', 'Milestone 4', 'Milestone 5'];
 
@@ -42,7 +43,8 @@ export default function HorizontalNonLinearStepper(props: propType) {
     const [totalRaised, setTotalRaised] = useState(0)
     const [roundEnd, setRoundEnd] = useState(0)
 
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
 
     const { runContractFunction: getFunderSummary } = useWeb3Contract({
         abi: abi,

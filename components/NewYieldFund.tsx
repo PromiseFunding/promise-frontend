@@ -22,6 +22,7 @@ import DeleteIcon from "@material-ui/icons/Delete"
 import Modal from "@mui/material/Modal"
 import CircularProgress from "@mui/material/CircularProgress"
 import { useRouter } from "next/router"
+import { DEFAULT_CHAIN_ID } from "../config/helper-config"
 
 const modalStyle = {
     position: "absolute" as "absolute",
@@ -40,7 +41,8 @@ const modalStyle = {
 export default function NewYieldFund() {
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
 
     const yieldAddress =
         chainId in addresses
@@ -132,7 +134,7 @@ export default function NewYieldFund() {
         const uploadTask = uploadBytesResumable(iconRef, file as Blob)
         uploadTask.on(
             "state_changed",
-            (snapshot) => {},
+            (snapshot) => { },
             (err) => console.log(err),
             () => {
                 getDownloadURL(uploadTask.snapshot.ref).then((url) => {

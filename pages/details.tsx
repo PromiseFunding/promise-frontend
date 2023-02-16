@@ -21,12 +21,15 @@ import StartVote from "../components/details/StartVote"
 import Vote from "../components/details/Vote"
 import WithdrawExpired from "../components/details/WithdrawExpired"
 import { ethers } from "ethers";
+import { DEFAULT_CHAIN_ID } from "../config/helper-config"
+import { ConnectButton } from "web3uikit"
 
 const Details: NextPage = () => {
     const router = useRouter()
     const fundAddress = router.query.fund as string
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
     const rpcUrl = chainId == "421613" ? process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_RPC_URL : "http://localhost:8545"
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
     const signer = provider
@@ -49,7 +52,7 @@ const Details: NextPage = () => {
     const addresses: contractAddressesInterface = contractAddresses
 
     //TODO: get helper-config working instead!... gets rid of decimal function
-    const chainIdNum = parseInt(chainIdHex!)
+    const chainIdNum = parseInt(chainId)
 
     let coinName = "USDT"
 
@@ -88,8 +91,10 @@ const Details: NextPage = () => {
     }
 
     async function updateFunderInfo() {
-        const funderInfo = await getFunderSummary() as funderSummary
-        setFunderSummary(funderInfo)
+        if (funderParam) {
+            const funderInfo = await getFunderSummary() as funderSummary
+            setFunderSummary(funderInfo)
+        }
         updateUI()
     }
 
@@ -112,11 +117,11 @@ const Details: NextPage = () => {
     }
 
     useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
+        if (fundAddress) {
             setFunderParam(userAddress)
             setLevelParam(tranche)
         }
-    }, [isWeb3Enabled, fundAddress, userAddress])
+    }, [fundAddress, userAddress])
 
     useEffect(() => {
         if (account) {
@@ -125,10 +130,10 @@ const Details: NextPage = () => {
     }, [account])
 
     useEffect(() => {
-        if (funderParam && levelParam >= 0) {
+        if (fundAddress && levelParam >= 0) {
             updateFunderInfo()
         }
-    }, [funderParam, levelParam])
+    }, [chainId, funderParam, levelParam, fundAddress])
 
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
@@ -160,7 +165,7 @@ const Details: NextPage = () => {
     return (
         <div>
             <Header main={false}></Header>
-            {data && milestoneSummary && funderSummary ? (
+            {data && milestoneSummary ? (
                 <div className={styles.detailsMain}>
                     <Head>
                         <title>{data.fundTitle}: {data.description}</title>
@@ -176,7 +181,7 @@ const Details: NextPage = () => {
                             <div className={styles.textArea}>{data.description} </div>
                         </div>
                         <div className={styles.actionsOuter}>
-                            <div className={styles.actionsInner}>
+                            {funderSummary ? (<div className={styles.actionsInner}>
                                 <StateStatus fundAddress={fundAddress} milestoneSummary={milestoneSummary} funderSummary={funderSummary} decimals={decimals!}
                                     format="details"></StateStatus>
                                 <div className={styles.buttons}>
@@ -236,7 +241,24 @@ const Details: NextPage = () => {
                                     ) : <></>}
                                 </div>
 
-                            </div>
+                            </div>) : (
+                                <div className={styles.connectWallet}>
+                                    <b style={{ color: "green" }}>
+                                        {milestoneSummary.lifeTimeRaised.toNumber() / 10 ** decimals!}
+                                    </b>
+                                    <p style={{ fontSize: "20px" }}>{coinName} Raised Lifetime.</p>
+
+                                    <div style={{ alignItems: "center", width: "100%", display: "flex", flexDirection: "column", marginTop: "20px" }}>
+
+                                        <h1 style={{ fontSize: "20px", fontWeight: "700", textAlign: "center" }}>Please connect your wallet to interact with the fundraiser!</h1>
+                                        <div style={{ marginTop: "15px" }}>
+                                            <ConnectButton moralisAuth={true} />
+                                        </div>
+                                    </div>
+
+                                </div>)}
+
+
                         </div>
                     </div>
                     <div className={styles.contentLower}>

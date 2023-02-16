@@ -17,6 +17,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
 import { formatDuration } from '../../utils/utils'
+import { DEFAULT_CHAIN_ID } from "../../config/helper-config"
 
 const modalStyle = {
     position: 'absolute' as 'absolute',
@@ -40,7 +41,8 @@ export default function Updates(props: propType) {
     const [updates, setUpdates] = useState<update[]>()
 
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
     const fundRef = refDb(database, chainId + "/funds/" + fundAddress + '/updates')
 
     useEffect(() => {

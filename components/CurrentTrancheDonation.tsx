@@ -10,6 +10,7 @@ import styles from "../styles/Home.module.css"
 import { ContractTransaction } from "ethers"
 import { database, storage } from "../firebase-config"
 import { update, set, ref as refDb, ref, onValue } from "firebase/database"
+import { DEFAULT_CHAIN_ID } from "../config/helper-config"
 
 //contract is already deployed... trying to look at features of contract
 export default function CurrentTrancheDonation(props: propType) {
@@ -24,7 +25,8 @@ export default function CurrentTrancheDonation(props: propType) {
     const milestone = tranche! + 1
     // const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
     const [amountFunded, setAmountFunded] = useState(0)
     const [val, setVal] = useState("")
 

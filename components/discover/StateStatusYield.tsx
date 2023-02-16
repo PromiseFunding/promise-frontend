@@ -7,10 +7,9 @@ import { useState, useEffect } from "react"
 import { abi, yieldAbi } from "../../constants"
 import { BigNumber } from "ethers"
 import { tokenConfig } from "../../config/token-config"
-import { ref, get } from "firebase/database"
-import { database } from "../../firebase-config"
-import { formatDuration, convertSeconds } from "../../utils/utils"
-import Tooltip from "@mui/material/Tooltip"
+import { ethers } from "ethers";
+import { DEFAULT_CHAIN_ID } from "../../config/helper-config"
+
 
 export default function StateStatusYield(props: propType) {
     const fundAddress = props.fundAddress
@@ -21,8 +20,13 @@ export default function StateStatusYield(props: propType) {
     const coinName = props.coinName
 
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
-    const chainIdNum = parseInt(chainIdHex!)
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+    const chainIdNum = parseInt(chainId!)
+
+    const rpcUrl = chainId == "421613" ? process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_RPC_URL : "http://localhost:8545"
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
+    const signer = provider
+
     const [totalActiveFunded, settotalActiveFunded] = useState(0)
     const [interestProceeds, setInterestProceeds] = useState(0)
     const [totalActiveInterestFunded, settotalActiveInterestFunded] = useState(0)
@@ -39,12 +43,16 @@ export default function StateStatusYield(props: propType) {
     const [totalFunderAmount, setTotalFunderAmount] = useState(0)
     const [entryTime, setEntryTime] = useState(0)
 
-    const { runContractFunction: getFundSummary } = useWeb3Contract({
-        abi: yieldAbi,
-        contractAddress: fundAddress!,
-        functionName: "getFundSummary",
-        params: {},
-    })
+    const getFundSummary = async () => {
+        const contract = new ethers.Contract(fundAddress, yieldAbi as any[], signer)
+
+        const getResult = async () => {
+            const result = await contract.getFundSummary()
+            return result
+        }
+
+        return getResult()
+    }
 
     async function updateUI() {
         const fundInfo = await getFundSummary() as fundSummary
@@ -134,7 +142,7 @@ export default function StateStatusYield(props: propType) {
     }
 
     useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
+        if (fundAddress) {
             updateUI()
         }
     }, [isWeb3Enabled, fundAddress, fundSummary, funderSummary])

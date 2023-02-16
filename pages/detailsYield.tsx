@@ -18,12 +18,14 @@ import TabsContentYield from "../components/details/TabsContentYield"
 import DonateYield from "../components/details/DonateYield"
 import WithdrawYield from "../components/details/WithdrawYield"
 import { ethers } from "ethers";
+import { DEFAULT_CHAIN_ID } from "../config/helper-config"
+import { ConnectButton } from "web3uikit"
 
 const Details: NextPage = () => {
     const router = useRouter()
     const fundAddress = router.query.fund as string
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
 
     const rpcUrl = chainId == "421613" ? process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_RPC_URL : "http://localhost:8545"
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
@@ -49,7 +51,7 @@ const Details: NextPage = () => {
     const addresses: contractAddressesInterface = contractAddresses
 
     //TODO: get helper-config working instead!... gets rid of decimal function
-    const chainIdNum = parseInt(chainIdHex!)
+    const chainIdNum = parseInt(chainId)
 
     let coinName = "USDT"
 
@@ -84,8 +86,10 @@ const Details: NextPage = () => {
     }
 
     async function updateFunderInfo() {
-        const funderInfo = (await getFunderSummary()) as funderSummaryYield
-        setFunderSummary(funderInfo)
+        if (funderParam) {
+            const funderInfo = (await getFunderSummary()) as funderSummaryYield
+            setFunderSummary(funderInfo)
+        }
         updateUI()
     }
 
@@ -125,10 +129,10 @@ const Details: NextPage = () => {
     }, [account])
 
     useEffect(() => {
-        if (funderParam) {
+        if (fundAddress) {
             updateFunderInfo()
         }
-    }, [funderParam])
+    }, [fundAddress, isWeb3Enabled, funderParam])
 
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
@@ -139,7 +143,7 @@ const Details: NextPage = () => {
     return (
         <div>
             <Header main={false}></Header>
-            {data && fundSummary && funderSummary ? (
+            {data && fundSummary ? (
                 <div className={styles.detailsMain}>
                     <Head>
                         <title>
@@ -165,28 +169,44 @@ const Details: NextPage = () => {
                             <div className={styles.textArea}>{data.description} </div>
                         </div>
                         <div className={styles.actionsOuter}>
-                            <div className={styles.actionsInner}>
-                                <StateStatusYield
-                                    fundAddress={fundAddress}
-                                    fundSummary={fundSummary}
-                                    funderSummaryYield={funderSummary}
-                                    decimals={decimals!}
-                                    format="details"
-                                    coinName={coinName}
-                                ></StateStatusYield>
-                                <div className={styles.buttons}>
-                                    {userAddress != owner ? (
-                                        <>
-                                            <Button className={styles.shareButton}>Share</Button>
-                                            <DonateYield
-                                                fundAddress={fundAddress}
-                                                decimals={decimals!}
-                                                fundSummary={fundSummary}
-                                                funderSummaryYield={funderSummary}
-                                                onGetFunderInfo={() => {
-                                                    updateFunderInfo()
-                                                }}
-                                            ></DonateYield>
+                            {funderSummary ? (
+                                <div className={styles.actionsInner}>
+                                    <StateStatusYield
+                                        fundAddress={fundAddress}
+                                        fundSummary={fundSummary}
+                                        funderSummaryYield={funderSummary}
+                                        decimals={decimals!}
+                                        format="details"
+                                        coinName={coinName}
+                                    ></StateStatusYield>
+                                    <div className={styles.buttons}>
+                                        {userAddress != owner ? (
+                                            <>
+                                                <Button className={styles.shareButton}>Share</Button>
+                                                <DonateYield
+                                                    fundAddress={fundAddress}
+                                                    decimals={decimals!}
+                                                    fundSummary={fundSummary}
+                                                    funderSummaryYield={funderSummary}
+                                                    onGetFunderInfo={() => {
+                                                        updateFunderInfo()
+                                                    }}
+                                                ></DonateYield>
+                                                <WithdrawYield
+                                                    fundAddress={fundAddress}
+                                                    decimals={decimals!}
+                                                    fundSummary={fundSummary}
+                                                    funderSummaryYield={funderSummary}
+                                                    onGetFunderInfo={() => {
+                                                        updateFunderInfo()
+                                                    }}
+                                                    coinName={coinName}
+                                                ></WithdrawYield>
+                                            </>
+                                        ) : (
+                                            <></>
+                                        )}
+                                        {userAddress == owner ? (
                                             <WithdrawYield
                                                 fundAddress={fundAddress}
                                                 decimals={decimals!}
@@ -197,27 +217,30 @@ const Details: NextPage = () => {
                                                 }}
                                                 coinName={coinName}
                                             ></WithdrawYield>
-                                        </>
-                                    ) : (
-                                        <></>
-                                    )}
-                                    {userAddress == owner ? (
-                                        <WithdrawYield
-                                            fundAddress={fundAddress}
-                                            decimals={decimals!}
-                                            fundSummary={fundSummary}
-                                            funderSummaryYield={funderSummary}
-                                            onGetFunderInfo={() => {
-                                                updateFunderInfo()
-                                            }}
-                                            coinName={coinName}
-                                        ></WithdrawYield>
-                                    ) : (
-                                        <></>
-                                    )}
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
+                            ) : (
+                                <div className={styles.connectWallet}>
+                                    <b style={{ color: "green" }}>
+                                        {fundSummary.totalLifetimeFunded.toNumber() / 10 ** decimals!}
+                                    </b>
+                                    <p style={{ fontSize: "20px" }}>{coinName} Raised Lifetime.</p>
+
+                                    <div style={{ alignItems: "center", width: "100%", display: "flex", flexDirection: "column", marginTop: "20px" }}>
+
+                                        <h1 style={{ fontSize: "20px", fontWeight: "700", textAlign: "center" }}>Please connect your wallet to interact with the fundraiser!</h1>
+                                        <div style={{ marginTop: "15px" }}>
+                                            <ConnectButton moralisAuth={true} />
+                                        </div>
+                                    </div>
+
+                                </div>)}
                         </div>
+
+
                     </div>
                     <div className={styles.contentLower}>
                         <TabsContentYield
@@ -241,8 +264,9 @@ const Details: NextPage = () => {
                         />
                     </Head>
                 </div>
-            )}
-        </div>
+            )
+            }
+        </div >
     )
 }
 

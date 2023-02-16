@@ -26,13 +26,15 @@ import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
 import CurrentTrancheDonation from "../components/CurrentTrancheDonation"
 import Updates from "../components/details/Updates"
+import { DEFAULT_CHAIN_ID } from "../config/helper-config"
 
 const DetailsOld: NextPage = () => {
     const router = useRouter()
     const fundAddress = router.query.fund as string
 
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
 
     const fundRef = ref(database, chainId + "/funds/" + fundAddress)
     const [data, setData] = useState<databaseFundObject>()
