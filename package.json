@@ -48,6 +48,7 @@
     "react-horizontal-scrolling-menu": "^3.2.3",
     "react-moralis": "^1.4.2",
     "react-plotly.js": "^2.6.0",
+    "react-share": "^4.4.1",
     "react-tsparticles": "^2.7.0",
     "react-twitter-embed": "^4.0.4",
     "react-typed": "^1.2.0",

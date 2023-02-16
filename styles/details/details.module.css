@@ -140,7 +140,7 @@
     width: 100%;
     color: white;
     bottom: 0px;
-    background: linear-gradient(125.78deg,#cdd406 17.93%, #a9db29ee 42.06%, #3f9407cc 73.89%);
+    background: linear-gradient(125.78deg, #cdd406 17.93%, #a9db29ee 42.06%, #3f9407cc 73.89%);
     border-radius: 10px;
 }
 
@@ -244,6 +244,12 @@
     font-size: 50px;
     text-align: center;
     font-weight: 500;
+}
+
+.shareTitle {
+    font-size: 40px;
+    text-align: center;
+    font-weight: 600;
 }
 
 .textarea {

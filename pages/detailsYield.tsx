@@ -44,6 +44,7 @@ const Details: NextPage = () => {
     const [lockTime, setLockTime] = useState(0)
     const [fundSummary, setFundSummary] = useState<fundSummary>()
     const [funderSummary, setFunderSummary] = useState<funderSummaryYield>()
+    const [open, setOpen] = useState(false)
 
     const [funderParam, setFunderParam] = useState("")
     const [userAddress, setUserAddress] = useState("")
@@ -140,6 +141,10 @@ const Details: NextPage = () => {
         })
     }, [fundAddress, chainId])
 
+    const handleClose = () => {
+        setOpen(false)
+    }
+
     return (
         <div>
             <Header main={false}></Header>
@@ -169,44 +174,95 @@ const Details: NextPage = () => {
                             <div className={styles.textArea}>{data.description} </div>
                         </div>
                         <div className={styles.actionsOuter}>
-                            {funderSummary ? (
-                                <div className={styles.actionsInner}>
-                                    <StateStatusYield
-                                        fundAddress={fundAddress}
-                                        fundSummary={fundSummary}
-                                        funderSummaryYield={funderSummary}
-                                        decimals={decimals!}
-                                        format="details"
-                                        coinName={coinName}
-                                    ></StateStatusYield>
-                                    <div className={styles.buttons}>
-                                        {userAddress != owner ? (
-                                            <>
-                                                <Button className={styles.shareButton}>Share</Button>
-                                                <DonateYield
-                                                    fundAddress={fundAddress}
-                                                    decimals={decimals!}
-                                                    fundSummary={fundSummary}
-                                                    funderSummaryYield={funderSummary}
-                                                    onGetFunderInfo={() => {
-                                                        updateFunderInfo()
-                                                    }}
-                                                ></DonateYield>
-                                                <WithdrawYield
-                                                    fundAddress={fundAddress}
-                                                    decimals={decimals!}
-                                                    fundSummary={fundSummary}
-                                                    funderSummaryYield={funderSummary}
-                                                    onGetFunderInfo={() => {
-                                                        updateFunderInfo()
-                                                    }}
-                                                    coinName={coinName}
-                                                ></WithdrawYield>
-                                            </>
-                                        ) : (
-                                            <></>
-                                        )}
-                                        {userAddress == owner ? (
+                            <div className={styles.actionsInner}>
+                                <StateStatusYield
+                                    fundAddress={fundAddress}
+                                    fundSummary={fundSummary}
+                                    funderSummaryYield={funderSummary}
+                                    decimals={decimals!}
+                                    format="details"
+                                    coinName={coinName}
+                                    yieldFundTitle={data.fundTitle}
+                                ></StateStatusYield>
+                                <div className={styles.buttons}>
+                                    {userAddress != owner ? (
+                                        <>
+                                            <div>
+                                                <Modal
+                                                    open={open}
+                                                    aria-labelledby="modal-modal-title"
+                                                    aria-describedby="modal-modal-description"
+                                                    onClose={handleClose}
+                                                >
+                                                    <Box sx={modalStyle}>
+                                                        <div className={styles.shareTitle}>
+                                                            Share
+                                                        </div>
+                                                        <div className={styles.modalForm}>
+                                                            <br></br>
+                                                            <TwitterShareButton
+                                                                url={`http://localhost:3000/detailsYield?fund=${fundAddress}`}
+                                                                title={`Check out this fundraiser on @Promise called '${data.fundTitle}'.`}
+                                                                hashtags={["Web3Fundraising"]}
+                                                            >
+                                                                <TwitterIcon
+                                                                    size={50}
+                                                                    borderRadius={10}
+                                                                />
+                                                            </TwitterShareButton>
+                                                            <br></br>
+                                                            <FacebookShareButton
+                                                                url={`http://localhost:3000/detailsYield?fund=${fundAddress}`}
+                                                                quote={`Check out this fundraiser on @Promise called '${data.fundTitle}'.`}
+                                                                hashtag="#Web3Fundraising"
+                                                            >
+                                                                <FacebookIcon
+                                                                    size={50}
+                                                                    borderRadius={10}
+                                                                />
+                                                            </FacebookShareButton>
+                                                            <br></br>
+                                                            <EmailShareButton
+                                                                url={`http://localhost:3000/detailsYield?fund=${fundAddress}`}
+                                                                body={`Check out this fundraiser on the called '${data.fundTitle}'.`}
+                                                                subject={
+                                                                    "Promise Web3 Fundraising"
+                                                                }
+                                                            >
+                                                                <EmailIcon
+                                                                    size={50}
+                                                                    borderRadius={10}
+                                                                />
+                                                            </EmailShareButton>
+                                                            <br></br>
+                                                            <WhatsappShareButton
+                                                                url={`http://localhost:3000/detailsYield?fund=${fundAddress}`}
+                                                                title={`Check out this fundraiser on the called '${data.fundTitle}'.`}
+                                                            >
+                                                                <WhatsappIcon
+                                                                    size={50}
+                                                                    borderRadius={10}
+                                                                />
+                                                            </WhatsappShareButton>
+                                                        </div>
+                                                    </Box>
+                                                </Modal>
+                                                <Button
+                                                    className={styles.shareButton}
+                                                    onClick={() => setOpen(true)}
+                                                >
+                                                    Share
+                                                </Button>
+                                            </div>
+                                            <DonateYield
+                                                fundAddress={fundAddress}
+                                                decimals={decimals!}
+                                                fundSummary={fundSummary}
+                                                funderSummaryYield={funderSummary}
+                                                onGetFunderInfo={() => {
+                                                    updateFunderInfo()
+                                                }}
+                                            ></DonateYield>
                                             <WithdrawYield
                                                 fundAddress={fundAddress}
                                                 decimals={decimals!}
@@ -217,30 +273,27 @@ const Details: NextPage = () => {
                                                 }}
                                                 coinName={coinName}
                                             ></WithdrawYield>
-                                        ) : (
-                                            <></>
-                                        )}
-                                    </div>
+                                        </>
+                                    ) : (
+                                        <></>
+                                    )}
+                                    {userAddress == owner ? (
+                                        <WithdrawYield
+                                            fundAddress={fundAddress}
+                                            decimals={decimals!}
+                                            fundSummary={fundSummary}
+                                            funderSummaryYield={funderSummary}
+                                            onGetFunderInfo={() => {
+                                                updateFunderInfo()
+                                            }}
+                                            coinName={coinName}
+                                        ></WithdrawYield>
+                                    ) : (
+                                        <></>
+                                    )}
                                 </div>
-                            ) : (
-                                <div className={styles.connectWallet}>
-                                    <b style={{ color: "green" }}>
-                                        {fundSummary.totalLifetimeFunded.toNumber() / 10 ** decimals!}
-                                    </b>
-                                    <p style={{ fontSize: "20px" }}>{coinName} Raised Lifetime.</p>
-
-                                    <div style={{ alignItems: "center", width: "100%", display: "flex", flexDirection: "column", marginTop: "20px" }}>
-
-                                        <h1 style={{ fontSize: "20px", fontWeight: "700", textAlign: "center" }}>Please connect your wallet to interact with the fundraiser!</h1>
-                                        <div style={{ marginTop: "15px" }}>
-                                            <ConnectButton moralisAuth={true} />
-                                        </div>
-                                    </div>
-
-                                </div>)}
+                            </div>
                         </div>
-
-
                     </div>
                     <div className={styles.contentLower}>
                         <TabsContentYield
