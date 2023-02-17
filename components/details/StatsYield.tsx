@@ -14,6 +14,7 @@ import { funderSummaryYield, fundSummary, propType } from "../../config/types"
 import { updateMetadata } from "firebase/storage"
 import { useMoralis } from "react-moralis"
 import { height } from "@mui/system"
+import PoolInfo from "./PoolInfoYield"
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, ArcElement)
 
@@ -88,7 +89,11 @@ export default function StatsYield(props: propType) {
 
     const getDataFunder = () => {
         const newData = {
-            labels: ["Life Time Contributed", "Total Straight Donated", "Amount Withdrawable (Interest Method)"],
+            labels: [
+                "Life Time Contributed",
+                "Total Straight Donated",
+                "Amount Withdrawable (Interest Method)",
+            ],
             datasets: [
                 {
                     label: `Total Amount Raised (${coinName})`,
@@ -184,6 +189,7 @@ export default function StatsYield(props: propType) {
                     This fundraiser has no statistics to report yet.{" "}
                 </h1>
             )}
+            <PoolInfo fundAddress={props.fundAddress} fundSummary={fundSummary} />
         </div>
     )
 }
