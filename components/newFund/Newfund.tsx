@@ -1,16 +1,16 @@
-import { contractAddresses, FundFactory } from "../constants"
+import { contractAddresses, FundFactory } from "../../constants"
 // dont export from moralis when using react
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { SetStateAction, useEffect, useState } from "react"
 import { useNotification } from "web3uikit" //wrapped components in this as well in _app.js.
-import { tokenConfig } from "../config/token-config"
-import { contractAddressesInterface } from "../config/types"
+import { tokenConfig } from "../../config/token-config"
+import { contractAddressesInterface } from "../../config/types"
 import { update, set, ref as refDb } from "firebase/database"
 import { ref as refStore, getDownloadURL, uploadBytesResumable } from "firebase/storage"
-import { database, storage } from "../firebase-config"
-import { milestone } from "../config/types"
+import { database, storage } from "../../firebase-config"
+import { milestone } from "../../config/types"
 import { BigNumber } from "ethers"
-import styles from "../styles/Home.module.css"
+import styles from "../../styles/Home.module.css"
 import TextField from "@mui/material/TextField"
 import FormHelperText from "@mui/material/FormHelperText"
 import FormControl from "@mui/material/FormControl"
@@ -23,7 +23,7 @@ import DeleteIcon from "@material-ui/icons/Delete"
 import Modal from "@mui/material/Modal"
 import CircularProgress from "@mui/material/CircularProgress"
 import { useRouter } from "next/router"
-import { DEFAULT_CHAIN_ID } from "../config/helper-config"
+import { DEFAULT_CHAIN_ID } from "../../config/helper-config"
 
 
 const categories = ["--", "Tech", "Film", "Product", "Gaming"]
@@ -54,7 +54,7 @@ export default function NewFund() {
             addresses[chainId]["PromiseFundFactory"].length - 1
             ]
             : null
-    const chainIdNum = parseInt(chainIdHex!)
+    const chainIdNum = parseInt(chainId)
 
     const [assetValue, setAssetValue] = useState("USDT")
     const [title, setTitle] = useState("")
@@ -636,7 +636,7 @@ export default function NewFund() {
                     </div>
                 </Box>
             ) : (
-                <div>No Create Yield Address Detected</div>
+                <h1 style={{ marginTop: "50px", marginLeft: "50px", marginRight: "50px", fontSize: "60px", fontWeight: "700", textAlign: "center" }}>Please connect a wallet to create a new fundraiser.</h1>
             )}
         </div>
     )
