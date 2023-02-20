@@ -49,6 +49,16 @@
     margin: 20px;
 }
 
+.connectWallet {
+    height: 94%;
+    font-size: 15px;
+    position: relative;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    font-size: 25px;
+}
+
 .textArea {
     white-space: pre-wrap;
     margin-top: 10px;

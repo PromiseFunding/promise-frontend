@@ -5,23 +5,24 @@ import Header from "../components/Header"
 import { useEffect, useState } from "react"
 import Search from "../components/Search"
 import CategorySelector from "../components/CategorySelector"
-import SortSelector from "../components/SortingSearch"
 import { useMoralis, useWeb3Contract } from "react-moralis"
 import { contractAddressesInterface } from "../config/types"
 import { contractAddresses, FundFactory, YieldFundFactory } from "../constants"
 import { ref, get } from "firebase/database"
 import { database } from "../firebase-config"
 import * as React from "react"
-import Particles from "react-tsparticles"
-import { loadFull } from "tsparticles"
-import { useCallback } from "react"
-import { Engine } from "tsparticles-engine"
 import Typed from "react-typed"
+import { ethers } from "ethers";
+import { DEFAULT_CHAIN_ID } from "../config/helper-config"
 
 const Discover: NextPage = () => {
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
+    const rpcUrl = chainId == "421613" ? process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_RPC_URL : "http://localhost:8545"
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
+    const signer = provider
 
     const [state, setState] = React.useState({
         top: false,
@@ -33,8 +34,8 @@ const Discover: NextPage = () => {
     const fundFactoryAddress =
         chainId in addresses
             ? addresses[chainId]["PromiseFundFactory"][
-                  addresses[chainId]["PromiseFundFactory"].length - 1
-              ]
+            addresses[chainId]["PromiseFundFactory"].length - 1
+            ]
             : null
 
     const yieldAddress =
@@ -46,19 +47,27 @@ const Discover: NextPage = () => {
     const [allFunds, setAllFunds] = useState<string[]>([])
     const [query, setQuery] = useState("")
 
-    const { runContractFunction: getAllPromiseFund } = useWeb3Contract({
-        abi: FundFactory,
-        contractAddress: fundFactoryAddress!,
-        functionName: "getAllPromiseFund",
-        params: {},
-    })
+    const getAllPromiseFund = async () => {
+        const contract = new ethers.Contract(fundFactoryAddress!, FundFactory as any[], signer)
 
-    const { runContractFunction: getAllYieldFundsAAVE } = useWeb3Contract({
-        abi: YieldFundFactory,
-        contractAddress: yieldAddress!,
-        functionName: "getAllYieldFundsAAVE",
-        params: {},
-    })
+        const getResult = async () => {
+            const result = await contract.getAllPromiseFund()
+            return result
+        }
+
+        return getResult()
+    }
+
+    const getAllYieldFundsAAVE = async () => {
+        const contract = new ethers.Contract(yieldAddress!, YieldFundFactory as any[], signer)
+
+        const getResult = async () => {
+            const result = await contract.getAllYieldFundsAAVE()
+            return result
+        }
+
+        return getResult()
+    }
 
     async function updateUI() {
         const allPromiseFundsFromCall = (await getAllPromiseFund()) as string[]
@@ -79,10 +88,10 @@ const Discover: NextPage = () => {
     }
 
     useEffect(() => {
-        if (isWeb3Enabled && fundFactoryAddress) {
+        if (fundFactoryAddress) {
             updateUI()
         }
-    }, [isWeb3Enabled, fundFactoryAddress])
+    }, [fundFactoryAddress])
 
     return (
         <div>
@@ -119,9 +128,8 @@ const Discover: NextPage = () => {
             <br></br>
             <div>
                 <CategorySelector></CategorySelector>
-                {/* <SortSelector></SortSelector> */}
             </div>
-            {isWeb3Enabled && fundFactoryAddress ? (
+            {fundFactoryAddress ? (
                 <>
                     <div>
                         <Search fundAddressArray={allFunds} query={query}></Search>

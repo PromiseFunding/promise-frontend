@@ -10,6 +10,8 @@ import { Button, TextField } from '@mui/material'
 import { useNotification } from "web3uikit"
 import Link from 'next/link'
 import { funderSummaryYield, fundSummary, propType } from "../../config/types"
+import { DEFAULT_CHAIN_ID } from "../../config/helper-config"
+
 
 
 export default function CommunityForumYield(props: propType) {
@@ -19,7 +21,8 @@ export default function CommunityForumYield(props: propType) {
     const owner = fundSummary.owner!
 
     const { account, chainId: chainIdHex, } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
 
     const [isFunder, setIsFunder] = useState(false)
     const [userAddress, setUserAddress] = useState("")

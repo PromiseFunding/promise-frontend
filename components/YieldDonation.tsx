@@ -6,6 +6,8 @@ import { BigNumber } from "ethers"
 import { networkConfig } from "../config/helper-config"
 import { contractAddressesInterface, propType } from "../config/types"
 import { tokenConfig } from "../config/token-config"
+import { DEFAULT_CHAIN_ID } from "../config/helper-config"
+
 
 //contract is already deployed... trying to look at features of contract
 export default function YieldDonation(props: propType) {
@@ -14,7 +16,8 @@ export default function YieldDonation(props: propType) {
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
 
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)

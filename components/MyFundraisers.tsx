@@ -13,6 +13,8 @@ import { contractAddressesInterface } from "../config/types"
 import { contractAddresses, FundFactory } from "../constants"
 import { ScrollMenu } from "react-horizontal-scrolling-menu"
 import Box from "@mui/material/Box"
+import { DEFAULT_CHAIN_ID } from "../config/helper-config"
+
 
 export default function MyFundraisers() {
     const [donationsData, setDonationsData] = useState<string[]>([])
@@ -20,7 +22,8 @@ export default function MyFundraisers() {
     const [windowWidth, setWindowWidth] = useState(0)
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
 
     useWindowSize()
 

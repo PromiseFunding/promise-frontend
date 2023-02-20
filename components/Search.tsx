@@ -8,6 +8,8 @@ import { ref, onValue, get } from "firebase/database"
 import { database } from "../firebase-config"
 import styles from "../styles/Home.module.css"
 import { useMoralis } from "react-moralis"
+import { DEFAULT_CHAIN_ID } from "../config/helper-config"
+
 
 type DictionaryNumber = {
     [x: string]: number
@@ -17,8 +19,6 @@ export default function Search(props: propTypeFunds) {
     const [filteredData, setFilteredData] = useState<string[]>(props.fundAddressArray)
     //const [maxEntries, setMaxEntries] = useState(12)
     const [windowWidth, setWindowWidth] = useState(0)
-    const [amountPerFund, setAmountPerFund] = useState<DictionaryNumber>({})
-    const [invisPadding, setInvisPadding] = useState(false)
     const [page, setPage] = useState(1)
 
     const router = useRouter()
@@ -32,7 +32,8 @@ export default function Search(props: propTypeFunds) {
     const sortBy = (router.query.sortby as string) || ""
 
     const { chainId: chainIdHex } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
 
     useWindowSize()
 

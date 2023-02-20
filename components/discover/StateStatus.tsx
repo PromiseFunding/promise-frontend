@@ -11,6 +11,8 @@ import { ref, get } from "firebase/database"
 import { database } from "../../firebase-config"
 import { states } from "../../config/helper-config"
 import { formatDuration, convertSeconds } from "../../utils/utils"
+import { ethers } from "ethers";
+import { DEFAULT_CHAIN_ID } from "../../config/helper-config"
 
 export default function StateStatus(props: propType) {
     const fundAddress = props.fundAddress
@@ -20,8 +22,13 @@ export default function StateStatus(props: propType) {
     const decimals = props.decimals
 
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
-    const chainIdNum = parseInt(chainIdHex!)
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+    const chainIdNum = parseInt(chainId!)
+
+    const rpcUrl = chainId == "421613" ? process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_RPC_URL : "http://localhost:8545"
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
+    const signer = provider
+
     const [percent, setPercent] = useState(0)
     const [tranche, setTranche] = useState(0)
     const [state, setState] = useState(0)
@@ -48,12 +55,16 @@ export default function StateStatus(props: propType) {
         setMilestoneName(snapshot.val())
     }
 
-    const { runContractFunction: getMilestoneSummary } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getMilestoneSummary",
-        params: {},
-    })
+    const getMilestoneSummary = async () => {
+        const contract = new ethers.Contract(fundAddress, abi as any[], signer)
+
+        const getResult = async () => {
+            const result = await contract.getMilestoneSummary()
+            return result
+        }
+
+        return getResult()
+    }
 
     async function updateUI() {
         const milestoneInfo = (
@@ -130,7 +141,7 @@ export default function StateStatus(props: propType) {
     }
 
     useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
+        if (fundAddress) {
             updateUI()
         }
     }, [isWeb3Enabled, fundAddress, milestoneSummary, funderSummary])
@@ -214,11 +225,11 @@ export default function StateStatus(props: propType) {
                                 <div>
                                     {owner == userAddress
                                         ? `The seed funding round ended ${convertSeconds(
-                                              preFundingEnd
-                                          )}. You may now withdraw the proceeds raised.`
+                                            preFundingEnd
+                                        )}. You may now withdraw the proceeds raised.`
                                         : `The seed funding round ended ${convertSeconds(
-                                              preFundingEnd
-                                          )}. The fundraiser will soon start taking donations again once the owner starts the first milestone round.
+                                            preFundingEnd
+                                        )}. The fundraiser will soon start taking donations again once the owner starts the first milestone round.
                                  `}
                                 </div>
                             )}
@@ -307,14 +318,14 @@ export default function StateStatus(props: propType) {
                                                     timeLeftVoting > 172800
                                                         ? "green"
                                                         : timeLeftVoting > 86400
-                                                        ? "orange"
-                                                        : "red",
+                                                            ? "orange"
+                                                            : "red",
                                             }}
                                         >
                                             {timeLeftVoting > 0
                                                 ? `${formatDuration(
-                                                      timeLeftVoting
-                                                  )} left in voting period.`
+                                                    timeLeftVoting
+                                                )} left in voting period.`
                                                 : "The voting period has ended. Anyone may now end the vote to process the results."}
                                         </h1>
                                     ) : (
@@ -322,7 +333,7 @@ export default function StateStatus(props: propType) {
                                             {state == 2 ? (
                                                 <div>
                                                     {milestoneSummary!.withdrawExpired &&
-                                                    userAddress != owner.toLowerCase() ? (
+                                                        userAddress != owner.toLowerCase() ? (
                                                         <h1
                                                             style={{
                                                                 fontWeight: "500",
@@ -342,21 +353,21 @@ export default function StateStatus(props: propType) {
                                                             ].activeRaised!.toNumber() ? (
                                                                 <div>
                                                                     {userAddress ==
-                                                                    owner.toLowerCase()
+                                                                        owner.toLowerCase()
                                                                         ? milestoneSummary!
-                                                                              .currentTranche +
-                                                                              1 !=
-                                                                          milestoneSummary!
-                                                                              .milestones.length
+                                                                            .currentTranche +
+                                                                            1 !=
+                                                                            milestoneSummary!
+                                                                                .milestones.length
                                                                             ? "Milestone vote successful! You may now withdraw the funds raised in this milestone. The next milestone will start immediately upon withdrawal."
                                                                             : "Milestone vote successful! You may now withdraw the final funds raised in this fundraiser. If you wish, you may add another milestone to continue the fundraiser."
                                                                         : milestoneSummary!
-                                                                              .currentTranche +
-                                                                              1 !=
-                                                                          milestoneSummary!
-                                                                              .milestones.length
-                                                                        ? "Milestone vote successful. The next Milestone will start after the creator withdraws the funds raised."
-                                                                        : "Milestone vote successful. The creator may now withdraw the final funds raised for the fundraiser. "}
+                                                                            .currentTranche +
+                                                                            1 !=
+                                                                            milestoneSummary!
+                                                                                .milestones.length
+                                                                            ? "Milestone vote successful. The next Milestone will start after the creator withdraws the funds raised."
+                                                                            : "Milestone vote successful. The creator may now withdraw the final funds raised for the fundraiser. "}
                                                                 </div>
                                                             ) : (
                                                                 <h1>

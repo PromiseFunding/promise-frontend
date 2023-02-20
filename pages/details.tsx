@@ -20,26 +20,28 @@ import Withdraw from "../components/details/Withdraw"
 import StartVote from "../components/details/StartVote"
 import Vote from "../components/details/Vote"
 import WithdrawExpired from "../components/details/WithdrawExpired"
+import { ethers } from "ethers";
+import { DEFAULT_CHAIN_ID } from "../config/helper-config"
+import { ConnectButton } from "web3uikit"
 
 const Details: NextPage = () => {
     const router = useRouter()
     const fundAddress = router.query.fund as string
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
-    const chainId: string = parseInt(chainIdHex!).toString()
+    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
+
+    const rpcUrl = chainId == "421613" ? process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_RPC_URL : "http://localhost:8545"
+    const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
+    const signer = provider
 
     const fundRef = ref(database, chainId + "/funds/" + fundAddress)
     const [data, setData] = useState<databaseFundObject>()
     const [assetAddress, setAssetAddress] = useState("")
     const [owner, setOwner] = useState("")
-    const [amt, setAmt] = useState(0)
     const [state, setState] = useState(0)
     const [tranche, setTranche] = useState(0)
-    const [timeLeft, setTimeLeft] = useState(100)
     const [totalFunds, setTotalFunds] = useState(0)
     const [milestoneDurations, setMilestoneDurations] = useState<number[]>()
-    const [funderCalledVote, setFunderCalledVote] = useState<boolean>(false)
-    const [numVotesTried, setNumVotesTried] = useState(0)
-    const [timeLeftVoting, setTimeLeftVoting] = useState(0)
     const [milestoneSummary, setMilestoneSummary] = useState<milestoneSummary>()
     const [funderSummary, setFunderSummary] = useState<funderSummary>()
 
@@ -50,7 +52,7 @@ const Details: NextPage = () => {
     const addresses: contractAddressesInterface = contractAddresses
 
     //TODO: get helper-config working instead!... gets rid of decimal function
-    const chainIdNum = parseInt(chainIdHex!)
+    const chainIdNum = parseInt(chainId)
 
     let coinName = "USDT"
 
@@ -62,31 +64,37 @@ const Details: NextPage = () => {
 
     const decimals = chainId in addresses ? tokenConfig[chainIdNum][coinName].decimals : null
 
-    const {
-        runContractFunction: getMilestoneSummary,
-    } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getMilestoneSummary",
-        params: {},
-    })
+    const getMilestoneSummary = async () => {
+        const contract = new ethers.Contract(fundAddress, abi as any[], signer)
 
-    const {
-        runContractFunction: getFunderSummary,
-    } = useWeb3Contract({
-        abi: abi,
-        contractAddress: fundAddress!,
-        functionName: "getFunderSummary",
-        params: { funder: funderParam, level: levelParam },
-    })
+        const getResult = async () => {
+            const result = await contract.getMilestoneSummary()
+            return result
+        }
+
+        return getResult()
+    }
+
+    const getFunderSummary = async () => {
+        const contract = new ethers.Contract(fundAddress, abi as any[], signer)
+
+        const getResult = async () => {
+            const result = await contract.getFunderSummary(funderParam, levelParam)
+            return result
+        }
+
+        return getResult()
+    }
 
     function getDurations(milestones: milestone[]): number[] {
         return milestones.map(milestone => milestone!.milestoneDuration!.toNumber())
     }
 
     async function updateFunderInfo() {
-        const funderInfo = await getFunderSummary() as funderSummary
-        setFunderSummary(funderInfo)
+        if (funderParam) {
+            const funderInfo = await getFunderSummary() as funderSummary
+            setFunderSummary(funderInfo)
+        }
         updateUI()
     }
 
@@ -96,32 +104,24 @@ const Details: NextPage = () => {
         const ownerFromCall = milestoneInfo.owner
         const stateFromCall = milestoneInfo.state
         const trancheFromCall = milestoneInfo.currentTranche
-        const timeLeftFromCall = milestoneInfo.timeLeftRound
         const totalFromCall = milestoneInfo.lifeTimeRaised
         const durationsFromCall = getDurations(milestoneInfo.milestones)
-        const votesTriedFromCall = milestoneInfo.votesTried
-        const timeLeftVotingFromCall = milestoneInfo.timeLeftVoting
-        const didFunderVoteFromCall = milestoneInfo.funderCalledVote
 
         setMilestoneSummary(milestoneInfo)
         setAssetAddress(assetAddressFromCall!)
         setOwner((ownerFromCall as String).toLowerCase())
         setState(stateFromCall)
         setTranche(trancheFromCall)
-        setTimeLeft(timeLeftFromCall.toNumber())
         setTotalFunds(totalFromCall.toNumber() / 10 ** decimals!)
         setMilestoneDurations(durationsFromCall!)
-        setFunderCalledVote(didFunderVoteFromCall)
-        setNumVotesTried(votesTriedFromCall.toNumber())
-        setTimeLeftVoting(timeLeftVotingFromCall.toNumber())
     }
 
     useEffect(() => {
-        if (isWeb3Enabled && fundAddress) {
+        if (fundAddress) {
             setFunderParam(userAddress)
             setLevelParam(tranche)
         }
-    }, [isWeb3Enabled, fundAddress, userAddress])
+    }, [fundAddress, userAddress])
 
     useEffect(() => {
         if (account) {
@@ -130,10 +130,10 @@ const Details: NextPage = () => {
     }, [account])
 
     useEffect(() => {
-        if (funderParam && levelParam >= 0) {
+        if (fundAddress && levelParam >= 0) {
             updateFunderInfo()
         }
-    }, [funderParam, levelParam])
+    }, [chainId, funderParam, levelParam, fundAddress])
 
     useEffect(() => {
         onValue(fundRef, (snapshot) => {
@@ -165,7 +165,7 @@ const Details: NextPage = () => {
     return (
         <div>
             <Header main={false}></Header>
-            {data && milestoneSummary && funderSummary ? (
+            {data && milestoneSummary ? (
                 <div className={styles.detailsMain}>
                     <Head>
                         <title>{data.fundTitle}: {data.description}</title>
@@ -181,7 +181,7 @@ const Details: NextPage = () => {
                             <div className={styles.textArea}>{data.description} </div>
                         </div>
                         <div className={styles.actionsOuter}>
-                            <div className={styles.actionsInner}>
+                            {funderSummary ? (<div className={styles.actionsInner}>
                                 <StateStatus fundAddress={fundAddress} milestoneSummary={milestoneSummary} funderSummary={funderSummary} decimals={decimals!}
                                     format="details"></StateStatus>
                                 <div className={styles.buttons}>
@@ -241,7 +241,24 @@ const Details: NextPage = () => {
                                     ) : <></>}
                                 </div>
 
-                            </div>
+                            </div>) : (
+                                <div className={styles.connectWallet}>
+                                    <b style={{ color: "green" }}>
+                                        {milestoneSummary.lifeTimeRaised.toNumber() / 10 ** decimals!}
+                                    </b>
+                                    <p style={{ fontSize: "20px" }}>{coinName} Raised Lifetime.</p>
+
+                                    <div style={{ alignItems: "center", width: "100%", display: "flex", flexDirection: "column", marginTop: "20px" }}>
+
+                                        <h1 style={{ fontSize: "20px", fontWeight: "700", textAlign: "center" }}>Please connect your wallet to interact with the fundraiser!</h1>
+                                        <div style={{ marginTop: "15px" }}>
+                                            <ConnectButton moralisAuth={true} />
+                                        </div>
+                                    </div>
+
+                                </div>)}
+
+
                         </div>
                     </div>
                     <div className={styles.contentLower}>
