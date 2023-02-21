@@ -212,7 +212,7 @@ export default function DonateYield(props: propType) {
                                         onChange={handleChangeType}
                                     >
                                         <MenuItem value={"interest"}>Interest</MenuItem>
-                                        <MenuItem value={"straight"}>Straight</MenuItem>
+                                        <MenuItem value={"straight"}>Direct</MenuItem>
                                     </Select>
                                 </FormControl>
                                 <FormControl>
@@ -233,7 +233,7 @@ export default function DonateYield(props: propType) {
                                     <FormHelperText style={{ textAlign: "center" }}>
                                         {donateType == "straight" ? (
                                             <>
-                                                A straight donation is delivered directly to the
+                                                A direct donation is delivered directly to the
                                                 fundraiser.
                                             </>
                                         ) : (

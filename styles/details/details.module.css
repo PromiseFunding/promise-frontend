@@ -107,7 +107,7 @@
     width: 100%;
     color: white;
     bottom: 0px;
-    background: linear-gradient(125.78deg, #cdd406 17.93%, #a9db29ee 42.06%, #3f9407cc 73.89%);
+    background: linear-gradient(125.78deg, #DCF211 17.93%, #a9db29ee 42.06%, #7BF759 73.89%);
     border-radius: 10px;
     margin-bottom: 10px;
 }
@@ -140,7 +140,7 @@
     width: 100%;
     color: white;
     bottom: 0px;
-    background: linear-gradient(125.78deg, #cdd406 17.93%, #a9db29ee 42.06%, #3f9407cc 73.89%);
+    background: linear-gradient(125.78deg, #DCF211 17.93%, #a9db29ee 42.06%, #7BF759 73.89%);
     border-radius: 10px;
 }
 
@@ -191,12 +191,12 @@
 
 .donateButtonYield:hover {
     color: rgb(226 232 240);
-    background: linear-gradient(125.78deg, #3f9407cc 17.93%, #8bbd0dee 42.06%, #cdd406 73.89%);
+    background: linear-gradient(125.78deg, #7BF759 17.93%, #a9db29ee 42.06%, #DCF211 73.89%);
 }
 
 .donateButtonYield2:hover {
     color: rgb(226 232 240);
-    background: linear-gradient(125.78deg, #3f9407cc 17.93%, #8bbd0dee 42.06%, #cdd406 73.89%);
+    background: linear-gradient(125.78deg, #7BF759 17.93%, #a9db29ee 42.06%, #DCF211 73.89%);
 }
 
 .donateOuter {
@@ -222,7 +222,7 @@
     background: rgb(226, 56, 56);
     font-size: 180px;
     /* width: 50%; */
-    background: linear-gradient(125.78deg, #cdd406 17.93%, #a9db29ee 42.06%, #3f9407cc 73.89%);
+    background: linear-gradient(125.78deg, #DCF211 17.93%, #a9db29ee 42.06%, #7BF759 73.89%);
     color: white;
     border: 1rem solid;
 }
@@ -234,6 +234,18 @@
     flex-direction: column;
     height: 100%;
     align-items: center;
+}
+
+.modalFormShare {
+    padding: 10px;
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    height: 100%;
+    padding-bottom: 75px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px,
 }
 
 .milestoneSelector {

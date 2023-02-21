@@ -17,9 +17,31 @@ import StateStatusYield from "../components/discover/StateStatusYield"
 import TabsContentYield from "../components/details/TabsContentYield"
 import DonateYield from "../components/details/DonateYield"
 import WithdrawYield from "../components/details/WithdrawYield"
-import { ethers } from "ethers";
-import { DEFAULT_CHAIN_ID } from "../config/helper-config"
-import { ConnectButton } from "web3uikit"
+import {
+    TwitterShareButton,
+    TwitterIcon,
+    FacebookShareButton,
+    FacebookIcon,
+    EmailShareButton,
+    EmailIcon,
+    WhatsappShareButton,
+    WhatsappIcon,
+} from "react-share"
+import Box from "@mui/material/Box"
+import Modal from "@mui/material/Modal"
+
+const modalStyle = {
+    position: "absolute" as "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "400px",
+    height: "30%",
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 3,
+    borderRadius: "25px",
+}
 
 const Details: NextPage = () => {
     const router = useRouter()
@@ -198,52 +220,57 @@ const Details: NextPage = () => {
                                                         <div className={styles.shareTitle}>
                                                             Share
                                                         </div>
-                                                        <div className={styles.modalForm}>
+                                                        <div className={styles.modalFormShare}>
                                                             <br></br>
-                                                            <TwitterShareButton
-                                                                url={`http://localhost:3000/detailsYield?fund=${fundAddress}`}
-                                                                title={`Check out this fundraiser on @Promise called '${data.fundTitle}'.`}
-                                                                hashtags={["Web3Fundraising"]}
-                                                            >
-                                                                <TwitterIcon
-                                                                    size={50}
-                                                                    borderRadius={10}
-                                                                />
-                                                            </TwitterShareButton>
-                                                            <br></br>
-                                                            <FacebookShareButton
-                                                                url={`http://localhost:3000/detailsYield?fund=${fundAddress}`}
-                                                                quote={`Check out this fundraiser on @Promise called '${data.fundTitle}'.`}
-                                                                hashtag="#Web3Fundraising"
-                                                            >
-                                                                <FacebookIcon
-                                                                    size={50}
-                                                                    borderRadius={10}
-                                                                />
-                                                            </FacebookShareButton>
-                                                            <br></br>
-                                                            <EmailShareButton
-                                                                url={`http://localhost:3000/detailsYield?fund=${fundAddress}`}
-                                                                body={`Check out this fundraiser on the called '${data.fundTitle}'.`}
-                                                                subject={
-                                                                    "Promise Web3 Fundraising"
-                                                                }
-                                                            >
-                                                                <EmailIcon
-                                                                    size={50}
-                                                                    borderRadius={10}
-                                                                />
-                                                            </EmailShareButton>
-                                                            <br></br>
-                                                            <WhatsappShareButton
-                                                                url={`http://localhost:3000/detailsYield?fund=${fundAddress}`}
-                                                                title={`Check out this fundraiser on the called '${data.fundTitle}'.`}
-                                                            >
-                                                                <WhatsappIcon
-                                                                    size={50}
-                                                                    borderRadius={10}
-                                                                />
-                                                            </WhatsappShareButton>
+                                                            <div style={{ marginRight: '12px' }}>
+                                                                <TwitterShareButton
+                                                                    url={`http://localhost:3000/detailsYield?fund=${fundAddress}`}
+                                                                    title={`Check out this fundraiser on @Promise called '${data.fundTitle}'.`}
+                                                                    hashtags={["Web3Fundraising"]}
+                                                                >
+                                                                    <TwitterIcon
+                                                                        size={50}
+                                                                        borderRadius={10}
+                                                                    />
+                                                                </TwitterShareButton>
+                                                            </div>
+                                                            <div style={{ marginRight: '12px' }}>
+                                                                <FacebookShareButton
+                                                                    url={`http://localhost:3000/detailsYield?fund=${fundAddress}`}
+                                                                    quote={`Check out this fundraiser on @Promise called '${data.fundTitle}'.`}
+                                                                    hashtag="#Web3Fundraising"
+                                                                >
+                                                                    <FacebookIcon
+                                                                        size={50}
+                                                                        borderRadius={10}
+                                                                    />
+                                                                </FacebookShareButton>
+                                                            </div>
+                                                            <div style={{ marginRight: '12px' }}>
+                                                                <EmailShareButton
+                                                                    url={`http://localhost:3000/detailsYield?fund=${fundAddress}`}
+                                                                    body={`Check out this fundraiser on the called '${data.fundTitle}'.`}
+                                                                    subject={
+                                                                        "Promise Web3 Fundraising"
+                                                                    }
+                                                                >
+                                                                    <EmailIcon
+                                                                        size={50}
+                                                                        borderRadius={10}
+                                                                    />
+                                                                </EmailShareButton>
+                                                            </div>
+                                                            <div>
+                                                                <WhatsappShareButton
+                                                                    url={`http://localhost:3000/detailsYield?fund=${fundAddress}`}
+                                                                    title={`Check out this fundraiser on the called '${data.fundTitle}'.`}
+                                                                >
+                                                                    <WhatsappIcon
+                                                                        size={50}
+                                                                        borderRadius={10}
+                                                                    />
+                                                                </WhatsappShareButton>
+                                                            </div>
                                                         </div>
                                                     </Box>
                                                 </Modal>

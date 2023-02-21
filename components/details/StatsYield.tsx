@@ -91,7 +91,7 @@ export default function StatsYield(props: propType) {
         const newData = {
             labels: [
                 "Life Time Contributed",
-                "Total Straight Donated",
+                "Total Direct Donated",
                 "Amount Withdrawable (Interest Method)",
             ],
             datasets: [
