@@ -188,7 +188,7 @@ export default function StateStatus(props: propType) {
                         </>
                     ) : (
                         <>
-                            Milestone {tranche + 1}: <b>{milestoneName}</b>
+                            Milestone {tranche + 1}
                             <BorderLinearProgress variant="determinate" value={percent} />
                             <h1
                                 style={{

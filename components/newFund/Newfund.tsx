@@ -418,6 +418,7 @@ export default function NewFund() {
                                     value={title}
                                     style={{ width: "30%" }}
                                     helperText="Input a title for your fund"
+                                    inputProps={{ maxLength: 60 }}
                                 />
                                 <FormControl variant="filled" style={{ width: "20%" }}>
                                     <InputLabel>Category</InputLabel>
@@ -512,6 +513,7 @@ export default function NewFund() {
                                                             helperText="Input a title for the milestone"
                                                             variant="filled"
                                                             style={{ width: "50%" }}
+                                                            inputProps={{ maxLength: 28 }}
                                                         />
                                                         <TextField
                                                             type="number"
