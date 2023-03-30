@@ -2,7 +2,6 @@ import type { NextPage } from "next"
 import Head from "next/head"
 import styles from "../styles/Home.module.css"
 import Header from "../components/Header"
-import NewFund from "../components/Newfund"
 import Link from "next/link"
 
 const Form: NextPage = () => {
@@ -184,9 +183,14 @@ const Form: NextPage = () => {
                     <h1 style={{ fontSize: "25px", fontWeight: "450" }}>Recommendation:</h1>
                     <br></br>
                     <h1 style={{ fontSize: "18px" }}>
-                        It is recommended that you weigh the pros and cons of each type of fundraiser and pick the one that best suits your purpose.
-                        We believe that the &apos;Promise Fund&apos; is best suited for projects or products as it inherently builds a community and reputation. We also believe that the &apos;Yield Fund&apos; is best
-                        suited for one time use cases or causes and charitable donations. Ultimately, however, the decision is up to you! Pick the fundraiser that you want to start, fill out the details very carefully and thoughtfully, and get started!
+                        It is recommended that you weigh the pros and cons of each type of
+                        fundraiser and pick the one that best suits your purpose. We believe that
+                        the &apos;Promise Fund&apos; is best suited for projects or products as it
+                        inherently builds a community and reputation. We also believe that the
+                        &apos;Yield Fund&apos; is best suited for one time use cases or causes and
+                        charitable donations. Ultimately, however, the decision is up to you! Pick
+                        the fundraiser that you want to start, fill out the details very carefully
+                        and thoughtfully, and get started!
                     </h1>
                 </div>
             </div>

@@ -45,7 +45,7 @@ const modalStyle = {
     p: 3,
     borderRadius: "25px",
 }
-import { ethers } from "ethers";
+import { ethers } from "ethers"
 import { DEFAULT_CHAIN_ID } from "../config/helper-config"
 import { ConnectButton } from "web3uikit"
 
@@ -55,7 +55,10 @@ const Details: NextPage = () => {
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
     const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
 
-    const rpcUrl = chainId == "421613" ? process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_RPC_URL : "http://localhost:8545"
+    const rpcUrl =
+        chainId == "421613"
+            ? process.env.NEXT_PUBLIC_ARBITRUM_GOERLI_RPC_URL
+            : "http://localhost:8545"
     const provider = new ethers.providers.JsonRpcProvider(rpcUrl)
     const signer = provider
 
@@ -118,7 +121,7 @@ const Details: NextPage = () => {
 
     async function updateFunderInfo() {
         if (funderParam) {
-            const funderInfo = await getFunderSummary() as funderSummary
+            const funderInfo = (await getFunderSummary()) as funderSummary
             setFunderSummary(funderInfo)
         }
         updateUI()
@@ -224,178 +227,201 @@ const Details: NextPage = () => {
                             <div className={styles.textArea}>{data.description} </div>
                         </div>
                         <div className={styles.actionsOuter}>
-                            {funderSummary ? (<div className={styles.actionsInner}>
-                                <StateStatus fundAddress={fundAddress} milestoneSummary={milestoneSummary} funderSummary={funderSummary} decimals={decimals!}
-                                    format="details"></StateStatus>
-                                <div className={styles.buttons}>
-                                    {state != 3 ? (
-                                        <div>
-                                            <Modal
-                                                open={open}
-                                                aria-labelledby="modal-modal-title"
-                                                aria-describedby="modal-modal-description"
-                                                onClose={handleClose}
-                                            >
-                                                <Box sx={modalStyle}>
-                                                    <div className={styles.shareTitle}>Share</div>
-                                                    <div className={styles.modalFormShare}>
-                                                        <br></br>
-                                                        <div style={{ marginRight: "12px" }}>
-                                                            <TwitterShareButton
-                                                                url={`http://localhost:3000/details?fund=${fundAddress}`}
-                                                                title={`Check out this milestone based fundraiser on @Promise called '${data.fundTitle}'.`}
-                                                                hashtags={["Web3Fundraising"]}
-                                                            >
-                                                                <TwitterIcon
-                                                                    size={50}
-                                                                    borderRadius={10}
-                                                                />
-                                                            </TwitterShareButton>
+                            {funderSummary ? (
+                                <div className={styles.actionsInner}>
+                                    <StateStatus
+                                        fundAddress={fundAddress}
+                                        milestoneSummary={milestoneSummary}
+                                        funderSummary={funderSummary}
+                                        decimals={decimals!}
+                                        format="details"
+                                    ></StateStatus>
+                                    <div className={styles.buttons}>
+                                        {state != 3 ? (
+                                            <div>
+                                                <Modal
+                                                    open={open}
+                                                    aria-labelledby="modal-modal-title"
+                                                    aria-describedby="modal-modal-description"
+                                                    onClose={handleClose}
+                                                >
+                                                    <Box sx={modalStyle}>
+                                                        <div className={styles.shareTitle}>
+                                                            Share
                                                         </div>
-                                                        <div style={{ marginRight: "12px" }}>
-                                                            <FacebookShareButton
-                                                                url={`http://localhost:3000/details?fund=${fundAddress}`}
-                                                                quote={`Check out this milestone based fundraiser on @Promise called '${data.fundTitle}'.`}
-                                                                hashtag="#Web3Fundraising"
-                                                            >
-                                                                <FacebookIcon
-                                                                    size={50}
-                                                                    borderRadius={10}
-                                                                />
-                                                            </FacebookShareButton>
+                                                        <div className={styles.modalFormShare}>
+                                                            <br></br>
+                                                            <div style={{ marginRight: "12px" }}>
+                                                                <TwitterShareButton
+                                                                    url={`http://localhost:3000/details?fund=${fundAddress}`}
+                                                                    title={`Check out this milestone based fundraiser on @Promise called '${data.fundTitle}'.`}
+                                                                    hashtags={["Web3Fundraising"]}
+                                                                >
+                                                                    <TwitterIcon
+                                                                        size={50}
+                                                                        borderRadius={10}
+                                                                    />
+                                                                </TwitterShareButton>
+                                                            </div>
+                                                            <div style={{ marginRight: "12px" }}>
+                                                                <FacebookShareButton
+                                                                    url={`http://localhost:3000/details?fund=${fundAddress}`}
+                                                                    quote={`Check out this milestone based fundraiser on @Promise called '${data.fundTitle}'.`}
+                                                                    hashtag="#Web3Fundraising"
+                                                                >
+                                                                    <FacebookIcon
+                                                                        size={50}
+                                                                        borderRadius={10}
+                                                                    />
+                                                                </FacebookShareButton>
+                                                            </div>
+                                                            <div style={{ marginRight: "12px" }}>
+                                                                <EmailShareButton
+                                                                    url={`http://localhost:3000/details?fund=${fundAddress}`}
+                                                                    body={`Check out this milestone based fundraiser on the called '${data.fundTitle}'.`}
+                                                                    subject={
+                                                                        "Promise Web3 Fundraising"
+                                                                    }
+                                                                >
+                                                                    <EmailIcon
+                                                                        size={50}
+                                                                        borderRadius={10}
+                                                                    />
+                                                                </EmailShareButton>
+                                                            </div>
+                                                            <div>
+                                                                <WhatsappShareButton
+                                                                    url={`http://localhost:3000/details?fund=${fundAddress}`}
+                                                                    title={`Check out this milestone based fundraiser on the called '${data.fundTitle}'.`}
+                                                                >
+                                                                    <WhatsappIcon
+                                                                        size={50}
+                                                                        borderRadius={10}
+                                                                    />
+                                                                </WhatsappShareButton>
+                                                            </div>
                                                         </div>
-                                                        <div style={{ marginRight: "12px" }}>
-                                                            <EmailShareButton
-                                                                url={`http://localhost:3000/details?fund=${fundAddress}`}
-                                                                body={`Check out this milestone based fundraiser on the called '${data.fundTitle}'.`}
-                                                                subject={
-                                                                    "Promise Web3 Fundraising"
-                                                                }
-                                                            >
-                                                                <EmailIcon
-                                                                    size={50}
-                                                                    borderRadius={10}
-                                                                />
-                                                            </EmailShareButton>
-                                                        </div>
-                                                        <div>
-                                                            <WhatsappShareButton
-                                                                url={`http://localhost:3000/details?fund=${fundAddress}`}
-                                                                title={`Check out this milestone based fundraiser on the called '${data.fundTitle}'.`}
-                                                            >
-                                                                <WhatsappIcon
-                                                                    size={50}
-                                                                    borderRadius={10}
-                                                                />
-                                                            </WhatsappShareButton>
-                                                        </div>
-                                                    </div>
-                                                </Box>
-                                            </Modal>
-                                            <Button
-                                                className={styles.shareButton}
-                                                onClick={() => setOpen(true)}
-                                            >
-                                                Share
-                                            </Button>
-                                        </div>
-                                    ) : (
-                                        <></>
-                                    )}
+                                                    </Box>
+                                                </Modal>
+                                                <Button
+                                                    className={styles.shareButton}
+                                                    onClick={() => setOpen(true)}
+                                                >
+                                                    Share
+                                                </Button>
+                                            </div>
+                                        ) : (
+                                            <></>
+                                        )}
 
-                                    {donateVisible() ? (
-                                        <Donate
-                                            milestoneSummary={milestoneSummary}
-                                            funderSummary={funderSummary}
-                                            fundAddress={fundAddress}
-                                            decimals={decimals!}
-                                            onGetFunderInfo={() => {
-                                                updateFunderInfo()
-                                            }}
-                                        ></Donate>
-                                    ) : (
-                                        <></>
-                                    )}
-                                    {state == 0 &&
-                                    (userAddress == owner ||
-                                        milestoneSummary!.timeLeftRound.toNumber() == 0) ? (
-                                        <StartVote
-                                            fundAddress={fundAddress}
-                                            onChangeState={() => {
-                                                updateUI()
-                                            }}
-                                            milestoneSummary={milestoneSummary}
-                                            userAddress={userAddress}
-                                        ></StartVote>
-                                    ) : (
-                                        <></>
-                                    )}
-                                    {(state == 3 && userAddress != owner) ||
-                                    (state == 4 &&
-                                        userAddress == owner &&
-                                        milestoneSummary!.timeLeftRound.toNumber() == 0) ||
-                                    (state == 2 && owner.toLowerCase() == userAddress) ? (
-                                        <Withdraw
-                                            fundAddress={fundAddress}
-                                            onChangeState={() => {
-                                                updateUI()
-                                            }}
-                                            milestoneSummary={milestoneSummary}
-                                            funderSummary={funderSummary}
-                                            onGetFunderInfo={() => {
-                                                updateFunderInfo()
-                                            }}
-                                        ></Withdraw>
-                                    ) : (
-                                        <></>
-                                    )}
-                                    {state == 2 && milestoneSummary.withdrawExpired ? (
-                                        <WithdrawExpired
-                                            fundAddress={fundAddress}
-                                            onChangeState={() => {
-                                                updateUI()
-                                            }}
-                                            milestoneSummary={milestoneSummary}
-                                            funderSummary={funderSummary}
-                                            onGetFunderInfo={() => {
-                                                updateFunderInfo()
-                                            }}
-                                        ></WithdrawExpired>
-                                    ) : (
-                                        <></>
-                                    )}
-                                    {state == 1 ? (
-                                        <Vote
-                                            milestoneSummary={milestoneSummary}
-                                            funderSummary={funderSummary}
-                                            fundAddress={fundAddress}
-                                            onGetFunderInfo={() => {
-                                                updateFunderInfo()
-                                            }}
-                                        ></Vote>
-                                    ) : (
-                                        <></>
-                                    )}
+                                        {donateVisible() ? (
+                                            <Donate
+                                                milestoneSummary={milestoneSummary}
+                                                funderSummary={funderSummary}
+                                                fundAddress={fundAddress}
+                                                decimals={decimals!}
+                                                onGetFunderInfo={() => {
+                                                    updateFunderInfo()
+                                                }}
+                                            ></Donate>
+                                        ) : (
+                                            <></>
+                                        )}
+                                        {state == 0 &&
+                                        (userAddress == owner ||
+                                            milestoneSummary!.timeLeftRound.toNumber() == 0) ? (
+                                            <StartVote
+                                                fundAddress={fundAddress}
+                                                onChangeState={() => {
+                                                    updateUI()
+                                                }}
+                                                milestoneSummary={milestoneSummary}
+                                                userAddress={userAddress}
+                                            ></StartVote>
+                                        ) : (
+                                            <></>
+                                        )}
+                                        {(state == 3 && userAddress != owner) ||
+                                        (state == 4 &&
+                                            userAddress == owner &&
+                                            milestoneSummary!.timeLeftRound.toNumber() == 0) ||
+                                        (state == 2 && owner.toLowerCase() == userAddress) ? (
+                                            <Withdraw
+                                                fundAddress={fundAddress}
+                                                onChangeState={() => {
+                                                    updateUI()
+                                                }}
+                                                milestoneSummary={milestoneSummary}
+                                                funderSummary={funderSummary}
+                                                onGetFunderInfo={() => {
+                                                    updateFunderInfo()
+                                                }}
+                                            ></Withdraw>
+                                        ) : (
+                                            <></>
+                                        )}
+                                        {state == 2 && milestoneSummary.withdrawExpired ? (
+                                            <WithdrawExpired
+                                                fundAddress={fundAddress}
+                                                onChangeState={() => {
+                                                    updateUI()
+                                                }}
+                                                milestoneSummary={milestoneSummary}
+                                                funderSummary={funderSummary}
+                                                onGetFunderInfo={() => {
+                                                    updateFunderInfo()
+                                                }}
+                                            ></WithdrawExpired>
+                                        ) : (
+                                            <></>
+                                        )}
+                                        {state == 1 ? (
+                                            <Vote
+                                                milestoneSummary={milestoneSummary}
+                                                funderSummary={funderSummary}
+                                                fundAddress={fundAddress}
+                                                onGetFunderInfo={() => {
+                                                    updateFunderInfo()
+                                                }}
+                                            ></Vote>
+                                        ) : (
+                                            <></>
+                                        )}
+                                    </div>
                                 </div>
-
-                            </div>) : (
+                            ) : (
                                 <div className={styles.connectWallet}>
                                     <b style={{ color: "green" }}>
-                                        {milestoneSummary.lifeTimeRaised.toNumber() / 10 ** decimals!}
+                                        {milestoneSummary.lifeTimeRaised.toNumber() /
+                                            10 ** decimals!}
                                     </b>
                                     <p style={{ fontSize: "20px" }}>{coinName} Raised Lifetime.</p>
 
-                                    <div style={{ alignItems: "center", width: "100%", display: "flex", flexDirection: "column", marginTop: "20px" }}>
-
-                                        <h1 style={{ fontSize: "20px", fontWeight: "700", textAlign: "center" }}>Please connect your wallet to interact with the fundraiser!</h1>
+                                    <div
+                                        style={{
+                                            alignItems: "center",
+                                            width: "100%",
+                                            display: "flex",
+                                            flexDirection: "column",
+                                            marginTop: "20px",
+                                        }}
+                                    >
+                                        <h1
+                                            style={{
+                                                fontSize: "20px",
+                                                fontWeight: "700",
+                                                textAlign: "center",
+                                            }}
+                                        >
+                                            Please connect your wallet to interact with the
+                                            fundraiser!
+                                        </h1>
                                         <div style={{ marginTop: "15px" }}>
                                             <ConnectButton moralisAuth={true} />
                                         </div>
                                     </div>
-
-                                </div>)}
-
-
+                                </div>
+                            )}
                         </div>
                     </div>
                     <div className={styles.contentLower}>
