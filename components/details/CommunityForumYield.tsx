@@ -74,7 +74,7 @@ export default function CommunityForumYield(props: propType) {
     return (
         <div style={{ marginLeft: "25%", marginRight: "25%" }}>
             <h1 style={{ fontSize: "40px", fontWeight: "500", textAlign: "center", padding: "30px" }}>Connect</h1>
-            <p style={{ textAlign: "center", marginBottom: "20px" }}>Creators have the option to share a communal space for the funders of their project to talk, discuss updates, and communicate with then creator. </p>
+            <p style={{ textAlign: "center", marginBottom: "20px" }}>Creators have the option to share a communal space for the funders of their project to talk, discuss updates, and communicate with them. </p>
             {
                 owner.toLowerCase() != account ? (<div>
                     {

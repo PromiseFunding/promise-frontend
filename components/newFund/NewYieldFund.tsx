@@ -311,6 +311,7 @@ export default function NewYieldFund() {
                                     value={title}
                                     style={{ width: "30%" }}
                                     helperText="Input a title for your fund"
+                                    inputProps={{ maxLength: 60 }}
                                 />
                                 <FormControl variant="filled" style={{ width: "20%" }}>
                                     <InputLabel>Category</InputLabel>

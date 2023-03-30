@@ -13,6 +13,7 @@ import FormHelperText from "@mui/material/FormHelperText"
 import FormControl from "@mui/material/FormControl"
 import InputLabel from "@mui/material/InputLabel"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { formatDuration, convertSeconds } from "../../utils/utils"
 
 const modalStyle = {
     position: "absolute" as "absolute",
@@ -119,8 +120,13 @@ export default function WithdrawYield(props: propType) {
         ) {
             return true
         }
-        //interestProceeds + totalActiveFunded - totalActiveInterestFunded
-        if (userAddress == owner.toLowerCase() && ((fundSummary!.withdrawableInterestProceeds.toNumber() + fundSummary!.totalActiveFunded.toNumber() - fundSummary!.totalActiveInterestFunded.toNumber()) == 0)) {
+        if (
+            userAddress == owner.toLowerCase() &&
+            fundSummary!.withdrawableInterestProceeds.toNumber() +
+                fundSummary!.totalActiveFunded.toNumber() -
+                fundSummary!.totalActiveInterestFunded.toNumber() <=
+                0
+        ) {
             return true
         }
 
@@ -144,7 +150,7 @@ export default function WithdrawYield(props: propType) {
                 <div>
                     <Button
                         disabled={isDisabled()}
-                        className={isDisabled() ? styles.disabledButton : styles.donateButton}
+                        className={isDisabled() ? styles.disabledButton : styles.donateButtonYield}
                         style={{ marginBottom: isDisabled() ? "0px" : "10px" }}
                         onClick={async function () {
                             await withdrawProceeds({
@@ -155,24 +161,24 @@ export default function WithdrawYield(props: propType) {
                     >
                         Withdraw
                     </Button>
+                    {isDisabled() ? (
+                        <div
+                            className={styles.disabledText}
+                            style={
+                                {
+                                    "--visibility": isDisabled() ? "visible" : "hidden",
+                                    "--position": isDisabled() ? "relative" : "absolute",
+                                } as React.CSSProperties
+                            }
+                        >
+                            {disabledMessage()}
+                        </div>
+                    ) : (
+                        <div></div>
+                    )}
                 </div>
             ) : timeLeftFunder > 0 ? (
                 <>
-                    <div>
-                        <Button
-                            disabled={true}
-                            className={styles.disabledButton}
-                            style={{ marginBottom: "0px" }}
-                            onClick={async function () {
-                                await withdrawFundsFromPool({
-                                    onSuccess: (tx) => handleSuccess(tx as ContractTransaction),
-                                    onError: (error) => console.log(error),
-                                })
-                            }}
-                        >
-                            Withdraw
-                        </Button>
-                    </div>
                     <div
                         className={styles.disabledText}
                         style={
@@ -182,7 +188,9 @@ export default function WithdrawYield(props: propType) {
                             } as React.CSSProperties
                         }
                     >
-                        * The timelock is still going. You have {timeLeftFunder} seconds left before withdrawing becomes available.
+                        * The timelock is still going. You have {formatDuration(timeLeftFunder)}{" "}
+                        seconds left before you can withdraw your deposit from the interest
+                        donation method.
                     </div>
                 </>
             ) : (
@@ -210,8 +218,8 @@ export default function WithdrawYield(props: propType) {
                                             <FormControl>
                                                 <div style={{ textAlign: "center" }}>
                                                     <FontAwesomeIcon
-                                                        className={styles.donateIcon}
-                                                        icon={["fas", "calendar-days"]}
+                                                        className={styles.donateIconYield}
+                                                        icon={["fas", "coins"]}
                                                         mask={["fas", "square-full"]}
                                                         size="6x"
                                                         transform="shrink-4"
@@ -245,7 +253,7 @@ export default function WithdrawYield(props: propType) {
                                         />
                                     </div>
                                     <Button
-                                        className={styles.donateButton2}
+                                        className={styles.donateButtonYield2}
                                         style={{ bottom: "0px" }}
                                         onClick={async function () {
                                             handleClose()
@@ -263,33 +271,21 @@ export default function WithdrawYield(props: propType) {
                         </Modal>
                     </div>
                     <div>
-                        <Button
-                            disabled={isDisabled()}
-                            className={isDisabled() ? styles.disabledButton : styles.donateButton}
-                            style={{ marginBottom: isDisabled() ? "0px" : "10px" }}
-                            onClick={async function () {
-                                setOpen(true)
-                            }}
-                        >
-                            Withdraw
-                        </Button>
+                        {isDisabled() ? (
+                            <></>
+                        ) : (
+                            <Button
+                                className={styles.donateButtonYield}
+                                style={{ marginBottom: "10px" }}
+                                onClick={async function () {
+                                    setOpen(true)
+                                }}
+                            >
+                                Withdraw
+                            </Button>
+                        )}
                     </div>
                 </>
-            )}
-            {isDisabled() ? (
-                <div
-                    className={styles.disabledText}
-                    style={
-                        {
-                            "--visibility": isDisabled() ? "visible" : "hidden",
-                            "--position": isDisabled() ? "relative" : "absolute",
-                        } as React.CSSProperties
-                    }
-                >
-                    {disabledMessage()}
-                </div>
-            ) : (
-                <div></div>
             )}
         </div>
     )

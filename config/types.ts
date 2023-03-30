@@ -49,6 +49,7 @@ export interface propType {
     format?: string
     fundSummary?: fundSummary
     funderSummaryYield?: funderSummaryYield
+    yieldFundTitle?: string
 }
 
 export interface propTypeEntryNumber {

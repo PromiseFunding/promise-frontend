@@ -18,6 +18,7 @@ export default function StateStatusYield(props: propType) {
     const funderSummary = props.funderSummaryYield
     const decimals = props.decimals
     const coinName = props.coinName
+    const title = props.yieldFundTitle
 
     const { chainId: chainIdHex, isWeb3Enabled, account } = useMoralis()
     const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
@@ -40,8 +41,9 @@ export default function StateStatusYield(props: propType) {
     const [owner, setOwner] = useState("")
     const [lockTime, setLockTime] = useState(0)
     const [withdrawableAmount, setWithdrawableAmount] = useState(0)
-    const [totalFunderAmount, setTotalFunderAmount] = useState(0)
+    const [totalStraightFunderAmount, setTotalStraightFunderAmount] = useState(0)
     const [entryTime, setEntryTime] = useState(0)
+    const [ownerWithdrawResult, setownerWithdrawResult] = useState(0)
 
     const getFundSummary = async () => {
         const contract = new ethers.Contract(fundAddress, yieldAbi as any[], signer)
@@ -55,8 +57,7 @@ export default function StateStatusYield(props: propType) {
     }
 
     async function updateUI() {
-        const fundInfo = await getFundSummary() as fundSummary
-
+        const fundInfo = (fundSummary ? fundSummary : await getFundSummary()) as fundSummary
         const totalActiveFunded = fundInfo.totalActiveFunded
         const totalActiveInterestFunded = fundInfo.totalActiveInterestFunded
         const totalLifetimeFunded = fundInfo.totalLifetimeFunded
@@ -124,9 +125,9 @@ export default function StateStatusYield(props: propType) {
         )
         if (format != "discover") {
             const amountFundedFromCall = funderSummary!.amountWithdrawable.toNumber()
-            setWithdrawableAmount(amountFundedFromCall / 10 ** decimals!)
-            const amountTotalFundedFromCall = funderSummary!.amountTotal.toNumber()
-            setTotalFunderAmount(amountTotalFundedFromCall / 10 ** decimals!)
+            setWithdrawableAmount(+(amountFundedFromCall / 10 ** decimals!).toFixed(decimals))
+            const amountTotalFundedFromCall = funderSummary!.amountStraightTotal.toNumber()
+            setTotalStraightFunderAmount(amountTotalFundedFromCall / 10 ** decimals!)
             const entryTimeFromCall = funderSummary!.entryTime.toNumber()
             setEntryTime(entryTimeFromCall)
         }
@@ -153,17 +154,6 @@ export default function StateStatusYield(props: propType) {
         }
     }, [account])
 
-    // const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
-    //     height: 10,
-    //     borderRadius: 0,
-    //     [`&.${linearProgressClasses.colorSecondary}`]: {
-    //         backgroundColor: theme.palette.grey[theme.palette.mode === "light" ? 200 : 800],
-    //     },
-    //     [`& .${linearProgressClasses.bar}`]: {
-    //         backgroundColor: theme.palette.mode === "light" ? "lightgreen" : "yellow",
-    //     },
-    // }))
-
     return (
         <div className={styles.stateStatus}>
             {format == "discover" ? (
@@ -174,32 +164,6 @@ export default function StateStatusYield(props: propType) {
                         </b>{" "}
                         {asset} Pledged
                     </div>
-                    {/* <Tooltip
-                            title={
-                                <>
-                                    <div>
-                                        <>
-                                            <div style={{ color: "lightgreen" }}>
-                                                {totalLifetimeStraightFunded.toLocaleString(
-                                                    "en-US"
-                                                )}{" "}
-                                                {asset} Straight Donated
-                                            </div>
-                                            <div style={{ color: "lightblue" }}>
-                                                {totalLifetimeInterestFunded.toLocaleString(
-                                                    "en-US"
-                                                )}{" "}
-                                                {asset} &apos;Lossless&apos; Donated
-                                            </div>
-                                        </>
-                                    </div>
-                                </>
-                            }
-                            placement="right"
-                            arrow
-                        >
-                            <BorderLinearProgress variant="determinate" value={percent} />
-                        </Tooltip> */}
                     <br></br>
                 </>
             ) : (
@@ -208,22 +172,50 @@ export default function StateStatusYield(props: propType) {
                         <>
                             <div>
                                 <div
+                                    style={{ fontWeight: "400", fontSize: "40px", color: "green" }}
+                                >
+                                    {totalLifetimeFunded.toLocaleString("en-US")}
+                                </div>
+                                <div style={{ fontWeight: "700" }}>
+                                    {coinName} Total Pledged to {title}
+                                </div>
+                                <br></br>
+                                <div
                                     style={{
                                         marginTop: "10px",
                                         marginBottom: "10px",
                                         textAlign: "center",
                                     }}
                                 >
-                                    Amount You Can Withdraw{" "}
-                                    {interestProceeds +
-                                        totalActiveFunded -
-                                        totalActiveInterestFunded}{" "}
-                                    {coinName}:
+                                    Amount You Can Withdraw: <br></br>
+                                    <b
+                                        style={{
+                                            color: "green",
+                                            fontWeight: "500",
+                                            fontSize: "20px",
+                                        }}
+                                    >
+                                        {Math.round(
+                                            (interestProceeds +
+                                                totalActiveFunded -
+                                                totalActiveInterestFunded) *
+                                                10 ** decimals!
+                                        ) /
+                                            10 ** decimals!}{" "}
+                                    </b>
+                                    {coinName}
                                 </div>
                             </div>
                         </>
-                    ) : (
+                    ) : withdrawableAmount > 0 ? (
                         <>
+                            <div style={{ fontWeight: "400", fontSize: "40px", color: "green" }}>
+                                {totalLifetimeFunded.toLocaleString("en-US")}
+                            </div>
+                            <div style={{ fontWeight: "700" }}>
+                                {coinName} Total Pledged to {title}
+                            </div>
+                            <br></br>
                             <div
                                 style={{
                                     marginTop: "10px",
@@ -231,7 +223,57 @@ export default function StateStatusYield(props: propType) {
                                     textAlign: "center",
                                 }}
                             >
-                                Amount You Can Withdraw {withdrawableAmount} {coinName}:
+                                Amount You Have In Interest Method:
+                                <br></br>
+                                <b style={{ color: "green", fontWeight: "500", fontSize: "20px" }}>
+                                    {withdrawableAmount}
+                                </b>{" "}
+                                {coinName}
+                            </div>
+                        </>
+                    ) : totalStraightFunderAmount > 0 ? (
+                        <>
+                            <div style={{ fontWeight: "400", fontSize: "40px", color: "green" }}>
+                                {totalLifetimeFunded.toLocaleString("en-US")}
+                            </div>
+                            <div style={{ fontWeight: "700" }}>
+                                {coinName} Total Pledged to {title}
+                            </div>
+                            <br></br>
+                            <div
+                                style={{
+                                    marginTop: "10px",
+                                    marginBottom: "10px",
+                                    textAlign: "center",
+                                }}
+                            >
+                                Amount You Have Straight Donated:
+                                <br></br>
+                                <b style={{ color: "green", fontWeight: "500", fontSize: "20px" }}>
+                                    {totalStraightFunderAmount}
+                                </b>{" "}
+                                {coinName}
+                            </div>
+                        </>
+                    ) : (
+                        <>
+                            <div style={{ fontWeight: "400", fontSize: "40px", color: "green" }}>
+                                {totalLifetimeFunded.toLocaleString("en-US")}
+                            </div>
+                            <div style={{ fontWeight: "700" }}>
+                                {coinName} Total Pledged to {title}
+                            </div>
+                            <br></br>
+                            <div
+                                style={{
+                                    marginTop: "10px",
+                                    marginBottom: "10px",
+                                    textAlign: "center",
+                                }}
+                            >
+                                Donating Is Just A Click Away!
+                                <br></br>
+                                Check Out The Donation Options Below!
                             </div>
                         </>
                     )}

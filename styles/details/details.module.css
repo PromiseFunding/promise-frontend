@@ -100,6 +100,18 @@
     margin-bottom: 10px;
 }
 
+.donateButtonYield {
+    padding: 15px;
+    font-size: 20px;
+    font-weight: 700;
+    width: 100%;
+    color: white;
+    bottom: 0px;
+    background: linear-gradient(125.78deg, #DCF211 17.93%, #a9db29ee 42.06%, #7BF759 73.89%);
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
 .donateButton2 {
     padding: 15px;
     margin-left: auto;
@@ -113,6 +125,22 @@
     color: white;
     bottom: 0px;
     background: linear-gradient(125.78deg, #e5509a 17.93%, #b02588 42.06%, #694dcb 73.89%);
+    border-radius: 10px;
+}
+
+.donateButtonYield2 {
+    padding: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    position: absolute;
+    justify-content: center;
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    width: 100%;
+    color: white;
+    bottom: 0px;
+    background: linear-gradient(125.78deg, #DCF211 17.93%, #a9db29ee 42.06%, #7BF759 73.89%);
     border-radius: 10px;
 }
 
@@ -156,6 +184,21 @@
     background: linear-gradient(125.78deg, #694dcb 17.93%, #b02588 42.06%, #e5509a 73.89%);
 }
 
+.donateButton2:hover {
+    color: rgb(226 232 240);
+    background: linear-gradient(125.78deg, #694dcb 17.93%, #b02588 42.06%, #e5509a 73.89%);
+}
+
+.donateButtonYield:hover {
+    color: rgb(226 232 240);
+    background: linear-gradient(125.78deg, #7BF759 17.93%, #a9db29ee 42.06%, #DCF211 73.89%);
+}
+
+.donateButtonYield2:hover {
+    color: rgb(226 232 240);
+    background: linear-gradient(125.78deg, #7BF759 17.93%, #a9db29ee 42.06%, #DCF211 73.89%);
+}
+
 .donateOuter {
     width: 100%;
     height: 100%;
@@ -174,6 +217,16 @@
     border: 1rem solid;
 }
 
+.donateIconYield {
+    position: relative;
+    background: rgb(226, 56, 56);
+    font-size: 180px;
+    /* width: 50%; */
+    background: linear-gradient(125.78deg, #DCF211 17.93%, #a9db29ee 42.06%, #7BF759 73.89%);
+    color: white;
+    border: 1rem solid;
+}
+
 .modalForm {
     padding: 10px;
     display: flex;
@@ -181,6 +234,18 @@
     flex-direction: column;
     height: 100%;
     align-items: center;
+}
+
+.modalFormShare {
+    padding: 10px;
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    height: 100%;
+    padding-bottom: 75px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px,
 }
 
 .milestoneSelector {
@@ -191,6 +256,12 @@
     font-size: 50px;
     text-align: center;
     font-weight: 500;
+}
+
+.shareTitle {
+    font-size: 40px;
+    text-align: center;
+    font-weight: 600;
 }
 
 .textarea {

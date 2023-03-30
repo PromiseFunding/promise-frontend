@@ -5,17 +5,15 @@ import { useEffect, useState } from "react"
 import { BigNumber } from "ethers"
 import { networkConfig } from "../../config/helper-config"
 import { contractAddressesInterface, propType } from "../../config/types"
-import { DEFAULT_CHAIN_ID } from "../../config/helper-config"
 
 //contract is already deployed... trying to look at features of contract
-export default function PoolInfo(props: propType) {
+export default function PoolInfoYield(props: propType) {
     const fundAddress = props.fundAddress
-    const milestoneSummary = props.milestoneSummary
+    const yieldSummary = props.fundSummary
 
     const addresses: contractAddressesInterface = contractAddresses
     const { chainId: chainIdHex, isWeb3Enabled, user, isAuthenticated, account } = useMoralis()
-    const chainId: string = chainIdHex ? parseInt(chainIdHex!).toString() : DEFAULT_CHAIN_ID
-
+    const chainId: string = parseInt(chainIdHex!).toString()
 
     //TODO: get helper-config working instead!... gets rid of decimal function
     const chainIdNum = parseInt(chainIdHex!)
@@ -29,18 +27,22 @@ export default function PoolInfo(props: propType) {
 
     const [asset, setAsset] = useState("0")
 
+    const [locktime, setLockTime] = useState(0)
+
     async function updateUI() {
-        const ownerFromCall = milestoneSummary!.owner
-        const assetFromCall = milestoneSummary!.assetAddress
+        const ownerFromCall = yieldSummary!.owner
+        const assetFromCall = yieldSummary!.assetAddress
+        const locktimeFromCall = yieldSummary!.i_lockTime
+        setLockTime(locktimeFromCall.toNumber())
         setAsset(assetFromCall)
         setOwner(ownerFromCall)
     }
 
     useEffect(() => {
-        if (isWeb3Enabled && milestoneSummary) {
+        if (isWeb3Enabled && yieldSummary) {
             updateUI()
         }
-    }, [isWeb3Enabled, milestoneSummary])
+    }, [isWeb3Enabled, yieldSummary])
 
     return (
         <div style={{ width: "100%", borderRadius: "10px", position: "relative" }}>
@@ -55,34 +57,35 @@ export default function PoolInfo(props: propType) {
                                 <div>
                                     Fund Address:
                                     <a href={tracker + fundAddress}>
-                                        <u className={styles.fundinfo}>
-                                            <b className={styles.fundinfo}>{fundAddress}</b>
-                                        </u>
+                                        <u className={styles.fundinfo}><b className={styles.fundinfo}>{fundAddress}</b></u>
                                     </a>
                                 </div>
                                 <div>
                                     Owner Address:
                                     <a href={tracker + owner}>
-                                        <u className={styles.fundinfo}>
-                                            <b className={styles.fundinfo}>{owner}</b>
-                                        </u>
+                                        <u className={styles.fundinfo}><b className={styles.fundinfo}>{owner}</b></u>
                                     </a>
                                 </div>
                                 <div>
                                     User Address:
                                     <a href={tracker + account!}>
-                                        <u className={styles.fundinfo}>
-                                            <b className={styles.fundinfo}>{account}</b>
-                                        </u>
+                                        <u className={styles.fundinfo}><b className={styles.fundinfo}>{account}</b></u>
+                                    </a>
+                                </div>
+                                <div>
+                                    Pool Address:
+                                    <a href={tracker + poolAddress!}>
+                                        <u className={styles.fundinfo}><b className={styles.fundinfo}>{poolAddress}</b></u>
                                     </a>
                                 </div>
                                 <div>
                                     Asset Address:
                                     <a href={tracker + asset}>
-                                        <u className={styles.fundinfo}>
-                                            <b className={styles.fundinfo}>{asset}</b>
-                                        </u>
+                                        <u className={styles.fundinfo}><b className={styles.fundinfo}>{asset}</b></u>
                                     </a>
+                                </div>
+                                <div>
+                                    Lock Time: {locktime} seconds
                                 </div>
                             </div>
                         ) : (
